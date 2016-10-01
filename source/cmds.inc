@@ -232,7 +232,7 @@ CMD:veh(playerid, params[])
 
 CMD:mn(playerid, params[])
 {
-	ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Меню", "1. Статистика\n2. Список команд\n3. Личные настройки\n4. Обратная связь\n5. Правила сервера", "Открыть", "Выход");
+	ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Главное меню", "Информация о персонаже\nНастройки учётной записи\nСправка о доступных командах\nСправка о правилах сервера\nОбратная связь", "Открыть", "Выход");
 	return 1;
 }
 
@@ -350,10 +350,4 @@ CMD:lic(playerid, params[])
         lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_business,lic_freight,lic_helicopter);
     ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
     return 1;
-}
-CMD:givegun(playerid,params[]){
-	if(P[playerid][p_access] < 1) return true;
-	if(sscanf(params,"udd",params[0],params[1],params[2])) return SendClientMessage(playerid,-1, "/givegun [ID] [ID GUN] [PT]");
-	Weapon_Give(params[0],params[1],params[2]);
-	return true;
 }

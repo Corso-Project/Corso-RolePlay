@@ -262,19 +262,40 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    case 0:
         {
             new string[100];
-            format(string,sizeof string,"{FFFFFF}Имя:%s\nОрганизация:%s\nПол:%d\nДенег:$%.2f",Name(playerid),Get_TeamName(playerid),P[playerid][p_sex],P[playerid][p_cash]);
-            ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
+        	format(string,sizeof string,"{FFFFFF}Имя:\t\t%s\nОрганизация:\t\t%s\nПол:\t\t%d\nДенег:\t\t$%.2f",Name(playerid),Get_TeamName(playerid),P[playerid][p_sex],P[playerid][p_cash]);
+        	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
         }
-		case 1: ShowPlayerDialog(playerid, d_player_commands, DIALOG_STYLE_LIST, "Список Команд", "1. Игровые Команды", "Открыть", "Выход");
-		case 2: ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_LIST, "Личные настройки", "1. Изменение пароля\n2. Изменение имени", "Открыть", "Выход");
-		case 3: SendClientMessage(playerid, -1, "Обратная связь");
-		case 4: ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Правила Сервера", "Правила сервера", "Выход", "");
-	}
-    // Комады
-	case d_player_commands:if(response) switch(listitem)
-	{
-		case 0: ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Игровые Команды", "{FFFFFF}/lock - закрыть/открыть двери автомобиля\n/fill - заправить ТС\n/mn - меню\n/lic - посмотреть список лицензий", "Выход", "");
-	}
+        case 1:ShowPlayerDialog(playerid,d_player_settings, DIALOG_STYLE_LIST,"Настройки учётной записи","Сменить пароль","Выход","");
+        case 2:ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Справка о доступных командах", "{FFFFFF}/lock - закрыть/открыть двери автомобиля\n/fill - заправить ТС\n/mn - меню\n/lic - посмотреть список лицензий", "Выход", "");
+        case 3:{
+            new string[2048];
+            for(new msg;msg<sizeof(Server_Rules);msg++)
+            {
+                strcat(string,Server_Rules[msg]);
+            }
+            ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Правила сервера",string,"Закрыть","");
+        }
+        case 4:ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связть","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
+    }
+    case d_player_settings: if(response) switch(listitem){
+        case 0:{
+            SendClientMessage(playerid, -1, "Сменить пароль");
+        }
+    }
+    case d_player_report:{
+        if(!response) return ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Главное меню", "Информация о персонаже\nНастройки учётной записи\nСправка о доступных командах\nСправка о правилах сервера\nОбратная связь", "Открыть", "Выход");
+        if(!strlen(inputtext)){
+            ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связть","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
+        }
+        if(strlen(inputtext) < 4){
+            SendClientMessage(playerid,COLOR_GREY,"Слишком короткий запрос");
+            return ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связть","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
+        }
+        va_SendClientMessage(playerid, -1, "{61D765}Сообщение отправлено администраций сервера: {ffffff}%s",inputtext);
+        new string[144];
+        format(string, 144, "Репорт от %s [ID:%d]:{ffffff} %s",Name(playerid), playerid, inputtext);
+        Message_ToAdmins(COLOR_RED, string);
+    }
     // Покупка оружия
 	case d_player_buy_gun: if(response) switch(listitem)
     {

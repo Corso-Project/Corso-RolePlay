@@ -123,9 +123,9 @@ enum
 	d_vehicle_rent_officecar,
 	d_vehicle_rent_truck,
 	d_player_menu,
-	d_player_commands,
-	d_player_buy_gun
-
+	d_player_buy_gun,
+	d_player_settings,
+	d_player_report
 }
 
 new P[MAX_PLAYERS][E_PLAYER_DATA];
@@ -195,9 +195,9 @@ new Float: Prices_Fuel,
 // settings.ini
 new g_Chat_OOC,
 	Float: g_Payment_Register;
-// ??????
+// Пикапы
 new Ammu_Nation[8];
-// ?????-?????
+// Текст-дравы
 new Text:Corso;
 
 new male_skins[][] = {
@@ -245,12 +245,37 @@ new female_skins[][] = {
 };
 
 new Streams[][][] = {
-{"????????? ??????\n", ""},
-{"???????? ???? URL\n", ""},
+{"Выключить радио\n", ""},
+{"Включить музыку с URL\n", ""},
 {"Europa Plus HD\n", "http://ep2561.streamr.ru:8052/europaplus256.mp3"},
 {"NERadio House & Trancel\n", "http://fire1.neradio.com/;"},
 {"Dubplate.fm - Drum & Bass\n", "http://sc2.dubplate.fm:5000/DnB/192"},
 {"Dubplate.fm - Dubstep\n", "http://sc2.dubplate.fm:5000/dubstep/192"},
 {"Dubplate.fm - Urban Electro\n", "http://sc2.dubplate.fm:5000/Electro/192"},
 {"SESHstation", "http://5.101.126.134:8000/seshradio"}
+};
+new Server_Rules[][] = {
+"{FFFFFF}Правила игры на сервере.\n",
+"{54D5FF}1.{FFFFFF} Revenge Kill (Сокращено RK) запрещён | Warn/Тюрьма на 60 минут\n",
+"{54D5FF}2.{FFFFFF} Mеtagаming (Сокращение MG) запрещён | Бан чата 15-60 минут\n",
+"{54D5FF}3.{FFFFFF} Powergaming (Сокращение PG) запрещён | Kick/Warn/Тюрьма на 30-60 минут.\n",
+"{54D5FF}4.{FFFFFF} Deatmatch (сокращение DM)запрещён. | Kick/Warn/Тюрьма на 60 минут. Последующие нарушения Бан\n",
+"{54D5FF}5.{FFFFFF} DriveBy (сокращение DB) запрещён | Тюрьма 30-60 минут,Warn (DB разрешён только пассажирам)\n",
+"{54D5FF}6.{FFFFFF} Spawn Kill (Сокращение SK) запрещён |Тюрьма 60 минут,Warn/Бан\n",
+"{54D5FF}7.{FFFFFF} Team Kill (Сокращение TK) запрещён | Warn/Бан\n",
+"{54D5FF}8.{FFFFFF} Repeat Kill (Сокращение RK) запрещён | Тюрьма 60-120 минут,Warn\n",
+"{54D5FF}9.{FFFFFF} FastReload или Scroll (Сокращение FR), а так же Fastmoving (Сокращение FM) запрещён | Warn (Т.к. это багоюз)\n",
+"{54D5FF}10.{FFFFFF} Использование Читов/Хаков/Cleo запрещено. | бан на сервере от 10-30 дней до пожизненного.\n",
+"{54D5FF}11.{FFFFFF} Нон рп запрещён! | Тюрьма на 60 минут\n",
+"{54D5FF}12.{FFFFFF} Использовать аптечки,наркотики во время драки или перестрелки запрещено. | Warn\n",
+"{54D5FF}13.{FFFFFF} Флуд в IC и OOC, /s чаты | Бан чата 10-50 минут\n",
+"{54D5FF}14.{FFFFFF} Флуд в Репорт, а так же вопросы типа: Можете дать лицензию, деньги, дом, админку | Бан чата 40-100 минут,Kick,Warn\n",
+"{54D5FF}15.{FFFFFF} Выход из игры во время RP-процесса | Тюрьма 60-180 минут,Warn\n",
+"{54D5FF}16.{FFFFFF} Оскорбление/троллинг/клевета | Бан чата,Kick,Warn,Бан аккаунта\n",
+"{54D5FF}17.{FFFFFF} Оскорбление родителей | Бан 15-30 дней\n",
+"{54D5FF}18.{FFFFFF} Реклама посторонних ресурсов (серверов, сайтов, читов) | Пожизненный бан\n\n",
+"Правила для аккаунтов:\n",
+"{5a5fed}1.{FFFFFF} Ваш аккаунт - это ваша собственность и ваша отвественность. За утрату аккаунта (взлом,угон)\n",
+"{5a5fed}2.{FFFFFF} Администрация отвественности не несёт и аккаунты игроков не восстанавливает!\n",
+"{5a5fed}3.{FFFFFF} Продажа игровых денег,бизнесов,домов и т.д. за реальные деньги карается удалением аккаунта!\n"
 };

@@ -377,7 +377,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	// Меню
 	if(newkeys & KEY_NO)
 	{
-	    ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Меню", "1. Статистика\n2. Список команд\n3. Личные настройки\n4. Обратная связь\n5. Правила сервера", "Открыть", "Выход");
+	    ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Главное меню", "Информация о персонаже\nНастройки учётной записи\nСправка о доступных командах\nСправка о правилах сервера\nОбратная связь", "Открыть", "Выход");
 	}
 	// Открытие ворот и/или шлагбаумов
 	if(newkeys & KEY_CROUCH)
