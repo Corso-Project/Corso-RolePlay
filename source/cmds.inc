@@ -64,7 +64,7 @@ CMD:fill(playerid, params[])
 		V[vehicleid][v_fuel] = floatadd(V[vehicleid][v_fuel], volume);
 		PS[i][ps_volume] -= volume;
 		PS[i][ps_profit] += amount;
-		va_SendClientMessage(playerid, -1, "Автомобиль заправлен на %d литров за $%.2f", volume,amount);
+		va_SendClientMessage(playerid, -1, "Автомобиль заправлен на ~%.0f литров за $%.2f", volume,amount);
     }
 	return 1;
 }
@@ -189,7 +189,36 @@ CMD:s(playerid, params[])
 	P[playerid][_p_chat_time] = gettime();
 	return 1;
 }
-
+CMD:w(playerid,params[]){
+	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /w <текст>");
+	if((gettime() - P[playerid][_p_chat_time]) < 3) return 1;
+	if(containsAnyIP(params)) return 1;
+	strtolower(params);
+	if(strlen(P[playerid][_p_chat_msg]) == strlen(params)) {
+		if(strcmp(P[playerid][_p_chat_msg], params, true) == 0) return 1;
+	}
+	new Float:x, Float:y, Float:z;
+	GetPlayerPos(playerid, x,y,z);
+	SetPlayerChatBubble(playerid, params, 0xFFFF00FF, 1.2, 5000);
+	foreach(new i : Player) {
+		if(P[i][_p_in_game] == false) continue;
+		if(!IsPlayerInRangeOfPoint(i, 1.2, x,y,z)) continue;
+		if(GetPlayerVirtualWorld(i) != GetPlayerVirtualWorld(playerid)) continue;
+		if(GetPlayerInterior(i) != GetPlayerInterior(playerid)) continue;
+		if(strlen(params) > 64) {
+			new line1[128], line2[128];
+			new pos = strfind(params, " ", false, 64);
+			if(pos == (-1)) pos = 64;
+			strmid(line1, params, 0, pos);
+			strmid(line2, params, pos, strlen(params));
+			va_SendClientMessage(i, -1, "%s шепчет: %s", IC_Name(playerid),line1);
+			va_SendClientMessage(i, -1, "%s%c", line2);
+		} else va_SendClientMessage(i, -1, "%s шепчет: %s", IC_Name(playerid),params);
+	}
+	format(P[playerid][_p_chat_msg], 128, params);
+	P[playerid][_p_chat_time] = gettime();
+	return true;
+}
 CMD:me(playerid, params[])
 {
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /me <действие>");
@@ -239,7 +268,7 @@ CMD:mn(playerid, params[])
 CMD:gotopos(playerid, params[])
 {
  	new Float:paramss[3];
-	if(sscanf(params, "fff", paramss[0], paramss[1], paramss[2])) return SendClientMessage(playerid, -1, "Используйте: /gotopos [X] [Y] [Z]");
+	if(sscanf(params, "fff", paramss[0], paramss[1], paramss[2])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /gotopos [X] [Y] [Z]");
 	SetPlayerPos(playerid, paramss[0], paramss[1], paramss[2]);
 	va_SendClientMessage(playerid, 0xB9C9BFFF, "Вы телепортированы: X:%f; Y:%f; Z:%f.", paramss[0], paramss[1], paramss[2]);
 	return true;
@@ -249,7 +278,7 @@ CMD:makeleader(playerid, params[])
   	new string[144],
     user,org;
 	if(P[playerid][p_access] < 6) return 1;
-	if(sscanf(params, "ui", user,org)) return SendClientMessage(playerid, 0xff0000ff,"Используйте:{ffffff} /makeleader [ID] [ID Фракции]");
+	if(sscanf(params, "ui", user,org)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /makeleader [ID игрока] [ID Фракции]");
 	if(org > 19) return 1;
 	P[user][p_job_team] = org;
 	va_SendClientMessage(user,COLOR_YELLOW, "%s[%d] назначил Вас лидером организации \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
@@ -263,7 +292,7 @@ CMD:makeleader(playerid, params[])
 CMD:goto(playerid, params[])
 {
 	if(P[playerid][p_access] < 1) return 1;
-	if(sscanf(params, "u", params[0])) return SendClientMessage(playerid, -1, "{CECFCE} Использование: /goto [ID] ");
+	if(sscanf(params, "u", params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /goto [ID игрока] ");
 	if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, 0xC9C5C5, "Неверный ID");
 	new Float:plocx,Float:plocy,Float:plocz;
 	GetPlayerPos(params[0], plocx, plocy, plocz);
@@ -276,7 +305,7 @@ CMD:sethp(playerid, params[])
 {
 	new player,health;
 	if(P[playerid][p_access] < 1) return 1;
-	if(sscanf(params,"ui",player,health))return SendClientMessage(playerid, COLOR_GREY, "Использовать: /sethp [ID] [HP]");
+	if(sscanf(params,"ui",player,health))return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /sethp [ID игрока] [HP]");
 	if(health < 0 || health > 100) return SendClientMessage(playerid, COLOR_GREY, "Жизни не меньше 0 и не больше 100");
 	SetPlayerHealth(player, health);
 	return true;
@@ -284,14 +313,14 @@ CMD:sethp(playerid, params[])
 CMD:msg(playerid, params[])
 {
 	if(P[playerid][p_access] < 1) return 1;
-	if(sscanf(params, "s[120]", params[0])) return SendClientMessage(playerid, -1, "{CECFCE}Использование: /msg [сообщение]");
+	if(sscanf(params, "s[120]", params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /msg [сообщение]");
 	va_SendClientMessageToAll(0xFFCD00AA, "Администратор %s: %s",  Name(playerid), params[0]);
 	return 1;
 }
 CMD:kick(playerid, params[])
 {
 	if(P[playerid][p_access] < 1) return 1;
-    if(sscanf(params,"us[64]",params[0], params[1])) return SendClientMessage(playerid, -1, "Введите: /kick [ID] [Причина]");
+    if(sscanf(params,"us[64]",params[0], params[1])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /kick [ID игрока] [Причина]");
    	if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, 0xCECFCEFF, "Веденный вами ID не найден на сервере");
     va_SendClientMessageToAll(0xFF5030AA, "Администратор %s кикнул игрока %s. Причина: %s", Name(playerid), Name(params[0]), params[1]);
     Kick(params[0]);
@@ -301,7 +330,7 @@ CMD:skick(playerid, params[])
 {
 	if(P[playerid][p_access] < 3) return 1;
 	new mes[116];
-	if(sscanf(params, "u", params[0])) return SendClientMessage(playerid, -1, "Введите: /skick [ID]");
+	if(sscanf(params, "u", params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /skick [ID игрока]");
 	if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, 0xCECFCEFF, "Веденный вами ID не найден на сервере");
 	format(mes, sizeof(mes),"Администратор %s тихо кикнул игрока %s", Name(playerid), Name(params[0]));
 	Message_ToAdmins(0xAFAFAFFF, mes);
@@ -311,7 +340,7 @@ CMD:skick(playerid, params[])
 CMD:ans(playerid,params[])
 {
 	if(P[playerid][p_access] < 1) return true;
-	if(sscanf(params,"us[94]",params[0],params[1])) return SendClientMessage(playerid, -1, "Введите /ans [ID] [Ответ]");
+	if(sscanf(params,"us[94]",params[0],params[1])) return SendClientMessage(playerid,0xB22222FF, "[Справка]: {FFFFFF}Используйте /ans [ID игрока] [Ответ]");
 	if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, 0xCECFCEFF, "Веденный вами ID не найден на сервере");
 	va_SendClientMessage(params[0],0xFF9945FF,"Ответ администратора %s[%d]: %s",Name(playerid),playerid,params[1]);
 	PlayerPlaySound(params[0], 1085, 0.0, 0.0, 0.0);
@@ -350,4 +379,24 @@ CMD:lic(playerid, params[])
         lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_business,lic_freight,lic_helicopter);
     ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
     return 1;
+}
+CMD:gun(playerid,params[]){
+	if(P[playerid][p_access] < 1) return true;
+	if(sscanf(params,"udd",params[0],params[1],params[2])) return SendClientMessage(playerid,0xB22222FF, "[Справка]: {FFFFFF}Используйте /gun [ID игрока] [ID оружия] [количество патронов]");
+	Weapon_Give(params[0],params[1],params[2]);
+	return true;
+}
+CMD:sinf(playerid,params[]){
+	if(P[playerid][p_access] < 1) return true;
+	new output[128];
+	format(output, sizeof(output),"{FFFFFF} Бюджет штата: %2.f",Budget_GOVERNMENT);
+	ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Данные об штате",output,"Ок","");
+	return true;
+}
+CMD:test(playerid,params[]){
+	SetPlayerInterior(playerid, 5);
+	SetPlayerPos(playerid, 372.5565, -131.3607, 1001.4922);
+	SetPlayerShopName(playerid,"FDPIZA");
+	SendClientMessage(playerid,0xFFFFFFFF,"Welcome to Pizza Stack!");
+	return true;
 }

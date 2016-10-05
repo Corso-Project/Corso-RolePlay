@@ -110,6 +110,7 @@ stock IC_Me(playerid, action[])
 
 stock Weapon_Sync(playerid)
 {
+	new mes[164];
     if(P[playerid][_p_spawned] == false) return 1;
 	switch(GetPlayerState(playerid)) {
 	    case 0,7..9: return 1;
@@ -121,7 +122,7 @@ stock Weapon_Sync(playerid)
 	    switch(weapon[i])
 		{
 	        case 0,46: continue;
-	        case 1,10..18,35..42,44,45:
+	        case 1,10..18,24..25,35..42,44,45:
 			{
 				ResetPlayerWeapons(playerid);
 				P[playerid][p_weapon_1] = 0;
@@ -131,7 +132,11 @@ stock Weapon_Sync(playerid)
 				P[playerid][p_ammo_2] = 0;
 				P[playerid][p_ammo_3] = 0;
 				P[playerid][p_ammo_4] = 0;
-				Message_ToAdmins(0xB9C9BFFF, "[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
+				//Message_ToAdmins(0xB9C9BFFF, "[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
+
+				format(mes, sizeof(mes),"[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
+				Message_ToAdmins(0xB9C9BFFF, mes);
+				printf("[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
 				P[playerid][_p_cheater]++;
 			}
 			default:
@@ -175,6 +180,7 @@ stock Weapon_Sync(playerid)
 			} // default
 	    } // switch
 	} // for
+	printf("debug12451 67");
 	return 1;
 }
 

@@ -135,7 +135,7 @@ ptask OnPlayerVehicleFuelSync[1000](playerid)
 		if(engine == 1) switch(KMH) {
 			case 0: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], 0.0001);
 			//default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00003));
-			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00019));
+			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00039));//0.00022
 		}
 		if(Vehicle_WithoutFuel(GetVehicleModel(vehicleid)) == 0) {
 			if(V[vehicleid][v_fuel] <= 0) {

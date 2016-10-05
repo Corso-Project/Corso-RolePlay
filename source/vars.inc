@@ -95,17 +95,6 @@ enum E_PETROL_STATIONS_DATA {
 	Float: ps_pos_y,
 	Float: ps_pos_z
 }
-enum E_AMMU_NAIONS_DATA{
-	ORM: _an_ormid,
-	Text3D: _an_text3d,
-	//mysql sycned
-	an_uid,
-	an_name[30],
-	an_owner,
-	Float: an_pos_x,
-	Float: an_pos_y,
-	Float: an_pos_z
-}
 enum
 {
 	d_null,
@@ -131,10 +120,9 @@ enum
 new P[MAX_PLAYERS][E_PLAYER_DATA];
 new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
-new AN[1][E_AMMU_NAIONS_DATA];
 new PlayerText: ChoseSkin[3];
 
-new //V_GOVERNMENT[],
+new V_GOVERNMENT[4],
 	V_FBI[7],
 	V_LSPD[14],
 	V_SFPD[12],

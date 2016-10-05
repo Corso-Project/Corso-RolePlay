@@ -16,7 +16,7 @@ public OnGameModeInit()
 	// АЗС
 	mysql_tquery(MySQL:1,"SELECT * FROM `petrol_stations`", "OnMySQL_SelectPetrolStations");
 	// Ammu-Nation
-	mysql_tquery(MySQL:1,"SELECT * FROM `ammunation`", "OnMySQL_SelectAmmuNation");
+	//mysql_tquery(MySQL:1,"SELECT * FROM `ammunation`", "OnMySQL_SelectAmmuNation");
 	// Параметры игрового режима
 	SetGameModeText(GAMEMODE_VERSION);
 	SetMaxConnections(1);
@@ -60,6 +60,11 @@ public OnGameModeInit()
 	CreateDynamicMapIcon(-316.1618,829.9474,14.2422,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(776.7205,1871.4976,4.9072,6,0xFFFFFFFF,0,0);
 	//==========================================================================
+	// Правительство Штата
+	V_GOVERNMENT[0] = Vehicle_Add(489, 1246.6714, -2010.0225, 59.5282, 0.0000,1,1);
+	V_GOVERNMENT[1] = Vehicle_Add(489, 1250.9849, -2010.0314, 59.4050, 0.0000,1,1);
+	V_GOVERNMENT[2] = Vehicle_Add(489, 1256.0861, -2009.9465, 59.2592, 0.0000,1,1);
+	V_GOVERNMENT[3] = Vehicle_Add(489, 1260.8561, -2009.9620, 59.1229, 0.0000,1,1);
 	// Федеральное Бюро Расследований
 	V_FBI[0] = Vehicle_Add(427, 1262.2622, -1648.6503, 13.6227, 220.0000);
 	V_FBI[1] = Vehicle_Add(427, 1263.8562, -1642.9408, 13.6227, 220.0000);
@@ -267,7 +272,7 @@ public OnGameModeInit()
 	CreateDynamicObject(19315, 269.96164, 2068.13623, 22.56484,   0.00000, 0.00000, 180.00000);
 	CreateDynamicObject(19315, 257.19031, 2066.94263, 20.51266,   0.00000, 0.00000, 0.00000);
 	// Пикапы
-	//Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469);
+	Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469);
 	Ammu_Nation[1] = CreateDynamicPickup(1318,23,285.4752,-41.7966,1001.5156);
 	Ammu_Nation[2] = CreateDynamicPickup(1318,23,-2625.8296,208.2379,4.8125);
 	Ammu_Nation[3] = CreateDynamicPickup(1318,23,285.9187,-86.7644,1001.5229);

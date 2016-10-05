@@ -139,7 +139,10 @@ stock Vehicle_Add(model, Float:x, Float:y, Float:z, Float:angle, color1 = (-1), 
 
 	if(vehicleid == INVALID_VEHICLE_ID) return vehicleid;
 
-	SetVehicleNumberPlate(vehicleid, "P4F SiRoP");
+	new number_plate[256];
+	format(number_plate,256, "%c%c%c%i%c%c",65+random(25),65+random(25),65+random(25),random(99),65+random(25),65+random(25));
+    SetVehicleNumberPlate(vehicleid, number_plate);
+
 	V[vehicleid][v_fuel] = Vehicle_GetMaxFuel(model);
 	Iter_Add(Vehicle, vehicleid);
 	return vehicleid;

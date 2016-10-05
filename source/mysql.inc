@@ -13,10 +13,8 @@ forward OnMySQL_InsertAccount(playerid);
 public OnMySQL_InsertAccount(playerid)
 {
 	orm_load(P[playerid][_p_ormid]);
-	printf("Name: %s | Money: $%.2f",Name(playerid),P[playerid][p_cash]);
 	TogglePlayerSpectating(playerid, 0);
 	SetSpawnInfo(playerid, 0, P[playerid][p_skin], 1642.4329,-2239.0205,13.4967,180.0, 0,0,0,0,0,0);
-	//Command_SetAccessToCommands(playerid);
 	P[playerid][p_health] = 100;
 	SendClientMessage(playerid, 0xB9C9BFFF, "Создание учётной записи успешно выполнено.");
     SendClientMessage(playerid, 0xB9C9BFFF, "Добро пожаловать, в игру на "SERVER_NAME);
@@ -57,41 +55,8 @@ public OnMySQL_SelectPetrolStations()
 			Цена: $%.2f за 1 литр бензина",
 			PS[x][ps_name],ownername,PS[x][ps_volume],FUEL_TANK_LIMIT,Prices_Fuel);
 		PS[x][_ps_text3d] = CreateDynamic3DTextLabel(string, 0x4682B4FF, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z]+1,35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
+		CreateDynamicMapIcon(PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z],47,0xFFFFFFFF,0,0);
 		TotalPetrolStations++;
 	}
 	printf("Загруженно АЗС:%i            [Длительность загрузки: %d ms]",TotalPetrolStations,cache_get_query_exec_time(MILLISECONDS));
-}
-forward OnMySQL_SelectAmmuNation();
-public OnMySQL_SelectAmmuNation()
-{
-	new ownername[24];
-	new string[256];
-	new TotalAmmuNations;
-	for(new x; x < sizeof(AN); x++) {
-		AN[x][_an_ormid] = orm_create("ammunation");
-
-		orm_addvar_int(AN[x][_an_ormid], AN[x][an_uid], "UID");
-	    orm_setkey(AN[x][_an_ormid], "UID");
-	    orm_addvar_string(AN[x][_an_ormid], AN[x][an_name], 30, "Name");
-	    orm_addvar_int(AN[x][_an_ormid], AN[x][an_owner], "Owner");
-	    orm_addvar_float(AN[x][_an_ormid], AN[x][an_pos_x], "Pos_X");
-	    orm_addvar_float(AN[x][_an_ormid], AN[x][an_pos_y], "Pos_Y");
-	    orm_addvar_float(AN[x][_an_ormid], AN[x][an_pos_z], "Pos_Z");
-
-		orm_apply_cache(AN[x][_an_ormid], x);
-
-		switch(AN[x][an_owner])
-		{
-			case 0: ownername = "Правительство штата";
-			default: format(ownername, sizeof(ownername), "UID: %d", AN[x][an_owner]);
-		}
-		format(string, sizeof(string),
-			"%s\n\
-			Владелец: %s\n",
-			AN[x][an_name],ownername);
-		AN[x][_an_text3d] = CreateDynamic3DTextLabel(string, 0x4682B4FF, AN[x][an_pos_x],AN[x][an_pos_y],AN[x][an_pos_z]+1,35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
-		CreateDynamicPickup(1318,23,AN[x][an_pos_x],AN[x][an_pos_y],AN[x][an_pos_z]);
-		TotalAmmuNations++;
-	}
-	printf("Загруженно Магазиов Оружия:%i [Длительность загрузки: %d ms]",TotalAmmuNations,cache_get_query_exec_time(MILLISECONDS));
 }

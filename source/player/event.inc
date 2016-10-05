@@ -150,6 +150,12 @@ public OnPlayerSpawn(playerid)
 				SetPlayerPos(playerid, 1214.8512,-1675.8368,11.7969);
 				SetPlayerFacingAngle(playerid, 308.0);
 	    	}
+			case ORG_GOVERNMENT:{
+				SetPlayerInterior(playerid, 0);
+				SetPlayerVirtualWorld(playerid, 0);
+				SetPlayerPos(playerid, 1128.7860,-2043.8292,69.4214);
+				SetPlayerFacingAngle(playerid,273.4582);
+			}
 	    	default:
 			{
 	        	SetPlayerInterior(playerid, 0);
@@ -322,8 +328,6 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 	}
 	return 1;
 }
-/*						P[playerid][p_cash] = g_Payment_Register;
-						orm_insert(P[playerid][_p_ormid], "OnMySQL_InsertAccount", "d", playerid);*/
 public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	if(P[playerid][_p_in_game] == false) return 0;
