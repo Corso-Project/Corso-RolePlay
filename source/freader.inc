@@ -15,7 +15,6 @@ INI:mysql[](name[], value[])
 
 INI:prices[](name[], value[])
 {
-	INI_Float("Fuel", Prices_Fuel);
 	INI_Float("RentCar", Prices_RentCar);
 	INI_Float("Deagle", Prices_Deagle);
 	INI_Float("ShotGun", Prices_ShotGun);

@@ -3,7 +3,7 @@ public OnMySQL_SelectAccount(playerid)
 {
 	switch(orm_errno(P[playerid][_p_ormid])) {
 	    case ERROR_OK: ShowPlayerDialog(playerid, d_account_login, DIALOG_STYLE_PASSWORD, "Вход в учётную запись",SERVER_NAME"\n\n{FFFFFF}Введите пароль от своей учётной записи для входа в игру","Вход","Выход");
-	    case ERROR_NO_DATA: ShowPlayerDialog(playerid, d_account_register, DIALOG_STYLE_INPUT, "Создание учётной записи",SERVER_NAME"\n\n{FFFFFF}Придумайте и введите пароль для создания учётной записи.\nУсловия:\n- От 5 до 18 символов\n- Английские буквы и цифры","Далее","Выход");
+		case ERROR_NO_DATA: ShowPlayerDialog(playerid, d_account_register, DIALOG_STYLE_INPUT, "Создание учётной записи",SERVER_NAME"\n\n{FFFFFF}Придумайте и введите пароль для создания учётной записи.\nУсловия:\n- От 5 до 18 символов\n- Английские буквы и цифры","Далее","Выход");
 	}
 	orm_setkey(P[playerid][_p_ormid], "UID");
 	GetPlayerIp(playerid, P[playerid][p_last_ip], 46);
@@ -25,8 +25,8 @@ public OnMySQL_InsertAccount(playerid)
 forward OnMySQL_SelectPetrolStations();
 public OnMySQL_SelectPetrolStations()
 {
+	new string[226];
 	new ownername[24];
-	new string[152];
 	new TotalPetrolStations;
 	for(new x; x < sizeof(PS); x++) {
 	    PS[x][_ps_ormid] = orm_create("petrol_stations");
@@ -34,8 +34,10 @@ public OnMySQL_SelectPetrolStations()
 	    orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_uid], "UID");
 	    orm_setkey(PS[x][_ps_ormid], "UID");
 	    orm_addvar_string(PS[x][_ps_ormid], PS[x][ps_name], 30, "Name");
-	    orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_volume], "Volume");
-	    orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_owner], "Owner");
+	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_volume], "Volume");
+	    orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_owner],"Owner");
+		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_price], "Price");
+		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_fuel_price], "Fuel_Price");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_profit], "Profit");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_x], "Pos_X");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_y], "Pos_Y");
@@ -43,20 +45,19 @@ public OnMySQL_SelectPetrolStations()
 
 	    orm_apply_cache(PS[x][_ps_ormid], x);
 
-	    switch(PS[x][ps_owner])
-		{
-		    case 0: ownername = "Правительство штата";
-		    default: format(ownername, sizeof(ownername), "UID: %d", PS[x][ps_owner]);
-		}
+		ownername = (PS[x][ps_owner] == -1) ? "Правительство штата" : "Куплен";
 		format(string, sizeof(string),
-			"%s\n\
-			Владелец: %s\n\
-			Цистерна: %d из %d литров\n\
-			Цена: $%.2f за 1 литр бензина",
-			PS[x][ps_name],ownername,PS[x][ps_volume],FUEL_TANK_LIMIT,Prices_Fuel);
-		PS[x][_ps_text3d] = CreateDynamic3DTextLabel(string, 0x4682B4FF, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z]+1,35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
+		    "Автозаправочная станция:\n{FFFFAD}%s\n\
+		    Владелец: {99b4ff}%s{FFFFAD}\n\
+		    Стоимость: $%.2f\n\
+		    Цистерна: %.0f из %d литров\n\
+		    Цена: $%.2f за 1 литр бензина\n\
+		    Заправится: {99b4ff}/fill",
+		    PS[x][ps_name],ownername,PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
+		PS[x][_ps_text3d] = CreateDynamic3DTextLabel(string, 0xFFFFFFFF, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z]+1,35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 		CreateDynamicMapIcon(PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z],47,0xFFFFFFFF,0,0);
 		TotalPetrolStations++;
+		//printf("Владелец: %s | Цистерна: %.0f из %d литров | Цена: $%.2f за 1 литр бензина", PS[x][ps_name],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
 	}
 	printf("Загруженно АЗС:%i            [Длительность загрузки: %d ms]",TotalPetrolStations,cache_get_query_exec_time(MILLISECONDS));
 }

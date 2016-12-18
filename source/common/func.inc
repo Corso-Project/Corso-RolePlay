@@ -10,7 +10,6 @@ stock Name_IsValid(const string[])
         }
     }
     if(earth != 1) return 0;
-
 	return 1;
 }
 

@@ -26,7 +26,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    SetPlayerHealth(playerid, P[playerid][p_health]);
 	    TogglePlayerSpectating(playerid, 0);
 	    SetSpawnInfo(playerid, 0, P[playerid][p_skin], 1642.4329,-2239.0205,13.4967,180.0, 0,0,0,0,0,0);
-		//Command_SetAccessToCommands(playerid);
+        SetPlayerScore(playerid, P[playerid][p_level]);
 	    SendClientMessage(playerid, 0xB9C9BFFF, "Вход в учётную запись успешно выполнен.");
 	    SendClientMessage(playerid, 0xB9C9BFFF, "Добро пожаловать, в игру на "SERVER_NAME);
 	    SendClientMessage(playerid, 0xB9C9BFFF, "Главное меню, клавиша - '{00FF00}~k~~CONVERSATION_NO~{FFFFFF}'");
@@ -44,13 +44,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	// Создание учётной записи
 	case d_account_register: {
 	    if(!response) return Kick(playerid);
-	    if(strlen(inputtext) < 5 || strlen(inputtext) > 18) return ShowPlayerDialog(playerid, d_account_login, DIALOG_STYLE_INPUT, "Создание учётной записи",SERVER_NAME"\n\n{FFFFFF}Придумайте и введите пароль для создания учётной записи.\nУсловия:\n- {B22222}От 5 до 18 символов\n{FFFFFF}- Английские буквы и цифры","Далее","Выход");
+	    if(strlen(inputtext) < 5 || strlen(inputtext) > 18) return ShowPlayerDialog(playerid, d_account_register, DIALOG_STYLE_INPUT, "Создание учётной записи",SERVER_NAME"\n\n{FFFFFF}Придумайте и введите пароль для создания учётной записи.\nУсловия:\n- {B22222}От 5 до 18 символов\n{FFFFFF}- Английские буквы и цифры","Далее","Выход");
 	    for(new i; i < strlen(inputtext); i++) switch(inputtext[i]) {
 	        case '0'..'9': continue;
 	        case 'a'..'z': continue;
 	        case 'A'..'Z': continue;
-	        default: return ShowPlayerDialog(playerid, d_account_login, DIALOG_STYLE_INPUT, "Создание учётной записи",SERVER_NAME"\n\n{FFFFFF}Придумайте и введите пароль для создания учётной записи.\nУсловия:\n- От 5 до 18 символов\n- {B22222}Английские буквы и цифры","Далее","Выход");
+	        default: return ShowPlayerDialog(playerid, d_account_register, DIALOG_STYLE_INPUT, "Создание учётной записи",SERVER_NAME"\n\n{FFFFFF}Придумайте и введите пароль для создания учётной записи.\nУсловия:\n- От 5 до 18 символов\n- {B22222}Английские буквы и цифры","Далее","Выход");
 	    }
+        ShowPlayerDialog(playerid, d_account_login, DIALOG_STYLE_INPUT, "Создание учётной записи",SERVER_NAME"\n\n{FFFFFF}Придумайте и введите пароль для создания учётной записи.\nУсловия:\n- От 5 до 18 символов\n- Английские буквы и цифры","Далее","Выход");
 	    WP_Hash(P[playerid][p_password], 129, inputtext);
 	    ShowPlayerDialog(playerid, d_account_choose_sex, DIALOG_STYLE_MSGBOX, "Выбор пола персонажа",SERVER_NAME"\n\n{FFFFFF}Выберите, какой будет пол у вашего персонажа?","Мужской","Женский");
 	}
@@ -261,9 +262,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	{
 	    case 0:
         {
-            new string[100];
-        	format(string,sizeof string,"{FFFFFF}Имя:\t\t%s\nОрганизация:\t\t%s\nПол:\t\t%d\nДенег:\t\t$%.2f",Name(playerid),Get_TeamName(playerid),P[playerid][p_sex],P[playerid][p_cash]);
-        	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
+            ShowStats(playerid,playerid);
         }
         case 1:ShowPlayerDialog(playerid,d_player_settings, DIALOG_STYLE_LIST,"Настройки учётной записи","Сменить пароль","Выход","");
         case 2:ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Справка о доступных командах", "{FFFFFF}/lock - закрыть/открыть двери автомобиля\n/fill - заправить ТС\n/mn - меню\n/lic - посмотреть список лицензий", "Выход", "");
@@ -293,7 +292,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         }
         va_SendClientMessage(playerid, -1, "{61D765}Сообщение отправлено администраций сервера: {ffffff}%s",inputtext);
         new string[144];
-        format(string, 144, "Репорт от %s [ID:%d]:{ffffff} %s",Name(playerid), playerid, inputtext);
+        format(string, 144, "Жалоба от %s [ID:%d]:{ffffff} %s",Name(playerid), playerid, inputtext);
         Message_ToAdmins(COLOR_RED, string);
     }
     // Покупка оружия
@@ -340,6 +339,83 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
 		}
 	}
+    // Основное меню GPS
+    case d_player_gps: if(response) switch(listitem){
+        case 0:{
+            new min_id;
+            new Float:min_distance = 99999.0;
+            for (new x; x < sizeof(PS); x++) {
+                new Float: distance = GetPlayerDistanceFromPoint(playerid, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z]);
+                if (distance < min_distance) {
+                    min_distance = distance;
+                    min_id = x;
+                }
+            }
+            SetPlayerCheckpoint(playerid, PS[min_id][ps_pos_x], PS[min_id][ps_pos_y], PS[min_id][ps_pos_z], 5.0);
+            PlayerPlaySound(playerid,1130,0.0,0.0,0.0);
+            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Ближайшая заправка была отмечена на радаре.");
+        }
+        case 1: ShowPlayerDialog(playerid, d_gps_public_places, DIALOG_STYLE_LIST,"Общественные места",
+            "1. Автошкола\n\
+             2. Автостанция города Лос-Сантос\n\
+             3. Авторынок (Эконом класс)\n\
+             4. Авторынок (Средний класс)\n\
+             5. Авторынок (Премиум класс)","Выбрать","Назад");
+        case 2: ShowPlayerDialog(playerid, d_gps_jobs, DIALOG_STYLE_LIST,"Работы","...","Выбрать","Назад");
+        case 3: ShowPlayerDialog(playerid, d_gps_state_organizations, DIALOG_STYLE_LIST,"Государственные организации",
+            "1. Правительство штата\n\
+             2. Федеральное Бюро Расследований\n\
+             3. Полция города Los Santos\n\
+             4. Полиция города San Fiero\n\
+             5. Полиция города Las Venturas\n\
+             6. Национальная Гвардия\n\
+             7. Военно Воздушные Силы\n\
+             8. Военно Морской Флот\n\
+             9. Служба Экстренной Помощи\n\
+             10. Новости 'San Andreas'\n\
+             11. Центр Аттестаций\n\
+             12. Федеральное Бюро Расследований","Выбрать","Назад");
+        case 4: ShowPlayerDialog(playerid, d_gps_criminal_organizaions, DIALOG_STYLE_LIST,"Мафий/Банды",
+            "1. Grove Street\n\
+             2. Ballas\n\
+             3. Aztecas\n\
+             4. Vagos\n\
+             5. Rifa \n\
+             {CCCC66}6. Семья 'Триада'\n\
+             {CCCC66}7. Семья 'Воры в законе'\n\
+             {CCCC66}8. Семья 'Ла Коза Ностра'","Выбрать","Назад");
+        case 5: ShowPlayerDialog(playerid, d_gps_banks, DIALOG_STYLE_LIST,"Банки",
+            "1. Банк города Los Santos\n\
+             2. Банк города San Fierro\n\
+             3. Банк города Las Venturas","Выбрать","Назад");
+        case 6: ShowPlayerDialog(playerid, d_gps_pleasure, DIALOG_STYLE_LIST,"Развлечения",
+            "1. Казино «Четыре дракона»\n\
+             2. Казино «Дворец Калигулы»\n\
+             3. Казино «Casino Floor»","Выбрать","Назад");
+    }
+    // Спутниковая Система Навигации: Общественные места
+    case d_gps_public_places: if(response) switch(listitem){
+        case 0: SetPlayerCheckpoint(playerid, -2031.4530,-97.4284,35.1641,4.0);
+        case 1: SendClientMessage(playerid,-1,"Вокзал ЛС");
+        case 2: SetPlayerCheckpoint(playerid, 558.0014,-1257.0792,16.9318,4.0);
+        case 3: SetPlayerCheckpoint(playerid, -1988.1427,288.5436,34.0706,4.0);
+        case 4: SetPlayerCheckpoint(playerid, 1658.5923,2177.1665,10.3988,4.0);
+    }
+    // Спутниковая Система Навигации: Государственные организации
+    case d_gps_state_organizations: if(response) switch(listitem){
+        case 6: SetPlayerCheckpoint(playerid, -1531.5959,492.3214,6.9068, 4.0);
+        case 11: SetPlayerCheckpoint(playerid, -2432.2952,490.2813,29.6579, 4.0);
+    }
+    // Спутниковая Система Навигации: Развлечения
+    case d_gps_pleasure: if(response) switch(listitem){
+        case 0: SetPlayerCheckpoint(playerid, 2038.0607,1007.9816,10.2363,4.0);
+    }
+    // Спутниковая Система Навигации: Банки
+    case d_gps_banks: if(response) switch(listitem){
+        case 0: SetPlayerCheckpoint(playerid, 1540.4420,-1276.2134,17.1346, 4.0);
+        case 1: SendClientMessage(playerid,-1, "GPS SF");
+        case 2: SetPlayerCheckpoint(playerid, 2359.4534,2377.9929,10.5474, 4.0);
+    }
     }
     return 1;
 }

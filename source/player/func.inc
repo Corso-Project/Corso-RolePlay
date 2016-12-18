@@ -4,11 +4,12 @@ stock Get_AccessName(playerid)
 	switch(P[playerid][p_access])
 	{
 	    case 0: dests = "Гражданин";
-	    case 1: dests = "Helper";
+		case 1: dests = "Helper";
 	    case 2: dests = "Модератор";
 	    case 3: dests = "Супермодератор";
 	    case 4: dests = "Администратор";
 	    case 5: dests = "Гл.Администратор";
+		case 6: dests = "Основатель";
 	}
 	return dests;
 }
@@ -51,20 +52,19 @@ stock SkinShop_Show(playerid, team)
     switch(P[playerid][p_sex])
     {
         case SEX_FEMALE:
-            SetSpawnInfo(playerid, team, female_skins[team][1], 1526.03,-1346.4008,330.0234, 63.8611, 0,0,0,0,0,0);
-        case SEX_MALE:{
-			printf("%s",Name(playerid));
-            SetSpawnInfo(playerid, team, male_skins[team][1], 1526.03,-1346.4008,330.0234, 63.8611, 0,0,0,0,0,0);
-		}
+            SetSpawnInfo(playerid, team, female_skins[team][2], 199.5363,-127.6896,1003.5152,175.2766, 0,0,0,0,0,0);
+        case SEX_MALE:
+            SetSpawnInfo(playerid, team, male_skins[team][2], 199.5363,-127.6896,1003.5152,175.2766, 0,0,0,0,0,0);
     }
-	SetPlayerVirtualWorld(playerid, playerid);
-	SetPlayerInterior(playerid,0);
-	SetPlayerCameraPos(playerid,1520.0631,-1343.1326,330.6207);
-	SetPlayerCameraLookAt(playerid,1526.0348,-1346.2710,330.0553);
-	SpawnPlayer(playerid);//
-    for(new i; i < 3; i++)
+	SetPlayerInterior(playerid,3);
+	SetPlayerVirtualWorld(playerid,playerid+1);
+	SetPlayerCameraPos(playerid,199.525466, -130.204528, 1003.751770);
+	SetPlayerCameraLookAt(playerid,199.512817, -125.204986, 1003.685363);
+
+	SpawnPlayer(playerid);
+    for(new i; i < 8; i++)
         PlayerTextDrawShow(playerid, ChoseSkin[i]);
-    SelectTextDraw(playerid, 0xB1413DAA);
+    SelectTextDraw(playerid, 0x3DA2B1FF);
 }
 
 stock Cash_Give(playerid, Float: amount)
@@ -265,7 +265,6 @@ stock Weapon_Give(playerid, weaponid, ammo)
         case 2..9:
 		{
             P[playerid][p_weapon_1] = weaponid;
-            //ResetPlayerWeapons(playerid);
             GivePlayerWeapon(playerid, weaponid, 1);
             GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
             GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
@@ -275,7 +274,6 @@ stock Weapon_Give(playerid, weaponid, ammo)
 		{
             P[playerid][p_weapon_2] = weaponid;
             P[playerid][p_ammo_2] += ammo;
-            //ResetPlayerWeapons(playerid);
             GivePlayerWeapon(playerid, P[playerid][p_weapon_1], 1);
             GivePlayerWeapon(playerid, weaponid, ammo);
             GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
@@ -285,7 +283,6 @@ stock Weapon_Give(playerid, weaponid, ammo)
         {
             P[playerid][p_weapon_3] = weaponid;
             P[playerid][p_ammo_3] += ammo;
-            //ResetPlayerWeapons(playerid);
             GivePlayerWeapon(playerid, P[playerid][p_weapon_1], 1);
 			GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
             GivePlayerWeapon(playerid, weaponid, ammo);
@@ -295,11 +292,95 @@ stock Weapon_Give(playerid, weaponid, ammo)
 		{
             P[playerid][p_weapon_4] = weaponid;
             P[playerid][p_ammo_4] += ammo;
-            //ResetPlayerWeapons(playerid);
             GivePlayerWeapon(playerid, P[playerid][p_weapon_1], 1);
             GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
 			GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
             GivePlayerWeapon(playerid, weaponid, ammo);
         }
     }
+}
+stock GetTeamZoneColor(teamid)
+{
+	switch(teamid)
+	{
+		case TEAM_GROVE: return 0x009900AA;
+		case TEAM_BALLAS: return 0xCC00FFAA;
+		case TEAM_AZTECAS: return 0x00CCFFAA;
+		case TEAM_VAGOS: return 0xFFFF00AA;
+		case TEAM_RIFA: return 0x6666FFAA;
+	}
+	return -1;
+}
+new weaponName[][] = {
+	{"Fist"}, // 0
+	{"Brass Knuckles"}, // 1
+	{"Golf Club"}, // 2
+	{"Night Stick"}, // 3
+	{"Knife"}, // 4
+	{"Baseball Bat"}, // 5
+	{"Shovel"}, // 6
+	{"Pool Cue"}, // 7
+	{"Katana"}, // 8
+	{"Chainsaw"}, // 9
+	{"Purple Dildo"}, // 10
+	{"Big White Vibrator"}, // 11
+	{"Medium White Vibrator"}, // 12
+	{"Small White Vibrator"}, // 13
+	{"Flowers"}, // 14
+	{"Cane"}, // 15
+	{"Grenade"}, // 16
+	{"Teargas"}, // 17
+	{"Molotov"}, // 18
+	{" "}, // 19
+	{" "}, // 20
+	{" "}, // 21
+	{"Colt 45"}, // 22
+	{"Silenced"}, // 23
+	{"Deagle"}, // 24
+	{"Shotgun"}, // 25
+	{"Sawnoff"}, // 26
+	{"Combat"}, // 27
+	{"Uzi"}, // 28
+	{"MP5"}, // 29
+	{"AK47"}, // 30
+	{"M4"}, // 31
+	{"Tec9"}, // 32
+	{"Rifle"}, // 33
+	{"Sniper"}, // 34
+	{"RPG"}, // 35
+	{"HS RPG"}, // 36
+	{"Flame"}, // 37
+	{"Minigun"}, // 38
+	{"Satchel Charge"}, // 39
+	{"Detonator"}, // 40
+	{"Spray Can"}, // 41
+	{"Fire Extinguisher"}, // 42
+	{"Camera"}, // 43
+	{"Nightvision"}, // 44
+	{"Infrared Vision"}, // 45
+	{"Parachute"}, // 46
+	{"Fake Pistol"} // 47
+};
+stock ReturnPlayerWeaponsString(playerid)
+{
+	new string[128];
+	new WeaponID, Ammo;
+	for(new i = 0; i < 13; i++)
+	{
+	    if(i == 0 || i == 1)
+		{
+	   		GetPlayerWeaponData(playerid,i,WeaponID,Ammo);
+	   		if(Ammo > 1) Ammo = 1;
+	    }
+		else GetPlayerWeaponData(playerid,i,WeaponID,Ammo);
+		if(WeaponID > 0 && Ammo > 0)
+		{
+		    if(Ammo > 60000) Ammo = 1;
+
+		    if(strlen(string) > 4) format(string,256,"%s, %s(~y~%d~r~)", string, weaponName[WeaponID], Ammo);
+			else format(string,256,"%s(~y~%d~r~)", weaponName[WeaponID], Ammo);
+		}
+	}
+	if(strlen(string) < 3) string = "N~w~/~r~A";
+	return string;
 }

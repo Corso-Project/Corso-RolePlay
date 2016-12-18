@@ -1,7 +1,10 @@
 timer OnWeatherChanger[60*60*1000]()
 {
-	SetWorldTime(g_hour);
+	/*SetWorldTime(g_hour);
 	SetWeather(random(20));
+	defer OnWeatherChanger[random(60)*60*1000]();*/
+	SetWorldTime(g_hour);
+	SetWeather(1);
 	defer OnWeatherChanger[random(60)*60*1000]();
 }
 
@@ -95,7 +98,15 @@ task OnUpdateTime[10*1000]()
 	    }
 	}
 }
+ptask SpectateUpdatePlayer[1000](playerid){
+	new Float:Healt, Float:Armour, string[260];
 
+    GetPlayerHealth(gSpectateID[playerid], Healt);
+    GetPlayerArmour(gSpectateID[playerid], Armour);
+    new Float:Total = Armour + Healt;
+    format(string,sizeof(string), "%s ~n~~g~~h~H~w~ealth: ~g~~h~%d ~r~~h~/ ~b~F~w~PS: ~b~%d ~r~~h~/ ~y~P~w~ING: ~y~%d~n~ ~r~W~w~eapons:~n~ ~r~%s",Name(gSpectateID[playerid]), floatround(Total), GetPlayerFPS(gSpectateID[playerid]),GetPlayerPing(gSpectateID[playerid]), ReturnPlayerWeaponsString(gSpectateID[playerid]));
+	PlayerTextDrawSetString(playerid, P[playerid][SpecText], string);
+}
 /*ptask OnPlayerCashSync[1000](playerid)
 {
     if(P[playerid][_p_spawned] == false) return 1;
@@ -135,7 +146,7 @@ ptask OnPlayerVehicleFuelSync[1000](playerid)
 		if(engine == 1) switch(KMH) {
 			case 0: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], 0.0001);
 			//default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00003));
-			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00039));//0.00022
+			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00042));//0.00022
 		}
 		if(Vehicle_WithoutFuel(GetVehicleModel(vehicleid)) == 0) {
 			if(V[vehicleid][v_fuel] <= 0) {

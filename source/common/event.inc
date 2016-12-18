@@ -15,9 +15,8 @@ public OnGameModeInit()
 	}
 	// АЗС
 	mysql_tquery(MySQL:1,"SELECT * FROM `petrol_stations`", "OnMySQL_SelectPetrolStations");
-	// Ammu-Nation
-	//mysql_tquery(MySQL:1,"SELECT * FROM `ammunation`", "OnMySQL_SelectAmmuNation");
 	// Параметры игрового режима
+	SendRconCommand("loadfs map");
 	SetGameModeText(GAMEMODE_VERSION);
 	SetMaxConnections(1);
 	ShowNameTags(1);
@@ -28,6 +27,9 @@ public OnGameModeInit()
 	ManualVehicleEngineAndLights();
 	gettime(g_hour, g_minute);
 	OnWeatherChanger();
+	ShowPlayerMarkers(PLAYER_MARKERS_MODE_STREAMED);
+	for(new i=0; i < sizeof(ZoneInfo); i++)
+		ZoneID[i] = GangZoneCreate(ZoneInfo[i][zMinX], ZoneInfo[i][zMinY], ZoneInfo[i][zMaxX], ZoneInfo[i][zMaxY]);
 	//==========================================================================
 	// Pay'n'Spray
 	CreateDynamicMapIcon(1025.05,-1024.23,32.1, 63, 0xFFFFFFFF, 0,0);
@@ -49,7 +51,7 @@ public OnGameModeInit()
 	// Станция грузчиков
 	CreateDynamicMapIcon(-1056.0469,-632.4141,82.7891, 51, 0xFFFFFFFF, 0,0);
 	//Police Departament
-	CreateDynamicMapIcon(1564.9949,-1675.4197,13.5,30,0xFFFFFFFF,0,0); //Los Santos Police Departament
+	CreateDynamicMapIcon(1555.5056,-1675.6830,16.1953,30,0xFFFFFFFF,0,0); //Los Santos Police Departament
 	//Ammu-Nation
 	CreateDynamicMapIcon(1368.9360,-1279.7216,13.5469,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(-2625.8296,208.2379,4.8125,6,0xFFFFFFFF,0,0);
@@ -59,6 +61,8 @@ public OnGameModeInit()
 	CreateDynamicMapIcon(-2093.7271,-2464.8933,30.6250,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(-316.1618,829.9474,14.2422,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(776.7205,1871.4976,4.9072,6,0xFFFFFFFF,0,0);
+	// Casino
+	CreateDynamicMapIcon(2019.3190,1007.7921,10.8203,43,0xFFFFFFFF,0,0);
 	//==========================================================================
 	// Правительство Штата
 	V_GOVERNMENT[0] = Vehicle_Add(489, 1246.6714, -2010.0225, 59.5282, 0.0000,1,1);
@@ -75,7 +79,7 @@ public OnGameModeInit()
 	V_FBI[6] = Vehicle_Add(497, 1230.9314, -1685.1746, 34.9332, 0.0000, 0,0);
 	// Полиция Лос Сантос
 	V_LSPD[0] = Vehicle_Add(596,1554.5928,-1615.0944,13.1075,143.0);
-	V_LSPD[1] = Vehicle_Add(596,1560.2781,-1614.7255,13.1065,143.0);
+	V_LSPD[1] = Vehicle_Add(523,1560.2781,-1614.7255,13.1065,143.0);
 	V_LSPD[2] = Vehicle_Add(596,1565.3577,-1615.1208,13.1006,143.0);
 	V_LSPD[3] = Vehicle_Add(596,1570.3990,-1615.1421,13.1035,143.0);
 	V_LSPD[4] = Vehicle_Add(596,1575.5455,-1615.0767,13.1051,143.0);
@@ -271,7 +275,7 @@ public OnGameModeInit()
 	CreateDynamicObject(19315, 259.59869, 2066.96582, 17.77970,   0.00000, 0.00000, 0.00000);
 	CreateDynamicObject(19315, 269.96164, 2068.13623, 22.56484,   0.00000, 0.00000, 180.00000);
 	CreateDynamicObject(19315, 257.19031, 2066.94263, 20.51266,   0.00000, 0.00000, 0.00000);
-	// Пикапы
+	// Пикапы Аммунаций
 	Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469);
 	Ammu_Nation[1] = CreateDynamicPickup(1318,23,285.4752,-41.7966,1001.5156);
 	Ammu_Nation[2] = CreateDynamicPickup(1318,23,-2625.8296,208.2379,4.8125);
@@ -280,6 +284,14 @@ public OnGameModeInit()
 	Ammu_Nation[5] = CreateDynamicPickup(1318,23,315.8831,-143.6591,999.6016);
 	Ammu_Nation[6] = CreateDynamicPickup(1318,23,2400.5959,-1981.9949,13.5469);
 	Ammu_Nation[7] = CreateDynamicPickup(1318,23,296.8016,-112.0710,1001.5156);
+	// Пикапы Казино
+	Casino[0] = CreateDynamicPickup(1318,23,2019.3190,1007.7921,10.8203);
+	Casino[1] = CreateDynamicPickup(1318,23,2019.0719,1017.8466,996.8750);
+	// Пикапы Полиций
+	LSPD[0] = CreateDynamicPickup(1318,23,1555.5056,-1675.6830,16.1953);
+	LSPD[1] = CreateDynamicPickup(1318,23,246.8327,62.3205,1003.6406);
+	// Пикапы Мэрий
+	CityHall[0] = CreateDynamicPickup(1318,23,1481.0337,-1772.3137,18.7958);
 	// NPC
 	CreateActor(179, 287.9097,-104.5135,1001.5156,176.2943);
 	// TextDraw
@@ -292,6 +304,7 @@ public OnGameModeInit()
 	TextDrawSetOutline(Corso, 0);
 	TextDrawSetProportional(Corso, 1);
 	TextDrawSetShadow(Corso, 0);
+
 	return 1;
 }
 

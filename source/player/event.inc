@@ -9,9 +9,6 @@ public OnPlayerRequestClass(playerid, classid)
 
 public OnPlayerConnect(playerid)
 {
-	/*for (new a = 0; a < Command_GetPlayerCommandCount(playerid); a++)
-		Command_SetPlayer(a, playerid, false);*/
-
 	TogglePlayerSpectating(playerid, 1);
 	GetPlayerName(playerid, P[playerid][p_name], MAX_PLAYER_NAME);
 	if (Name_IsValid(P[playerid][p_name]) == 0)
@@ -25,10 +22,13 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_access], "Access");
 	orm_addvar_string(ormid, P[playerid][p_unban_date], 16, "Unban_Date");
 	orm_addvar_string(ormid, P[playerid][p_last_ip], 46, "Last_IP");
+	orm_addvar_string(ormid, P[playerid][p_reg_ip], 46, "Reg_IP");
 	orm_addvar_float(ormid, P[playerid][p_cash], "Cash");
 	orm_addvar_int(ormid, P[playerid][p_sex], "Sex");
 	orm_addvar_int(ormid, P[playerid][p_skin], "Skin");
 	orm_addvar_int(ormid, P[playerid][p_job_team], "Job_Team");
+	orm_addvar_int(ormid, P[playerid][p_level], "Level");
+	orm_addvar_int(ormid, P[playerid][p_exp], "Exp");
 	orm_addvar_int(ormid, P[playerid][p_health], "Health");
 	orm_addvar_int(ormid, P[playerid][p_armour], "Armour");
 	orm_addvar_int(ormid, P[playerid][p_weapon_1], "Weapon_1");
@@ -73,47 +73,110 @@ public OnPlayerConnect(playerid)
 	PlayerTextDrawFont(playerid, P[playerid][_p_cent], 3);
 	PlayerTextDrawSetProportional(playerid, P[playerid][_p_cent], 1);
 
-	ChoseSkin[0] = CreatePlayerTextDraw(playerid, 250.000000, 300.000000, "LD_BEAT:left");
-	PlayerTextDrawBackgroundColor(playerid, ChoseSkin[0], 255);
-	PlayerTextDrawFont(playerid, ChoseSkin[0], 4);
-	PlayerTextDrawLetterSize(playerid, ChoseSkin[0], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid, ChoseSkin[0], -1);
+	P[playerid][SpecText] = CreatePlayerTextDraw(playerid, 314.000000, 375.000000, " ");
+	PlayerTextDrawAlignment(playerid, P[playerid][SpecText], 2);
+	PlayerTextDrawBackgroundColor(playerid, P[playerid][SpecText], 16843038);
+	PlayerTextDrawFont(playerid, P[playerid][SpecText], 1);
+	PlayerTextDrawLetterSize(playerid, P[playerid][SpecText], 0.210000, 0.799999);
+	PlayerTextDrawColor(playerid, P[playerid][SpecText], 16711935);
+	PlayerTextDrawSetOutline(playerid, P[playerid][SpecText], 1);
+	PlayerTextDrawSetProportional(playerid, P[playerid][SpecText], 1);
+
+	ChoseSkin[0] = CreatePlayerTextDraw(playerid, 412.823516, 391.166687, "usebox");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[0], 0.000000, 1.887034);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[0], 253.058822, 0.000000);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[0], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[0], 0);
+	PlayerTextDrawUseBox(playerid, ChoseSkin[0], true);
+	PlayerTextDrawBoxColor(playerid, ChoseSkin[0], 0x00000030);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[0], 0);
 	PlayerTextDrawSetOutline(playerid, ChoseSkin[0], 0);
-	PlayerTextDrawSetProportional(playerid, ChoseSkin[0], 1);
-	PlayerTextDrawSetShadow(playerid, ChoseSkin[0], 1);
-	PlayerTextDrawUseBox(playerid, ChoseSkin[0], 1);
-	PlayerTextDrawBoxColor(playerid, ChoseSkin[0], 255);
-	PlayerTextDrawTextSize(playerid, ChoseSkin[0], 34.000000, 28.000000);
-	PlayerTextDrawSetSelectable(playerid, ChoseSkin[0], true);//Данная функция добавлена в 0.3e, true - делает текстдрав кликабельным, false - отключает кликабельность
+	PlayerTextDrawFont(playerid, ChoseSkin[0], 0);
 
-	ChoseSkin[1] = CreatePlayerTextDraw(playerid, 360.000000, 300.000000, "LD_BEAT:right");
-	PlayerTextDrawBackgroundColor(playerid, ChoseSkin[1], 0xFFFFFFFF);
-	PlayerTextDrawFont(playerid, ChoseSkin[1], 4);
-	PlayerTextDrawLetterSize(playerid, ChoseSkin[1], 0.500000, 1.000000);
-	PlayerTextDrawColor(playerid, ChoseSkin[1], -1);
+	ChoseSkin[1] = CreatePlayerTextDraw(playerid, 410.941192, 392.333312, "usebox");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[1], 0.000000, 1.627777);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[1], 254.941192, 0.000000);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[1], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[1], 0);
+	PlayerTextDrawUseBox(playerid, ChoseSkin[1], true);
+	PlayerTextDrawBoxColor(playerid, ChoseSkin[1], 0x00000035);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[1], 0);
 	PlayerTextDrawSetOutline(playerid, ChoseSkin[1], 0);
-	PlayerTextDrawSetProportional(playerid, ChoseSkin[1], 1);
-	PlayerTextDrawSetShadow(playerid, ChoseSkin[1], 1);
-	PlayerTextDrawUseBox(playerid, ChoseSkin[1], 1);
-	PlayerTextDrawBoxColor(playerid, ChoseSkin[1], 255);
-	PlayerTextDrawTextSize(playerid, ChoseSkin[1], 34.000000, 28.000000);
-	PlayerTextDrawSetSelectable(playerid, ChoseSkin[1], true);
+	PlayerTextDrawFont(playerid, ChoseSkin[1], 0);
 
-	ChoseSkin[2] = CreatePlayerTextDraw(playerid, 318.000000, 370.000000, "SELECT");
-	PlayerTextDrawAlignment(playerid, ChoseSkin[2], 2);
-	PlayerTextDrawBackgroundColor(playerid, ChoseSkin[2], 255);
-	PlayerTextDrawFont(playerid, ChoseSkin[2], 1);
-	PlayerTextDrawLetterSize(playerid, ChoseSkin[2], 0.679999, 1.900000);
-	PlayerTextDrawColor(playerid, ChoseSkin[2], -1);
+	ChoseSkin[2] = CreatePlayerTextDraw(playerid, 303.176483, 392.916687, "usebox");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[2], 0.000000, 1.498145);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[2], 255.411773, 0.000000);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[2], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[2], 0);
+	PlayerTextDrawUseBox(playerid, ChoseSkin[2], true);
+	PlayerTextDrawBoxColor(playerid, ChoseSkin[2], 0x00000040);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[2], 0);
 	PlayerTextDrawSetOutline(playerid, ChoseSkin[2], 0);
-	PlayerTextDrawSetProportional(playerid, ChoseSkin[2], 1);
-	PlayerTextDrawSetShadow(playerid, ChoseSkin[2], 1);
-	PlayerTextDrawUseBox(playerid, ChoseSkin[2], 1);
-	PlayerTextDrawBoxColor(playerid, ChoseSkin[2], 0);
-	PlayerTextDrawTextSize(playerid, ChoseSkin[2], 15.000000, 68.000000);
-	PlayerTextDrawSetSelectable(playerid, ChoseSkin[2], true);
+	PlayerTextDrawFont(playerid, ChoseSkin[2], 0);
 
+	ChoseSkin[3] = CreatePlayerTextDraw(playerid, 410.470367, 392.916687, "usebox");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[3], 0.000000, 1.498145);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[3], 362.705657, 0.000000);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[3], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[3], 0);
+	PlayerTextDrawUseBox(playerid, ChoseSkin[3], true);
+	PlayerTextDrawBoxColor(playerid, ChoseSkin[3], 0x00000030);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[3], 0);
+	PlayerTextDrawSetOutline(playerid, ChoseSkin[3], 0);
+	PlayerTextDrawFont(playerid, ChoseSkin[3], 0);
+
+	ChoseSkin[4] = CreatePlayerTextDraw(playerid, 365.764617, 392.916625, "usebox");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[4], 0.000000, 1.474182);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[4], 300.117645, 0.000000);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[4], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[4], 0);
+	PlayerTextDrawUseBox(playerid, ChoseSkin[4], true);
+	PlayerTextDrawBoxColor(playerid, ChoseSkin[4], 0x00000030);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[4], 0);
+	PlayerTextDrawSetOutline(playerid, ChoseSkin[4], 0);
+	PlayerTextDrawFont(playerid, ChoseSkin[4], 0);
+
+	ChoseSkin[5] = CreatePlayerTextDraw(playerid, 266.352966, 392.000030, "<<");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[5], 0.449999, 1.600000);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[5], 295.999847, 13.416666);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[5], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[5], -1);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[5], 0);
+	PlayerTextDrawSetOutline(playerid, ChoseSkin[5], 1);
+	PlayerTextDrawBackgroundColor(playerid, ChoseSkin[5], 51);
+	PlayerTextDrawFont(playerid, ChoseSkin[5], 3);
+	PlayerTextDrawSetProportional(playerid, ChoseSkin[5], 1);
+	PlayerTextDrawSetSelectable(playerid, ChoseSkin[5], true);
+
+	ChoseSkin[6] = CreatePlayerTextDraw(playerid, 314.823638, 391.416778, "Save");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[6], 0.449999, 1.600000);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[6], 367.528869, 15.166643);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[6], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[6], -1);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[6], 0);
+	PlayerTextDrawSetOutline(playerid, ChoseSkin[6], 1);
+	PlayerTextDrawBackgroundColor(playerid, ChoseSkin[6], 51);
+	PlayerTextDrawFont(playerid, ChoseSkin[6], 1);
+	PlayerTextDrawSetProportional(playerid, ChoseSkin[6], 1);
+	PlayerTextDrawSetSelectable(playerid, ChoseSkin[6], true);
+
+	ChoseSkin[7] = CreatePlayerTextDraw(playerid, 376.470550, 391.999938, ">>");
+	PlayerTextDrawLetterSize(playerid, ChoseSkin[7], 0.449999, 1.600000);
+	PlayerTextDrawTextSize(playerid, ChoseSkin[7], 403.764556, 14.000002);
+	PlayerTextDrawAlignment(playerid, ChoseSkin[7], 1);
+	PlayerTextDrawColor(playerid, ChoseSkin[7], -1);
+	PlayerTextDrawSetShadow(playerid, ChoseSkin[7], 0);
+	PlayerTextDrawSetOutline(playerid, ChoseSkin[7], 1);
+	PlayerTextDrawBackgroundColor(playerid, ChoseSkin[7], 51);
+	PlayerTextDrawFont(playerid, ChoseSkin[7], 3);
+	PlayerTextDrawSetProportional(playerid, ChoseSkin[7], 1);
+	PlayerTextDrawSetSelectable(playerid, ChoseSkin[7], true);
+	//
 	TextDrawShowForPlayer(playerid, Corso);
+
+	SetTimerEx("SetPlayerCameraPos_", 500, 0, "d", playerid);
+
 	return 1;
 }
 
@@ -130,12 +193,11 @@ public OnPlayerDisconnect(playerid, reason)
 	StopAudioStreamForPlayer(playerid);
 	return 1;
 }
-
 public OnPlayerSpawn(playerid)
 {
 	if(P[playerid][_p_in_game] == true)
 	{
-		SetPlayerColor(playerid, 0xFFFFFFFF);
+		SetPlayerColor(playerid, 0x8B0000FF);
 		ResetPlayerMoney(playerid);
 		GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
 		new string[16];
@@ -143,19 +205,24 @@ public OnPlayerSpawn(playerid)
 		PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
 		PlayerTextDrawShow(playerid, P[playerid][_p_cent]);
 		switch(P[playerid][p_job_team]) {
+			// Организаций
+			case ORG_GOVERNMENT:{
+				SetPlayerInterior(playerid, 0);
+				SetPlayerVirtualWorld(playerid, 0);
+				SetPlayerPos(playerid, 1128.7860,-2043.8292,69.4214);
+				SetPlayerFacingAngle(playerid,273.4582);
+				SetPlayerColor(playerid, 0xe6FB0122);
+				SendClientMessage(playerid, 0xe6FB01AA, "Governament");
+			}
 	    	case ORG_FBI:
 			{
 	        	SetPlayerInterior(playerid, 0);
 				SetPlayerVirtualWorld(playerid, 0);
 				SetPlayerPos(playerid, 1214.8512,-1675.8368,11.7969);
 				SetPlayerFacingAngle(playerid, 308.0);
+				SetPlayerColor(playerid, 0x1C5A8DFF);
+				SendClientMessage(playerid, 0x1C5A8DFF, "FBI");
 	    	}
-			case ORG_GOVERNMENT:{
-				SetPlayerInterior(playerid, 0);
-				SetPlayerVirtualWorld(playerid, 0);
-				SetPlayerPos(playerid, 1128.7860,-2043.8292,69.4214);
-				SetPlayerFacingAngle(playerid,273.4582);
-			}
 	    	default:
 			{
 	        	SetPlayerInterior(playerid, 0);
@@ -175,6 +242,8 @@ public OnPlayerSpawn(playerid)
 		if(P[playerid][p_weapon_2] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
 		if(P[playerid][p_weapon_3] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
 		if(P[playerid][p_weapon_4] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
+		for(new i=0; i < sizeof(ZoneInfo); i++)
+			GangZoneShowForPlayer(playerid, ZoneID[i], GetTeamZoneColor(ZoneInfo[i][zTeam]));
 	}
 	return 1;
 }
@@ -198,7 +267,7 @@ public OnPlayerText(playerid, text[])
 	strtolower(text);
 	format(P[playerid][_p_chat_msg], 128, text);
 	SetPlayerChatBubble(playerid, text, 0xFFFFFFFF, 35.0, 5000);
-	ApplyAnimation(playerid,"PED","IDLE_CHAT",8.1,0,1,1,1,1);
+	ApplyAnimation(playerid, "PED", "IDLE_CHAT", 8.1, 0, 0, 0, 0, 2000, 1);
 	new Float: x, Float: y, Float: z;
 	new line1[128], line2[128];
 	if(strlen(text) > 64) {
@@ -234,9 +303,8 @@ public OnPlayerText(playerid, text[])
 	return 0;
 }
 public OnPlayerCommandPerformed(playerid, cmd[], params[], result, flags){
-    if(result == -1){
-        return 0;
-    }
+    if(result == -1)
+		return 0;
     return 1;
 }
 public OnPlayerStateChange(playerid, newstate, oldstate)
@@ -472,6 +540,16 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
      		case 1: SetVehicleParamsEx(vehicleid, engine,0,alarm,doors,bonnet,boot,objective);
 	    }
 	}
+	if(newkeys & KEY_SPRINT)
+	{
+		if(gSpectateType[playerid] == 1)
+		{
+			PlayerTextDrawHide(playerid, P[playerid][SpecText]);
+			TogglePlayerSpectating(playerid, 0);
+			gSpectateID[playerid] = INVALID_PLAYER_ID;
+			gSpectateType[playerid] = 0;
+		}
+	}
 	return 0;
 }
 
@@ -585,21 +663,27 @@ public OnPlayerTakeDamage(playerid, issuerid, Float: amount, weaponid, bodypart)
 	return 0;
 }
 
-public OnPlayerEnterCheckpoint(playerid)
+public OnPlayerEnterDynamicCP(playerid,checkpointid)
 {
-	new source[180];
-	format(source, sizeof(source),
-		"Оружие\tЦена\tПатроны\n\
-		Desert Eagle\t$%.2f\t100\n\
-		Shotgun\t$%.2f\t100\n\
-		Micro SMG/Uzi\t$%.2f\t100\n\
-		MP5\t$%.2f\t100\n\
-		Country Rifle\t$%.2f\t100\n",
-		Prices_Deagle,Prices_ShotGun,Prices_Uzi,Prices_MP5,Prices_CRifle);
-	ShowPlayerDialog(playerid, d_player_buy_gun, DIALOG_STYLE_TABLIST_HEADERS, "Покупка оружия",source,"Выбор","Выйти");
+	if(checkpointid == Buy_Weapon){
+		new source[180];
+		format(source, sizeof(source),
+			"Оружие\tЦена\tПатроны\n\
+			Desert Eagle\t$%.2f\t100\n\
+			Shotgun\t$%.2f\t100\n\
+			Micro SMG/Uzi\t$%.2f\t100\n\
+			MP5\t$%.2f\t100\n\
+			Country Rifle\t$%.2f\t100\n",
+			Prices_Deagle,Prices_ShotGun,Prices_Uzi,Prices_MP5,Prices_CRifle);
+		ShowPlayerDialog(playerid, d_player_buy_gun, DIALOG_STYLE_TABLIST_HEADERS, "Покупка оружия",source,"Выбор","Выйти");
+	}
 	return true;
 }
-
+public OnPlayerEnterCheckpoint(playerid)
+{
+    DisablePlayerCheckpoint(playerid);
+    return 1;
+}
 public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 {
 	if(pickupid == Ammu_Nation[0])
@@ -609,7 +693,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,286.9145,-38.6596,1001.5156);
 		SetPlayerFacingAngle(playerid, 329.0564);
 		SetPlayerVirtualWorld(playerid, 0);
-		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == Ammu_Nation[1])
 	{
@@ -617,7 +700,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,1366.5776,-1279.5397,13.5469);
 		SetPlayerFacingAngle(playerid, 89.7301);
 		SetPlayerVirtualWorld(playerid,0);
-		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == Ammu_Nation[2])
 	{
@@ -626,7 +708,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,286.8773,-83.5809,1001.5156);
 		SetPlayerFacingAngle(playerid, 334.2157);
 		SetPlayerVirtualWorld(playerid, 0);
-		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == Ammu_Nation[3])
 	{
@@ -634,7 +715,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,-2626.6384,210.3960,4.5971);
 		SetPlayerFacingAngle(playerid, 13.1113);
 		SetPlayerVirtualWorld(playerid,0);
-		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == Ammu_Nation[4])
 	{
@@ -643,7 +723,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,313.7110,-140.3784,999.6016);
 		SetPlayerFacingAngle(playerid, 334.2157);
 		SetPlayerVirtualWorld(playerid, 0);
-		SetCameraBehindPlayer(playerid);
  	}
 	else if(pickupid == Ammu_Nation[5])
 	{
@@ -651,7 +730,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,2156.1997,943.3864,10.8203);
 		SetPlayerFacingAngle(playerid, 81.7582);
 		SetPlayerVirtualWorld(playerid,0);
-		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == Ammu_Nation[6])
 	{
@@ -660,9 +738,8 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
 		SetPlayerFacingAngle(playerid, 1.2438);
 		SetPlayerVirtualWorld(playerid, 0);
-		SetCameraBehindPlayer(playerid);
 
-		CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0);
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0);
  	}
  	else if(pickupid == Ammu_Nation[7])
 	{
@@ -670,9 +747,34 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,2400.5554,-1980.2947,13.5469);
 		SetPlayerFacingAngle(playerid, 5.1592);
 		SetPlayerVirtualWorld(playerid,0);
-		SetCameraBehindPlayer(playerid);
 
 		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Casino[0]){
+		SetPlayerInterior(playerid, 10);
+		SetPlayerVirtualWorld(playerid, 1);
+		SetPlayerPos(playerid,2016.2699,1017.7790,996.8750);
+	}
+	else if(pickupid == Casino[1]){
+		SetPlayerInterior(playerid,0);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerPos(playerid,2022.6709,1007.9366,10.8203);
+	}
+	else if(pickupid == LSPD[0]){
+		SetPlayerInterior(playerid, 6);
+		SetPlayerPos(playerid,246.2850,64.8440,1003.6406);
+		SetPlayerFacingAngle(playerid, 359.2673);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == LSPD[1]){
+		SetPlayerInterior(playerid,0);
+		SetPlayerPos(playerid,1552.6376,-1675.5725,16.1953);
+		SetPlayerFacingAngle(playerid, 92.8291);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == CityHall[0]){
+		SetPlayerInterior(playerid, 3);
+		SetPlayerPos(playerid,384.808624,173.804992,1008.382812);
 	}
     return 1;
 }
@@ -680,11 +782,11 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
 	new team = P[playerid][p_job_team];
 	new s_current = P[playerid][_p_skin_shop];
-    if(playertextid == ChoseSkin[0])
+    if(playertextid == ChoseSkin[5])
     {
 		switch(P[playerid][p_sex]) {
 			case SEX_MALE: {
-		 		if(s_current == 1) s_current = male_skins[team][0];
+		 		if(s_current == 1) s_current = male_skins[team][1];
  	 			else s_current--;
 				SetPlayerSkin(playerid,male_skins[team][s_current]);
 			}
@@ -696,7 +798,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 		}
 		P[playerid][_p_skin_shop] = s_current;
     }
-	else if(playertextid == ChoseSkin[1]){
+	else if(playertextid == ChoseSkin[7]){
 
 		switch(P[playerid][p_sex]) {
 			case SEX_MALE:
@@ -714,7 +816,7 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 		}
 		P[playerid][_p_skin_shop] = s_current;
 	}
-	else if(playertextid == ChoseSkin[2]){
+	else if(playertextid == ChoseSkin[6]){
 		switch(P[playerid][_p_in_game]) {
 			case false:{
 				P[playerid][_p_in_game] = true;
@@ -732,17 +834,52 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 					}
 				}
 				P[playerid][p_cash] = g_Payment_Register;
+				P[playerid][p_level] = 1;
+				P[playerid][p_exp] = 1;
+				SetPlayerScore(playerid,P[playerid][p_level]);
+				GetPlayerIp(playerid, P[playerid][p_reg_ip], 46);
 				orm_insert(P[playerid][_p_ormid], "OnMySQL_InsertAccount", "d", playerid);
-				for(new i; i < 3; i++){
+				for(new i; i < 8; i++){
 					PlayerTextDrawHide(playerid, ChoseSkin[i]);
 					CancelSelectTextDraw(playerid);
 				}
 				printf("debug");
 			}
-			case true: {
-				printf("debug1");
-			}
 		}
 	}
     return 1;
+}
+public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
+{
+	new x = 0;
+	while(x!=MAX_PLAYERS) {
+	    if( IsPlayerConnected(x) &&	GetPlayerState(x) == PLAYER_STATE_SPECTATING && gSpectateID[x] == playerid && gSpectateType[x] == 1 ){
+   		    SetPlayerInterior(x,newinteriorid);
+		}
+		x++;
+	}
+	return true;
+}
+forward ShowStats(playerid,targetid);
+public ShowStats(playerid,targetid){
+	new string[256];
+	new sex[8];
+	sex = (P[playerid][p_sex] == 0) ? "Женский" : "Мужской";
+	format(string,sizeof string,"{FFFFFF}Имя:\t\t\t\t\t{0099FF}%s{FFFFFF}\n\
+	Уровень:\t\t\t\t%d\n\
+	Очки опыта:\t\t\t\t%d из %d\n\
+	Организация:\t\t\t\t%s\n\
+	Пол:\t\t\t\t\t%s\n\
+	Денег:\t\t\t\t\t$%.2f\n",
+		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),sex,P[playerid][p_cash]);
+	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
+	return true;
+}
+forward StartSpectate(playerid, specid);
+public StartSpectate(playerid, specid)
+{
+	PlayerTextDrawShow(playerid, P[playerid][SpecText]);
+    SpectateUpdatePlayer(playerid);
+    //SpectorsShow(playerid);
+    return true;
 }

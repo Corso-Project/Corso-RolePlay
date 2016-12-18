@@ -155,3 +155,9 @@ stock Vehicle_Speed(vehicleid)
 	new Float: f_KMH = floatsqroot(((x * x) + (y * y)) + (z * z)) * 179.0;
 	return floatround(f_KMH);
 }
+stock GetEngineStat(vehicleid)
+{
+	new engine, lights, alarm, doors, bonnet, boot, objective;
+    GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
+	return engine;
+}
