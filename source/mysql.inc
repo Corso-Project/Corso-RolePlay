@@ -57,7 +57,6 @@ public OnMySQL_SelectPetrolStations()
 		PS[x][_ps_text3d] = CreateDynamic3DTextLabel(string, 0xFFFFFFFF, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z]+1,35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 		CreateDynamicMapIcon(PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z],47,0xFFFFFFFF,0,0);
 		TotalPetrolStations++;
-		//printf("Владелец: %s | Цистерна: %.0f из %d литров | Цена: $%.2f за 1 литр бензина", PS[x][ps_name],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
 	}
 	printf("Загруженно АЗС:%i            [Длительность загрузки: %d ms]",TotalPetrolStations,cache_get_query_exec_time(MILLISECONDS));
 }

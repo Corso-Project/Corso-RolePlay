@@ -169,7 +169,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar);
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -193,7 +193,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar);
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -217,7 +217,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar);
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -242,7 +242,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar);
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -260,10 +260,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     // Мену
 	case d_player_menu: if(response) switch(listitem)
 	{
-	    case 0:
-        {
-            ShowStats(playerid,playerid);
-        }
+	    case 0:ShowStats(playerid,playerid);
         case 1:ShowPlayerDialog(playerid,d_player_settings, DIALOG_STYLE_LIST,"Настройки учётной записи","Сменить пароль","Выход","");
         case 2:ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Справка о доступных командах", "{FFFFFF}/lock - закрыть/открыть двери автомобиля\n/fill - заправить ТС\n/mn - меню\n/lic - посмотреть список лицензий", "Выход", "");
         case 3:{
@@ -274,7 +271,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             }
             ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Правила сервера",string,"Закрыть","");
         }
-        case 4:ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связть","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
+        case 4:ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связь","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
     }
     case d_player_settings: if(response) switch(listitem){
         case 0:{
@@ -396,13 +393,18 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     // Спутниковая Система Навигации: Общественные места
     case d_gps_public_places: if(response) switch(listitem){
         case 0: SetPlayerCheckpoint(playerid, -2031.4530,-97.4284,35.1641,4.0);
-        case 1: SendClientMessage(playerid,-1,"Вокзал ЛС");
+        case 1: SetPlayerCheckpoint(playerid, 1811.6638,-1889.9030,12.9699,4.0);
         case 2: SetPlayerCheckpoint(playerid, 558.0014,-1257.0792,16.9318,4.0);
         case 3: SetPlayerCheckpoint(playerid, -1988.1427,288.5436,34.0706,4.0);
         case 4: SetPlayerCheckpoint(playerid, 1658.5923,2177.1665,10.3988,4.0);
     }
     // Спутниковая Система Навигации: Государственные организации
     case d_gps_state_organizations: if(response) switch(listitem){
+        case 0: SetPlayerCheckpoint(playerid, 1137.3706,-2037.2341,68.5749, 4.0);
+        case 1: SetPlayerCheckpoint(playerid, 1292.8685,-1650.4521,12.9523, 4.0);
+        case 2: SetPlayerCheckpoint(playerid, 1537.1475,-1675.8947,12.9438, 4.0);
+        case 3: SetPlayerCheckpoint(playerid, -1605.4011,724.7184,11.3619, 4.0);
+        case 4: SetPlayerCheckpoint(playerid, 2289.8364,2417.6626,10.2683, 4.0);
         case 6: SetPlayerCheckpoint(playerid, -1531.5959,492.3214,6.9068, 4.0);
         case 11: SetPlayerCheckpoint(playerid, -2432.2952,490.2813,29.6579, 4.0);
     }
@@ -413,7 +415,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     // Спутниковая Система Навигации: Банки
     case d_gps_banks: if(response) switch(listitem){
         case 0: SetPlayerCheckpoint(playerid, 1540.4420,-1276.2134,17.1346, 4.0);
-        case 1: SendClientMessage(playerid,-1, "GPS SF");
+        case 1: SetPlayerCheckpoint(playerid, -2650.0825,376.0515,6.1563, 4.0);
         case 2: SetPlayerCheckpoint(playerid, 2359.4534,2377.9929,10.5474, 4.0);
     }
     }

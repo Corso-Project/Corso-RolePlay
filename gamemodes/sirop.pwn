@@ -14,10 +14,11 @@
 #include <YSI_Data\y_iterate>
 #include <YSI_Server\y_flooding>
 #include <YSI_Storage\y_ini>
-#include <nex-ac>
+//#include <nex-ac>
 
 #include <Pawn.CMD>
 #include <gangzonesc>
+#include <geolocation>
 
 #include "..\source\vars.inc"
 

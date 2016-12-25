@@ -384,3 +384,9 @@ stock ReturnPlayerWeaponsString(playerid)
 	if(strlen(string) < 3) string = "N~w~/~r~A";
 	return string;
 }
+stock GetPlayerRegCountry(playerid)
+{
+    new dest[128];
+    GetIPCountry(P[playerid][p_reg_ip], dest);
+    return dest;
+}

@@ -175,6 +175,7 @@ public OnPlayerConnect(playerid)
 	//
 	TextDrawShowForPlayer(playerid, Corso);
 
+	//PlayerPlaySound(playerid, 1097, 0.0, 0.0, 10.0);
 	SetTimerEx("SetPlayerCameraPos_", 500, 0, "d", playerid);
 
 	return 1;
@@ -197,7 +198,7 @@ public OnPlayerSpawn(playerid)
 {
 	if(P[playerid][_p_in_game] == true)
 	{
-		SetPlayerColor(playerid, 0x8B0000FF);
+		SetPlayerColor(playerid, 0xFFFFFF22);
 		ResetPlayerMoney(playerid);
 		GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
 		new string[16];
@@ -212,7 +213,6 @@ public OnPlayerSpawn(playerid)
 				SetPlayerPos(playerid, 1128.7860,-2043.8292,69.4214);
 				SetPlayerFacingAngle(playerid,273.4582);
 				SetPlayerColor(playerid, 0xe6FB0122);
-				SendClientMessage(playerid, 0xe6FB01AA, "Governament");
 			}
 	    	case ORG_FBI:
 			{
@@ -221,7 +221,6 @@ public OnPlayerSpawn(playerid)
 				SetPlayerPos(playerid, 1214.8512,-1675.8368,11.7969);
 				SetPlayerFacingAngle(playerid, 308.0);
 				SetPlayerColor(playerid, 0x1C5A8DFF);
-				SendClientMessage(playerid, 0x1C5A8DFF, "FBI");
 	    	}
 	    	default:
 			{
@@ -328,7 +327,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             format(source, sizeof(source),
 				"{FFFFFF}Данный автомобиль такси сдаётся в аренду.\n\n\
 				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
-				Prices_RentCar);
+				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_taxi, DIALOG_STYLE_INPUT, "Аренда такси",source,"Аренда","Выйти");
             break;
 	    }
@@ -344,7 +343,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             format(source, sizeof(source),
 				"{FFFFFF}Данный автомобиль инженеров сдаётся в аренду.\n\n\
 				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
-				Prices_RentCar);
+				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_officecar, DIALOG_STYLE_INPUT, "Аренда служебного транспорта",source,"Аренда","Выйти");
             break;
 	    }
@@ -360,7 +359,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             format(source, sizeof(source),
 				"{FFFFFF}Данный грузовой автомобиль сдаётся в аренду.\n\n\
 				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
-				Prices_RentCar);
+				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_truck, DIALOG_STYLE_INPUT, "Аренда грузовика",source,"Аренда","Выйти");
             break;
 	    }
@@ -375,7 +374,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             format(source, sizeof(source),
 				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
 				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
-				Prices_RentCar);
+				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_car, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
             break;
 	    }

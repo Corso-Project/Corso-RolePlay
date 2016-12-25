@@ -1,5 +1,5 @@
 #define GAMEMODE_VERSION    "Corso RP"
-#define SERVER_NAME         "{23DCE1}Corso RolePlay"
+#define SERVER_NAME         "{B1413D}Corso RolePlay"
 
 #define FUEL_TANK_LIMIT			25000
 
@@ -257,7 +257,7 @@ new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
 new PlayerText: ChoseSkin[8];
 
-new V_GOVERNMENT[4],
+new V_GOVERNMENT[7],
 	V_FBI[7],
 	V_LSPD[14],
 	V_SFPD[12],
@@ -265,7 +265,7 @@ new V_GOVERNMENT[4],
 	V_MILITARY[15],
 	V_EMERGENCY[14],
 	//V_SANNEWS[],
-	//V_AUTOSCHOOL[],
+	V_AUTOSCHOOL[8],
 	//V_GROVE[],
 	//V_BALLAS[],
 	//V_AZTECAS[],
@@ -278,7 +278,7 @@ new V_GOVERNMENT[4],
 	V_ENGINEER[16],
 	V_FREIGHTER[13],
 	V_PETROL_TRAILER[13],
-	V_RENT[43];
+	V_RENT[89];
 
 new V_RENT_OWNER[sizeof V_RENT],
 	V_TAXI_OWNER[sizeof V_TAXI],
@@ -308,7 +308,9 @@ new g_MySQL_Host[46],
 	g_MySQL_Database[46],
 	g_MySQL_Password[46];
 // prices.ini
-new Float: Prices_RentCar,
+new Float: Prices_RentCar_Econom,
+	Float: Prices_RentCar_Standart,
+	Float: Prices_RentCar_Premium,
 	Float: Prices_Deagle,
 	Float: Prices_ShotGun,
 	Float: Prices_Uzi,
