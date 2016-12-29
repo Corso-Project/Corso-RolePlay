@@ -303,11 +303,11 @@ stock GetTeamZoneColor(teamid)
 {
 	switch(teamid)
 	{
-		case TEAM_GROVE: return 0x009900AA;
-		case TEAM_BALLAS: return 0xCC00FFAA;
-		case TEAM_AZTECAS: return 0x00CCFFAA;
-		case TEAM_VAGOS: return 0xFFFF00AA;
-		case TEAM_RIFA: return 0x6666FFAA;
+		case 1: return 0x009900AA;
+		case 2: return 0xCC00FFAA;
+		case 3: return 0x00CCFFAA;
+		case 4: return 0xFFFF00AA;
+		case 5: return 0x6666FFAA;
 	}
 	return -1;
 }

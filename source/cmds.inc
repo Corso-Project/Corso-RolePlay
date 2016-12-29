@@ -545,3 +545,14 @@ CMD:pay(playerid,params[]){
 	va_SendClientMessage(user,-1,"%s передал Вам $%.2f",Name(playerid),money);
 	return true;
 }
+CMD:shield(playerid,params[]){
+	switch(P[playerid][p_job_team])
+	{
+		case ORG_MILITARY, ORG_LSPD, ORG_SFPD,ORG_LVPD, ORG_FBI:
+		{
+			SetPlayerAttachedObject(playerid, 1, 18637, 14, 0.0, 0.0, 0.0, 0.0, 180.0, 180.0);
+		}
+		default: return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вам не доступна эта функция.");
+	}
+	return true;
+}

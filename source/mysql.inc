@@ -60,3 +60,25 @@ public OnMySQL_SelectPetrolStations()
 	}
 	printf("Загруженно АЗС:%i            [Длительность загрузки: %d ms]",TotalPetrolStations,cache_get_query_exec_time(MILLISECONDS));
 }
+forward OnMySQL_SelectGangZones();
+public OnMySQL_SelectGangZones()
+{
+	new TotalGangZones;
+	for(new x=0; x < sizeof(GZ); x++) {
+		GZ[x][_gz_ormid] = orm_create("gangzone");
+
+		orm_addvar_int(GZ[x][_gz_ormid], GZ[x][z_id], "z_id");
+	    orm_setkey(GZ[x][_gz_ormid], "z_id");
+	    orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMinX], "zMinX");
+		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMinY], "zMinY");
+		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMaxX], "zMaxX");
+		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMaxY], "zMaxY");
+	    orm_addvar_int(GZ[x][_gz_ormid], GZ[x][zTeam],"zTeam");
+
+	    orm_apply_cache(GZ[x][_gz_ormid], x);
+
+		GZ[x][z_id] = GangZoneCreate(GZ[x][zMinX], GZ[x][zMinY], GZ[x][zMaxX], GZ[x][zMaxY]);
+		TotalGangZones++;
+	}
+	printf("Загруженно Ганг Зон:%i      [Длительность загрузки: %d ms]",TotalGangZones,cache_get_query_exec_time(MILLISECONDS));
+}

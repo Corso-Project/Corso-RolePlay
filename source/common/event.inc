@@ -15,6 +15,8 @@ public OnGameModeInit()
 	}
 	// АЗС
 	mysql_tquery(MySQL:1,"SELECT * FROM `petrol_stations`", "OnMySQL_SelectPetrolStations");
+	// GangZones
+	mysql_tquery(MySQL:1,"SELECT * FROM `gangzone`", "OnMySQL_SelectGangZones");
 	// Параметры игрового режима
 	SendRconCommand("loadfs map");
 	SetGameModeText(GAMEMODE_VERSION);
@@ -28,8 +30,6 @@ public OnGameModeInit()
 	gettime(g_hour, g_minute);
 	OnWeatherChanger();
 	ShowPlayerMarkers(PLAYER_MARKERS_MODE_STREAMED);
-	for(new i=0; i < sizeof(ZoneInfo); i++)
-		ZoneID[i] = GangZoneCreate(ZoneInfo[i][zMinX], ZoneInfo[i][zMinY], ZoneInfo[i][zMaxX], ZoneInfo[i][zMaxY]);
 	//==========================================================================
 	// Pay'n'Spray
 	CreateDynamicMapIcon(1025.05,-1024.23,32.1, 63, 0xFFFFFFFF, 0,0);

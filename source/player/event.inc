@@ -241,8 +241,8 @@ public OnPlayerSpawn(playerid)
 		if(P[playerid][p_weapon_2] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
 		if(P[playerid][p_weapon_3] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
 		if(P[playerid][p_weapon_4] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
-		for(new i=0; i < sizeof(ZoneInfo); i++)
-			GangZoneShowForPlayer(playerid, ZoneID[i], GetTeamZoneColor(ZoneInfo[i][zTeam]));
+		for(new i=0; i < sizeof(GZ); i++)
+			GangZoneShowForPlayer(playerid, GZ[i][z_id], GetTeamZoneColor(GZ[i][zTeam]));
 	}
 	return 1;
 }
