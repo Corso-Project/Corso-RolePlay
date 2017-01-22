@@ -6,12 +6,6 @@
 #define MOVE_GATE_SPEED     	3.0
 #define MOVE_BARRIER_SPEED  	0.2
 
-#define TEAM_GROVE 1
-#define TEAM_BALLAS 2
-#define TEAM_AZTECAS 3
-#define TEAM_VAGOS 4
-#define TEAM_RIFA 5
-
 enum {
 	ORG_UNKNOWN,
 	ORG_GOVERNMENT,
@@ -33,7 +27,8 @@ enum {
 	ORG_ITALIAN,
 	JOB_TAXI,
 	JOB_ENGINEER,
-	JOB_FREIGHTER
+	JOB_FREIGHTER,
+	JOB_WHITEWING
 }
 
 enum {
@@ -107,15 +102,16 @@ enum E_PETROL_STATIONS_DATA {
 	Float: ps_pos_y,
 	Float: ps_pos_z
 }
-enum E_GANG_ZONES_DATA {
+enum E_GANG_ZONES_DATA{
 	ORM: _gz_ormid,
+	_gz_local,
 	// mysql synced
-	z_id,
-	Float:zMinX,
-	Float:zMinY,
-	Float:zMaxX,
-	Float:zMaxY,
-	zTeam
+	gz_uid,
+	Float: gz_min_pos_x,
+	Float: gz_min_pos_y,
+	Float: gz_max_pos_x,
+	Float: gz_max_pos_y,
+	gz_team
 }
 enum
 {
@@ -144,9 +140,33 @@ enum
 	d_gps_criminal_organizaions,
 	d_gps_banks,
 	d_gps_pleasure,
-	d_gps_nearest_filling
+	d_gps_nearest_filling,
+	d_job_whitewing
 }
-
+enum
+{
+	SweeperWay_1,
+	SweeperWay_2,
+	SweeperWay_3,
+	SweeperWay_4,
+	SweeperWay_5,
+	SweeperWay_6,
+	SweeperWay_7,
+	SweeperWay_8,
+	SweeperWay_9,
+	SweeperWay_10,
+	SweeperWay_11,
+	SweeperWay_12,
+	SweeperWay_13,
+	SweeperWay_14,
+	SweeperWay_15,
+	SweeperWay_16,
+	SweeperWay_17,
+	SweeperWay_18,
+	SweeperWay_19,
+	SweeperWay_20,
+	SweeperWay_21
+}
 new P[MAX_PLAYERS][E_PLAYER_DATA];
 new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
@@ -173,8 +193,11 @@ new V_GOVERNMENT[7],
 	V_TAXI[21],
 	V_ENGINEER[16],
 	V_FREIGHTER[13],
+	V_WHITEWING[7],
 	V_PETROL_TRAILER[13],
-	V_RENT[89];
+	V_RENT[58],
+	V_RENT_STANDART[18],
+	V_RENT_PREMIUM[14];
 
 new V_RENT_OWNER[sizeof V_RENT],
 	V_TAXI_OWNER[sizeof V_TAXI],
@@ -220,6 +243,7 @@ new Ammu_Nation[8];
 new Casino[2];
 new LSPD[2];
 new CityHall[2];
+new Whitewing[2];
 // CheckPoint
 new Buy_Weapon;
 // Текст-дравы
@@ -227,6 +251,10 @@ new Text:Corso;
 // слежение
 new gSpectateID[MAX_PLAYERS];
 new gSpectateType[MAX_PLAYERS];
+// Работы
+new Whitewing_[1] = 100;
+new Whitewing_GPS[MAX_PLAYERS];
+new Whitewinc_CP[22];
 // All
 new male_skins[][] = {
 {156,	1,2,3,4,5,6,7,8,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,32,33,34,35,36,37,38,42,43,44,45,46,47,48,49,50,51,52,58,59,60,62,66,67,68,72,73,78,79,80,81,82,83,84,86,94,95,96,97,98,99,100,101,119,128,132,133,134,135,136,137,142,143,144,146,149,153,154,155,156,158,159,160,161,162,167,168,170,171,176,177,180,181,182,183,184,185,186,188,189,200,202,203,204,206,208,209,210,212,213,217,220,221,222,223,229,230,234,235,236,239,240,241,242,247,248,249,250,252,253,254,255,258,259,260,261,262,264,268,272,273,289,290,291,292,293,294,295,296,297,299},
@@ -275,12 +303,7 @@ new female_skins[][] = {
 new Streams[][][] = {
 {"Выключить радио\n", ""},
 {"Включить музыку с URL\n", ""},
-{"Europa Plus HD\n", "http://ep2561.streamr.ru:8052/europaplus256.mp3"},
-{"NERadio House & Trancel\n", "http://fire1.neradio.com/;"},
-{"Dubplate.fm - Drum & Bass\n", "http://sc2.dubplate.fm:5000/DnB/192"},
-{"Dubplate.fm - Dubstep\n", "http://sc2.dubplate.fm:5000/dubstep/192"},
-{"Dubplate.fm - Urban Electro\n", "http://sc2.dubplate.fm:5000/Electro/192"},
-{"SESHstation", "http://212.109.220.203:8004/sesh"}
+{"SESHstation", "https://stream.sesh.team/stream.m3u"}
 };
 new Server_Rules[][] = {
 "{FFFFFF}Правила игры на сервере.\n",

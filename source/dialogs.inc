@@ -358,7 +358,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
              3. Авторынок (Эконом класс)\n\
              4. Авторынок (Средний класс)\n\
              5. Авторынок (Премиум класс)","Выбрать","Назад");
-        case 2: ShowPlayerDialog(playerid, d_gps_jobs, DIALOG_STYLE_LIST,"Работы","...","Выбрать","Назад");
+        case 2: ShowPlayerDialog(playerid, d_gps_jobs, DIALOG_STYLE_LIST,"Работы",
+            "1. Уборщик улиц г.Лос-Сантос\n\
+             2. Уборщик улиц г.Сан-Фиеро\n\
+             3. Уборщик улиц г.Лас-Вентурас","Выбрать","Назад");
         case 3: ShowPlayerDialog(playerid, d_gps_state_organizations, DIALOG_STYLE_LIST,"Государственные организации",
             "1. Правительство штата\n\
              2. Федеральное Бюро Расследований\n\
@@ -398,6 +401,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         case 3: SetPlayerCheckpoint(playerid, -1988.1427,288.5436,34.0706,4.0);
         case 4: SetPlayerCheckpoint(playerid, 1658.5923,2177.1665,10.3988,4.0);
     }
+    // Спутниковая Система Навигации: Работы
+    case d_gps_jobs: if(response) switch(listitem){
+        case 0: SetPlayerCheckpoint(playerid, 1622.3394,-1552.2294,13.2362, 4.0);
+    }
     // Спутниковая Система Навигации: Государственные организации
     case d_gps_state_organizations: if(response) switch(listitem){
         case 0: SetPlayerCheckpoint(playerid, 1137.3706,-2037.2341,68.5749, 4.0);
@@ -417,6 +424,15 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         case 0: SetPlayerCheckpoint(playerid, 1540.4420,-1276.2134,17.1346, 4.0);
         case 1: SetPlayerCheckpoint(playerid, -2650.0825,376.0515,6.1563, 4.0);
         case 2: SetPlayerCheckpoint(playerid, 2359.4534,2377.9929,10.5474, 4.0);
+    }
+    // Работа: Уборщик улиц
+    case d_job_whitewing: if(response) switch(listitem){
+        case 0:{
+            if(Whitewing_[0] <= 0) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Эта улица не нуждается в отчистке");
+            SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Отправляйтесь на очистку улицы");
+            Whitewing_GPS[playerid] = SweeperWay_1;
+            Whitewinc_CP[0] = CreateDynamicCP(1655.8282,-1579.3132,13.1099,7.0);
+        }
     }
     }
     return 1;

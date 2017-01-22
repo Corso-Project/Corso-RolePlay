@@ -299,7 +299,7 @@ CMD:makeleader(playerid, params[])
     user,org;
 	if(P[playerid][p_access] < 6) return 1;
 	if(sscanf(params, "ui", user,org)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /makeleader [ID игрока] [ID Фракции]");
-	if(org > 19) return 1;
+	if(org > 21) return 1;
 	P[user][p_job_team] = org;
 	va_SendClientMessage(user,COLOR_YELLOW, "%s[%d] назначил Вас лидером организации \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
 	va_SendClientMessage(playerid,COLOR_ORANGE, "Вы назначили игрока %s[%d] на лидерство фракции \"%s\" ",Name(user), user, Get_TeamName(user));
@@ -551,6 +551,23 @@ CMD:shield(playerid,params[]){
 		case ORG_MILITARY, ORG_LSPD, ORG_SFPD,ORG_LVPD, ORG_FBI:
 		{
 			SetPlayerAttachedObject(playerid, 1, 18637, 14, 0.0, 0.0, 0.0, 0.0, 180.0, 180.0);
+		}
+		default: return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вам не доступна эта функция.");
+	}
+	return true;
+}
+CMD:cleaner(playerid,params[]){
+	switch(P[playerid][p_job_team])
+	{
+		case JOB_WHITEWING:
+		{
+			if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вы должны находится в служебном транспорте.");
+			for(new i; i < sizeof(V_WHITEWING); i++){
+				new stri[115];
+				new string[80];
+				format(string,sizeof(string),"{FF8000}Мэрия\t[LS]\t{FFFFFF}— Уровень загрязнения {ff0000}%d %%",Whitewing_[0]); strcat(stri,string);
+				ShowPlayerDialog(playerid,d_job_whitewing,DIALOG_STYLE_LIST, "{FF8000}Выберите точку",stri,"Выбрать","Отмена");
+			}
 		}
 		default: return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вам не доступна эта функция.");
 	}

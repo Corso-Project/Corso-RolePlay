@@ -36,10 +36,10 @@ stock Get_TeamName(playerid)
 		case ORG_CHINESE: dests = "Семья 'Триада'";
 		case ORG_RUSSIAN: dests = "Семья 'Воры в законе'";
 		case ORG_ITALIAN: dests = "Семья 'Ла Коза Ностра'";
-		//case ORG_HITMAN: dests = "Киллеры";
 		case JOB_TAXI: dests = "Таксист";
 		case JOB_ENGINEER: dests = "Инженер";
 		case JOB_FREIGHTER: dests = "Грузоперевозчик";
+		case JOB_WHITEWING: dests = "Уборщик улиц";
 	}
 	return dests;
 }

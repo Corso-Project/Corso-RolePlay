@@ -242,7 +242,7 @@ public OnPlayerSpawn(playerid)
 		if(P[playerid][p_weapon_3] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
 		if(P[playerid][p_weapon_4] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
 		for(new i=0; i < sizeof(GZ); i++)
-			GangZoneShowForPlayer(playerid, GZ[i][z_id], GetTeamZoneColor(GZ[i][zTeam]));
+			GangZoneShowForPlayer(playerid, GZ[i][_gz_local], GetTeamZoneColor(GZ[i][gz_team]));
 	}
 	return 1;
 }
@@ -254,7 +254,6 @@ public OnPlayerDeath(playerid, killerid, reason)
 	P[playerid][_p_spawned] = false;
 	return 1;
 }
-
 public OnPlayerText(playerid, text[])
 {
 	if(!P[playerid][_p_in_game]) return 0;
@@ -378,6 +377,18 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             ShowPlayerDialog(playerid, d_vehicle_rent_car, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
             break;
 	    }
+		for(new i; i < sizeof(V_WHITEWING); i++){
+			if(vehicleid != V_WHITEWING[i]) continue;
+			if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
+                break;
+            }
+			new stri[115];
+			new string[80];
+			format(string,sizeof(string),"{FF8000}Мэрия\t[LS]\t{FFFFFF}— Уровень загрязнения {ff0000}%d %%",Whitewing_[0]); strcat(stri,string);
+			ShowPlayerDialog(playerid,d_job_whitewing,DIALOG_STYLE_LIST, "{FF8000}Выберите точку",stri,"Выбрать","Отмена");
+			break;
+		}
 	}
 	if(oldstate == PLAYER_STATE_DRIVER) {
 	    PlayerTextDrawHide(playerid, P[playerid][_p_speedo]);
@@ -547,6 +558,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			TogglePlayerSpectating(playerid, 0);
 			gSpectateID[playerid] = INVALID_PLAYER_ID;
 			gSpectateType[playerid] = 0;
+			stop SpectateUpdatePlayer(playerid);
 		}
 	}
 	return 0;
@@ -676,6 +688,142 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 			Prices_Deagle,Prices_ShotGun,Prices_Uzi,Prices_MP5,Prices_CRifle);
 		ShowPlayerDialog(playerid, d_player_buy_gun, DIALOG_STYLE_TABLIST_HEADERS, "Покупка оружия",source,"Выбор","Выйти");
 	}
+	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
+		if(P[playerid][p_job_team] == JOB_WHITEWING){
+			switch(Whitewing_GPS[playerid]){
+				case SweeperWay_1:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[0], 0);
+					Whitewing_GPS[playerid] = SweeperWay_2;
+					Whitewinc_CP[1] = CreateDynamicCP(1549.8121,-1589.7787,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_2:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[1], 0);
+					Whitewing_GPS[playerid] = SweeperWay_3;
+					Whitewinc_CP[2] = CreateDynamicCP(1442.3909,-1589.5940,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_3:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[2], 0);
+					Whitewing_GPS[playerid] = SweeperWay_4;
+					Whitewinc_CP[3] = CreateDynamicCP(1456.8506,-1454.6924,13.0931, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_4:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[3], 0);
+					Whitewing_GPS[playerid] = SweeperWay_5;
+					Whitewinc_CP[4] = CreateDynamicCP(1429.4366,-1437.2874,13.1096, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_5:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[4], 0);
+					Whitewing_GPS[playerid] = SweeperWay_6;
+					Whitewinc_CP[5] = CreateDynamicCP(1423.3903,-1399.9067,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_6:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[5], 0);
+					Whitewing_GPS[playerid] = SweeperWay_7;
+					Whitewinc_CP[6] = CreateDynamicCP(1371.6364,-1392.4711,13.2011, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_7:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[6], 0);
+					Whitewing_GPS[playerid] = SweeperWay_8;
+					Whitewinc_CP[7] = CreateDynamicCP(1339.0471,-1454.1600,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_8:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[7], 0);
+					Whitewing_GPS[playerid] = SweeperWay_9;
+					Whitewinc_CP[8] = CreateDynamicCP(1297.4784,-1562.0004,13.1138, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_9:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[8], 0);
+					Whitewing_GPS[playerid] = SweeperWay_10;
+					Whitewinc_CP[9] = CreateDynamicCP(1297.5422,-1725.7258,13.1100, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_10:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[9], 0);
+					Whitewing_GPS[playerid] = SweeperWay_11;
+					Whitewinc_CP[10] = CreateDynamicCP(1297.3958,-1839.1953,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_11:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[10], 0);
+					Whitewing_GPS[playerid] = SweeperWay_12;
+					Whitewinc_CP[11] = CreateDynamicCP(1332.1058,-1856.2460,13.1137, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_12:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[11], 0);
+					Whitewing_GPS[playerid] = SweeperWay_13;
+					Whitewinc_CP[12] = CreateDynamicCP(1381.1700,-1874.4652,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_13:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[12], 0);
+					Whitewing_GPS[playerid] = SweeperWay_14;
+					Whitewinc_CP[13] = CreateDynamicCP(1391.2841,-1833.3177,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_14:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[13], 0);
+					Whitewing_GPS[playerid] = SweeperWay_15;
+					Whitewinc_CP[14] = CreateDynamicCP(1391.4252,-1745.4158,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_15:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[14], 0);
+					Whitewing_GPS[playerid] = SweeperWay_16;
+					Whitewinc_CP[15] = CreateDynamicCP(1466.3789,-1734.5674,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_16:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[15], 0);
+					Whitewing_GPS[playerid] = SweeperWay_17;
+					Whitewinc_CP[16] = CreateDynamicCP(1580.8950,-1734.7208,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_17:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[16], 0);
+					Whitewing_GPS[playerid] = SweeperWay_18;
+					Whitewinc_CP[17] = CreateDynamicCP(1675.4750,-1734.5599,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_18:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[17], 0);
+					Whitewing_GPS[playerid] = SweeperWay_19;
+					Whitewinc_CP[18] = CreateDynamicCP(1692.1000,-1660.1686,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_19:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[18], 0);
+					Whitewing_GPS[playerid] = SweeperWay_20;
+					Whitewinc_CP[19] = CreateDynamicCP(1691.8464,-1606.7140,13.1099, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_20:{
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[19], 0);
+					Whitewing_GPS[playerid] = SweeperWay_21;
+					Whitewinc_CP[20] = CreateDynamicCP(1664.9994,-1590.4434,13.1182, 7.0);
+					Whitewing_[0]-=10;
+				}
+				case SweeperWay_21:{
+					DestroyDynamicCP(Whitewinc_CP[20]);
+					Whitewinc_CP[21] = CreateDynamicCP(1646.2280,-1541.6604,13.2842, 7.0);
+					TogglePlayerDynamicCP(playerid, Whitewinc_CP[21], 0);
+					new Float: amount = 245.94;
+					Cash_Give(playerid, amount);
+					Whitewing_[0] = 0;
+					SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Территория Мэрия [LS] очищена");
+					SendClientMessage(playerid,COLOR_GREEN,"Введите /cleaner для продолжений работы.");
+				}
+			}
+		}
+	}
 	return true;
 }
 public OnPlayerEnterCheckpoint(playerid)
@@ -774,6 +922,19 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	else if(pickupid == CityHall[0]){
 		SetPlayerInterior(playerid, 3);
 		SetPlayerPos(playerid,384.808624,173.804992,1008.382812);
+	}
+	else if(pickupid == Whitewing[0] || Whitewing[1]){
+		switch(P[playerid][p_job_team])
+		{
+			case JOB_WHITEWING:
+			{
+				ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Работа: Уборщик улиц", "{FFFFFF}Что-бы начать работу просто сядьте в одну из машин.\n\
+					За один рейс вы заработаете $549.64", "Закрыть","");
+			}
+			default: return ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Работа: Уборщик улиц","{FFFFFF}Для начала вам нужно устроится на работу, это можно сделать в мэрий.\n\
+				Для начала работы просто сядьте в одну из служебных машин.\n\
+				За один рейс вы заработаете $549.64","Закрыть","");
+		}
 	}
     return 1;
 }

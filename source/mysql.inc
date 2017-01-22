@@ -65,19 +65,19 @@ public OnMySQL_SelectGangZones()
 {
 	new TotalGangZones;
 	for(new x=0; x < sizeof(GZ); x++) {
-		GZ[x][_gz_ormid] = orm_create("gangzone");
+		GZ[x][_gz_ormid] = orm_create("gangzones");
 
-		orm_addvar_int(GZ[x][_gz_ormid], GZ[x][z_id], "z_id");
-	    orm_setkey(GZ[x][_gz_ormid], "z_id");
-	    orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMinX], "zMinX");
-		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMinY], "zMinY");
-		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMaxX], "zMaxX");
-		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][zMaxY], "zMaxY");
-	    orm_addvar_int(GZ[x][_gz_ormid], GZ[x][zTeam],"zTeam");
+		orm_addvar_int(GZ[x][_gz_ormid], GZ[x][gz_uid], "UID");
+	    orm_setkey(GZ[x][_gz_ormid], "UID");
+	    orm_addvar_float(GZ[x][_gz_ormid], GZ[x][gz_min_pos_x], "Pos_Min_X");
+		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][gz_min_pos_y], "Pos_Min_Y");
+		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][gz_max_pos_x], "Pos_Max_X");
+		orm_addvar_float(GZ[x][_gz_ormid], GZ[x][gz_max_pos_y], "Pos_Max_Y");
+	    orm_addvar_int(GZ[x][_gz_ormid], GZ[x][gz_team],"Team");
 
 	    orm_apply_cache(GZ[x][_gz_ormid], x);
 
-		GZ[x][z_id] = GangZoneCreate(GZ[x][zMinX], GZ[x][zMinY], GZ[x][zMaxX], GZ[x][zMaxY]);
+		GZ[x][_gz_local] = GangZoneCreate(GZ[x][gz_min_pos_x], GZ[x][gz_min_pos_y], GZ[x][gz_max_pos_x], GZ[x][gz_max_pos_y]);
 		TotalGangZones++;
 	}
 	printf("Загруженно Ганг Зон:%i      [Длительность загрузки: %d ms]",TotalGangZones,cache_get_query_exec_time(MILLISECONDS));
