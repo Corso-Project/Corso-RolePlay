@@ -184,6 +184,52 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        }
 	    }
 	}
+    case d_vehicle_rent_car_standart: switch(response) {
+        case 0: RemovePlayerFromVehicle(playerid);
+        case 1: {
+            new minute = strval(inputtext);
+            if(minute < 1 || minute > 240) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
+                return RemovePlayerFromVehicle(playerid);
+            }
+            new Float: amount = floatmul(minute, Prices_RentCar_Standart);
+            if(P[playerid][p_cash] < amount) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
+                return RemovePlayerFromVehicle(playerid);
+            }
+            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
+            Cash_Give(playerid, -amount);
+            Budget_GOVERNMENT += amount;
+            for(new i; i < sizeof(V_RENT_STANDART); i++) {
+                if(V_RENT_STANDART[i] != GetPlayerVehicleID(playerid)) continue;
+                V_RENT_OWNER[i] = P[playerid][p_uid];
+                defer OnRentVehicleEnd[minute*60*1000](V_RENT_STANDART[i], ORG_UNKNOWN);
+            }
+        }
+    }
+    case d_vehicle_rent_car_premium: switch(response) {
+        case 0: RemovePlayerFromVehicle(playerid);
+        case 1: {
+            new minute = strval(inputtext);
+            if(minute < 1 || minute > 240) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
+                return RemovePlayerFromVehicle(playerid);
+            }
+            new Float: amount = floatmul(minute, Prices_RentCar_Premium);
+            if(P[playerid][p_cash] < amount) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
+                return RemovePlayerFromVehicle(playerid);
+            }
+            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
+            Cash_Give(playerid, -amount);
+            Budget_GOVERNMENT += amount;
+            for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
+                if(V_RENT_PREMIUM[i] != GetPlayerVehicleID(playerid)) continue;
+                V_RENT_OWNER[i] = P[playerid][p_uid];
+                defer OnRentVehicleEnd[minute*60*1000](V_RENT_PREMIUM[i], ORG_UNKNOWN);
+            }
+        }
+    }
 	// Аренда такси
 	case d_vehicle_rent_taxi: switch(response) {
 	    case 0: RemovePlayerFromVehicle(playerid);

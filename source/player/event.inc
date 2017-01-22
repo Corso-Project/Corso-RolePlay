@@ -377,6 +377,36 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             ShowPlayerDialog(playerid, d_vehicle_rent_car, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
             break;
 	    }
+		for(new i; i < sizeof(V_RENT_STANDART); i++) {
+	        if(vehicleid != V_RENT_STANDART[i]) continue;
+	        if(V_RENT_OWNER[i] != 0) break;
+	        if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
+                break;
+            }
+            new source[128];
+            format(source, sizeof(source),
+				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Prices_RentCar_Standart);
+            ShowPlayerDialog(playerid, d_vehicle_rent_car_standart, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
+            break;
+	    }
+		for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
+	        if(vehicleid != V_RENT_PREMIUM[i]) continue;
+	        if(V_RENT_OWNER[i] != 0) break;
+	        if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
+                break;
+            }
+            new source[128];
+            format(source, sizeof(source),
+				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Prices_RentCar_Premium);
+            ShowPlayerDialog(playerid, d_vehicle_rent_car_premium, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
+            break;
+	    }
 		for(new i; i < sizeof(V_WHITEWING); i++){
 			if(vehicleid != V_WHITEWING[i]) continue;
 			if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {

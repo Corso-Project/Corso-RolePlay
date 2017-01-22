@@ -126,6 +126,8 @@ enum
 	d_vehicle_radio,
 	d_vehicle_url_radio,
 	d_vehicle_rent_car,
+	d_vehicle_rent_car_standart,
+	d_vehicle_rent_car_premium,
 	d_vehicle_rent_taxi,
 	d_vehicle_rent_officecar,
 	d_vehicle_rent_truck,
