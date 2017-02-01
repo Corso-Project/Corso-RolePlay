@@ -225,7 +225,50 @@ stock Armour_Sync(playerid)
 	}
 	return 1;
 }
-
+forward OnCheatDetected(playerid, ip_address[], type, code);
+public OnCheatDetected(playerid, ip_address[], type, code)
+{
+	if(type) BlockIpAddress(ip_address, 0); //Среагировал на IP (например за попытку брута ркона) - блочим его
+	else //Среагировал на ID игрока
+	{
+		switch(code) //Какой чит?
+		{
+			case 5: return 1; //Телепорт незанятых авто (античит в любом случае вернёт её на прежнее место, наказание лучше не делать)
+			case 11: //Починка транспорта, лучше вернуть ему старое хп (если не применит его - сработает уже анти-ноп)
+			 {
+				new vehid = GetPlayerVehicleID(playerid), Float:vhealth;
+				AntiCheatGetVehicleHealth(vehid, vhealth);
+				SetVehicleHealth(vehid, vhealth);
+				return 1;
+			}
+			case 14: //Деньги
+			{
+				//Возвращаем старую сумму
+				new a = AntiCheatGetMoney(playerid);
+				ResetPlayerMoney(playerid);
+				GivePlayerMoney(playerid, a);
+				return 1; //Иное наказание также нам не нужно
+			}
+			case 32: return ClearAnimations(playerid, 1); //CarJack, выкидываем игрока из авто
+			case 40: SendClientMessage(playerid, -1, MAX_CONNECTS_MSG); //Песочница (вход 2-х и более человек с одного IP), прощаемся
+			case 41: SendClientMessage(playerid, -1, UNKNOWN_CLIENT_MSG); //Версия клиента игрока не определена, прощаемся с ним
+			case 43..47: //Крашеры
+			{
+				Kick(playerid); //КРАЙНЕ рекомендуется кикать без задержки, иначе ОНО успеет крашнуть игроков
+				return 1;
+			}
+			default: //Здесь все остальные читы
+			{
+				va_SendClientMessage(playerid, -1, "Вы были кикнуты по причине %s (#%d)", CheatNames[code], code);
+				Kick(playerid);
+				return 1;
+			}
+		}
+		new pPing = GetPlayerPing(playerid) + 150;
+		SetTimerEx("ac_KickTimer", (pPing > 500 ? 500 : pPing), false, "i", playerid); //Кик за 40 и 41 код, ac_KickTimer есть в античите и успешно сработает
+	}
+	return 1;
+}
 stock Speedo_Sync(playerid)
 {
     new engine,lights,alarm,doors,bonnet,boot,objective;

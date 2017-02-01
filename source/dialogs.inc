@@ -184,6 +184,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        }
 	    }
 	}
+    // Аренда транспорта среднего класса
     case d_vehicle_rent_car_standart: switch(response) {
         case 0: RemovePlayerFromVehicle(playerid);
         case 1: {
@@ -207,6 +208,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             }
         }
     }
+    // Аренда транспорта премиум класса
     case d_vehicle_rent_car_premium: switch(response) {
         case 0: RemovePlayerFromVehicle(playerid);
         case 1: {

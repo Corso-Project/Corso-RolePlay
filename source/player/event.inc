@@ -175,7 +175,6 @@ public OnPlayerConnect(playerid)
 	//
 	TextDrawShowForPlayer(playerid, Corso);
 
-	//PlayerPlaySound(playerid, 1097, 0.0, 0.0, 10.0);
 	SetTimerEx("SetPlayerCameraPos_", 500, 0, "d", playerid);
 
 	return 1;
@@ -216,10 +215,9 @@ public OnPlayerSpawn(playerid)
 			}
 	    	case ORG_FBI:
 			{
-	        	SetPlayerInterior(playerid, 0);
-				SetPlayerVirtualWorld(playerid, 0);
-				SetPlayerPos(playerid, 1214.8512,-1675.8368,11.7969);
-				SetPlayerFacingAngle(playerid, 308.0);
+	        	SetPlayerInterior(playerid, 3);
+				SetPlayerPos(playerid, 215.7838,182.6928,1003.0313);
+				SetPlayerFacingAngle(playerid, 269.2349);
 				SetPlayerColor(playerid, 0x1C5A8DFF);
 	    	}
 	    	default:
@@ -953,7 +951,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerInterior(playerid, 3);
 		SetPlayerPos(playerid,384.808624,173.804992,1008.382812);
 	}
-	else if(pickupid == Whitewing[0] || Whitewing[1]){
+	else if(pickupid == Whitewing[0] || pickupid == Whitewing[1]){
 		switch(P[playerid][p_job_team])
 		{
 			case JOB_WHITEWING:
@@ -965,6 +963,26 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 				Для начала работы просто сядьте в одну из служебных машин.\n\
 				За один рейс вы заработаете $549.64","Закрыть","");
 		}
+	}
+	else if(pickupid == FBI[0]){
+		SetPlayerInterior(playerid,3);
+		SetPlayerPos(playerid,238.5226,140.8495,1003.0234);
+		SetPlayerFacingAngle(playerid, 357.8347);
+	}
+	else if(pickupid == FBI[1]){
+		SetPlayerInterior(playerid,0);
+		SetPlayerPos(playerid,-2453.6399,503.9580,30.0800);
+		SetPlayerFacingAngle(playerid, 266.5858);
+	}
+	else if(pickupid == FBI[2]){
+		SetPlayerInterior(playerid,3);
+		SetPlayerPos(playerid,288.5756,169.5392,1007.1719);
+		SetPlayerFacingAngle(playerid, 3.8765);
+	}
+	else if(pickupid == FBI[3]){
+		SetPlayerInterior(playerid,0);
+		SetPlayerPos(playerid,-2483.6584,514.0369,51.0638);
+		SetPlayerFacingAngle(playerid, 270.0022);
 	}
     return 1;
 }

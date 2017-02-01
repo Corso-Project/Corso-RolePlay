@@ -1,5 +1,5 @@
 # [SA-MP] Corso RolePlay - это..
-Игровой режим **Si**mulator и **Ro**le **P**lay с открытым исходным кодом, а так же:
+Игровой режим **C**orso **R**ole **P**lay с открытым исходным кодом, а так же:
 
 * Учётные записи на СУБД MySQL ([pBlueG](https://github.com/pBlueG/SA-MP-MySQL))
 	* Динамические настройки подключения (папка scriptfiles)
@@ -13,3 +13,4 @@
 	* Расширенные операции с таймерами ([y_timers](https://github.com/Misiur/YSI-Includes))
 	* И другие возможности доступные из [YSI 4.0](https://github.com/Misiur/YSI-Includes)
 	* Модуль [Streamer](https://github.com/samp-incognito/samp-streamer-plugin) для увеличения количества объектов, иконок, пикапов и т.д.
+	* Анти-Чит Nexus ([Nex-AC](https://github.com/NexiusTailer/Nex-AC))

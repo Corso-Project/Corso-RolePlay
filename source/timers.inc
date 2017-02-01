@@ -107,35 +107,6 @@ ptask SpectateUpdatePlayer[1000](playerid){
     format(string,sizeof(string), "%s ~n~~g~~h~H~w~ealth: ~g~~h~%d ~r~~h~/ ~b~F~w~PS: ~b~%d ~r~~h~/ ~y~P~w~ING: ~y~%d~n~ ~r~W~w~eapons:~n~ ~r~%s",Name(gSpectateID[playerid]), floatround(Total), GetPlayerFPS(gSpectateID[playerid]),GetPlayerPing(gSpectateID[playerid]), ReturnPlayerWeaponsString(gSpectateID[playerid]));
 	PlayerTextDrawSetString(playerid, P[playerid][SpecText], string);
 }
-/*ptask OnPlayerCashSync[1000](playerid)
-{
-    if(P[playerid][_p_spawned] == false) return 1;
-	switch(GetPlayerState(playerid))
-	{
-	    case 0,7..9: return 1;
-	}
-	if(GetPlayerMoney(playerid) < 0)
-	{
-	    ResetPlayerMoney(playerid);
-	    GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
-	}
-	else if(GetPlayerMoney(playerid) < floatround(P[playerid][p_cash]))
-	{
-		new a = floatround(P[playerid][p_cash]) - GetPlayerMoney(playerid);
-		P[playerid][p_cash] = floatsub(P[playerid][p_cash], a);
-		Budget_GOVERNMENT = floatadd(Budget_GOVERNMENT, a);
-	}
-	else if(GetPlayerMoney(playerid) > floatround(P[playerid][p_cash]))
-	{
-		Message_ToAdmins(0xB9C9BFFF, "[Защита]: Накрутка денежных средств - %s[%d] | C: %d / S: %d",Name(playerid),playerid,GetPlayerMoney(playerid),floatround(P[playerid][p_cash]));
-	    GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
-	    P[playerid][_p_cheater]++;
-	}
-	new string[16];
-	format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-	PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
-	return 1;
-}*/
 ptask OnPlayerVehicleFuelSync[1000](playerid)
 {
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {

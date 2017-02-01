@@ -4,3 +4,4 @@ server.cfg
 *.amx
 mysql_log.html
 server_log.txt
+samp-server.exe
