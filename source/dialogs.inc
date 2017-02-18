@@ -405,7 +405,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
              2. Автостанция города Лос-Сантос\n\
              3. Авторынок (Эконом класс)\n\
              4. Авторынок (Средний класс)\n\
-             5. Авторынок (Премиум класс)","Выбрать","Назад");
+             5. Авторынок (Премиум класс)\n\
+             6. Моторынок","Выбрать","Назад");
         case 2: ShowPlayerDialog(playerid, d_gps_jobs, DIALOG_STYLE_LIST,"Работы",
             "1. Уборщик улиц г.Лос-Сантос\n\
              2. Уборщик улиц г.Сан-Фиеро\n\
@@ -443,11 +444,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     // Спутниковая Система Навигации: Общественные места
     case d_gps_public_places: if(response) switch(listitem){
-        case 0: SetPlayerCheckpoint(playerid, -2031.4530,-97.4284,35.1641,4.0);
-        case 1: SetPlayerCheckpoint(playerid, 1811.6638,-1889.9030,12.9699,4.0);
-        case 2: SetPlayerCheckpoint(playerid, 558.0014,-1257.0792,16.9318,4.0);
-        case 3: SetPlayerCheckpoint(playerid, -1988.1427,288.5436,34.0706,4.0);
-        case 4: SetPlayerCheckpoint(playerid, 1658.5923,2177.1665,10.3988,4.0);
+        case 0: SetPlayerCheckpoint(playerid, -2031.4530, -97.4284, 35.1641, 4.0);
+        case 1: SetPlayerCheckpoint(playerid, 1811.6638, -1889.9030, 12.9699, 4.0);
+        case 2: SetPlayerCheckpoint(playerid, 558.0014, -1257.0792, 16.9318, 4.0);
+        case 3: SetPlayerCheckpoint(playerid, -1988.1427, 288.5436, 34.0706, 4.0);
+        case 4: SetPlayerCheckpoint(playerid, 1658.5923, 2177.1665, 10.3988, 4.0);
+        case 5: SetPlayerCheckpoint(playerid, -2717.8606, 195.2175, 4.3418, 4.0);
     }
     // Спутниковая Система Навигации: Работы
     case d_gps_jobs: if(response) switch(listitem){

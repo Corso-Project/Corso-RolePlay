@@ -54,7 +54,7 @@ timer OnGateClosed[7500](objectid)
 {
 	if(objectid == obj_FBI) {
 		obj_state_FBI = false;
-		MoveDynamicObject(obj_FBI, 1286.1700,-1652.1000,16.5500, MOVE_GATE_SPEED, 0.0000,0.0000,90.0000);
+		MoveDynamicObject(obj_FBI, -2436.8999, 495.46875, 29.8, MOVE_BARRIER_SPEED, 0.00, 90, 90);
 	}
 	if(objectid == obj_LSPD) {
 		obj_state_LSPD = false;
@@ -104,7 +104,7 @@ ptask SpectateUpdatePlayer[1000](playerid){
     GetPlayerHealth(gSpectateID[playerid], Healt);
     GetPlayerArmour(gSpectateID[playerid], Armour);
     new Float:Total = Armour + Healt;
-    format(string,sizeof(string), "%s ~n~~g~~h~H~w~ealth: ~g~~h~%d ~r~~h~/ ~b~F~w~PS: ~b~%d ~r~~h~/ ~y~P~w~ING: ~y~%d~n~ ~r~W~w~eapons:~n~ ~r~%s",Name(gSpectateID[playerid]), floatround(Total), GetPlayerFPS(gSpectateID[playerid]),GetPlayerPing(gSpectateID[playerid]), ReturnPlayerWeaponsString(gSpectateID[playerid]));
+    format(string,sizeof(string), "%s ~n~~g~~h~H~w~ealth: ~g~~h~%d ~r~~h~/ ~y~P~w~ING: ~y~%d~n~ ~r~W~w~eapons:~n~ ~r~%s",Name(gSpectateID[playerid]), floatround(Total), GetPlayerPing(gSpectateID[playerid]), ReturnPlayerWeaponsString(gSpectateID[playerid]));
 	PlayerTextDrawSetString(playerid, P[playerid][SpecText], string);
 }
 ptask OnPlayerVehicleFuelSync[1000](playerid)
@@ -115,9 +115,8 @@ ptask OnPlayerVehicleFuelSync[1000](playerid)
 		new KMH = Vehicle_Speed(vehicleid);
 		GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
 		if(engine == 1) switch(KMH) {
-			case 0: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], 0.0001);
-			//default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00003));
-			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00042));//0.00022
+			case 0: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], 0.00040);
+			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00072));
 		}
 		if(Vehicle_WithoutFuel(GetVehicleModel(vehicleid)) == 0) {
 			if(V[vehicleid][v_fuel] <= 0) {

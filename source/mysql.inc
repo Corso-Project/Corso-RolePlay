@@ -82,3 +82,26 @@ public OnMySQL_SelectGangZones()
 	}
 	printf("Загруженно Ганг Зон:%i      [Длительность загрузки: %d ms]",TotalGangZones,cache_get_query_exec_time(MILLISECONDS));
 }
+forward OnMySQL_SelectRangs();
+public OnMySQL_SelectRangs()
+{
+	new TotalRanks;
+	for(new x=0; x < sizeof(RG); x++){
+		RG[x][_r_ormid] = orm_create("rangs");
+
+		orm_addvar_int(RG[x][_r_ormid],RG[x][id],"ID");
+		orm_setkey(RG[x][_r_ormid],"ID");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang1], 32, "Rang1");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang2], 32, "Rang2");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang3], 32, "Rang3");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang4], 32, "Rang4");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang5], 32, "Rang5");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang6], 32, "Rang6");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang7], 32, "Rang7");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang8], 32, "Rang8");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang9], 32, "Rang9");
+		orm_addvar_string(RG[x][_r_ormid],RG[x][rang10], 32, "Rang10");
+		TotalRanks++;
+	}
+	printf("Загруженно Рангов:%i       [Длительность загрузки: %d ms]",TotalRanks,cache_get_query_exec_time(MILLISECONDS));
+}

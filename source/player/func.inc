@@ -43,7 +43,72 @@ stock Get_TeamName(playerid)
 	}
 	return dests;
 }
+stock Get_RangName(playerid)
+{
+	new dests[43];
+	switch(P[playerid][p_job_team]){
+		case ORG_UNKNOWN: dests = "Безработный";
+		case ORG_GOVERNMENT:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Водитель";
+				case 2: dests = "Охранник";
+				case 3: dests = "Нач. Охраны";
+				case 4: dests = "Пресс-Секретарь";
+				case 5: dests = "Советник по мэриям";
+				case 6: dests = "Советник по армиям";
+				case 7: dests = "Советник по органам внутренних дел";
+				case 8: dests = "Контролер органов здравоохранения";
+				case 9: dests = "Советник по средствам массовой информации";
+				case 10: dests = "Вице-президент";
+				case 11: dests = "Президент";
 
+			}
+		}
+		case ORG_FBI:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Стажер";
+				case 2: dests = "Младший агент";
+				case 3: dests = "Агент отдела ГНК";
+				case 4: dests = "Агент отдела КСО";
+				case 5: dests = "Старший агент";
+				case 6: dests = "Глава отдела ГНК";
+				case 7: dests = "Глава отдела КСО";
+				case 8: dests = "Инспектор ФБР";
+				case 9: dests = "Заместитель директора ФБР";
+				case 10: dests = "Директор ФБР";
+			}
+		}
+		case ORG_LSPD, ORG_SFPD, ORG_LVPD:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Кадет";
+				case 2: dests = "Патрульный";
+				case 3: dests = "Офицер";
+				case 4: dests = "Детектив";
+				case 5: dests = "Сержант";
+				case 6: dests = "Лейтенант";
+				case 7: dests = "Капитан";
+				case 8: dests = "Инспектор";
+				case 9: dests = "Комиссар";
+				case 10: dests = "Генерал";
+			}
+		}
+		case ORG_EMERGENCY:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Интерн";
+				case 2: dests = "Младший медработник";
+				case 3: dests = "Старший медработник";
+				case 4: dests = "Врач-участковый";
+				case 5: dests = "Врач-терапевт";
+				case 6: dests = "Врач-хирург";
+				case 7: dests = "Младший специалист";
+				case 8: dests = "Старший специалист";
+				case 9: dests = "Заведующий отделением";
+				case 10: dests = "Главный врач";
+			}
+		}
+	}
+	return dests;
+}
 stock SkinShop_Show(playerid, team)
 {
     if(GetPlayerState(playerid) == PLAYER_STATE_SPECTATING) TogglePlayerSpectating(playerid, 0);

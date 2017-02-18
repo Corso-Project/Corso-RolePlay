@@ -28,7 +28,12 @@ stock Message_ToAdmins(color, const fmat[], va_args<>)
         if (P[i][p_access] >= 1)
             SendClientMessage(i, color, va_return(fmat, va_start<2>));
 }
-
+stock Message_ToJobTeam(playerid,color, const fmat[], va_args<>)
+{
+	foreach(new i : Player)
+		if (P[playerid][p_job_team] == P[i][p_job_team])
+			SendClientMessage(i, color, va_return(fmat, va_start<2>));
+}
 stock containsAnyIP(const string[])
 {
 	new digits, digitGroups;

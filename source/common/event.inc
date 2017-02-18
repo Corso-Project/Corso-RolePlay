@@ -17,6 +17,8 @@ public OnGameModeInit()
 	mysql_tquery(MySQL:1,"SELECT * FROM `petrol_stations`", "OnMySQL_SelectPetrolStations");
 	// GangZones
 	mysql_tquery(MySQL:1,"SELECT * FROM `gangzones`", "OnMySQL_SelectGangZones");
+	// Rangs
+	mysql_tquery(MySQL:1,"SELECT * FROM `rangs`", "OnMySQL_SelectRangs");
 	// Параметры игрового режима
 	SendRconCommand("loadfs map");
 	SetGameModeText(GAMEMODE_VERSION);
@@ -369,6 +371,7 @@ public OnGameModeInit()
 	{
 		ApplyActorAnimation(FBI_Actors[i],"DEALER","Dealer_idle",4.1,1,0,0,0,0);
 		SetActorInvulnerable(FBI_Actors[i], 1);
+		print("FBI NPC");
 	}
 	// TextDraw
 	Corso = TextDrawCreate(577.000000, 7.000000, "CORSO");

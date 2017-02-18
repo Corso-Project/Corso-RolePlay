@@ -59,6 +59,7 @@ enum E_PLAYER_DATA {
 	p_sex,
 	p_skin,
 	p_job_team,
+	p_rang,
 	p_level,
 	p_exp,
 	p_health,
@@ -112,6 +113,21 @@ enum E_GANG_ZONES_DATA{
 	Float: gz_max_pos_x,
 	Float: gz_max_pos_y,
 	gz_team
+}
+enum E_PLAYER_RANG_DATA{
+	ORM: _r_ormid,
+	// mysql synced
+	id,
+	rang1[32],
+	rang2[32],
+	rang3[32],
+	rang4[32],
+	rang5[32],
+	rang6[32],
+	rang7[32],
+	rang8[32],
+	rang9[32],
+	rang10[32]
 }
 enum
 {
@@ -173,6 +189,7 @@ new P[MAX_PLAYERS][E_PLAYER_DATA];
 new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
 new GZ[104][E_GANG_ZONES_DATA];
+new RG[1][E_PLAYER_RANG_DATA];
 new PlayerText: ChoseSkin[8];
 
 new V_GOVERNMENT[7],
@@ -241,6 +258,7 @@ new Float: Prices_RentCar_Econom,
 new g_Chat_OOC,
 	Float: g_Payment_Register;
 // Пикапы
+new PickupGetTime[MAX_PLAYERS];
 new Ammu_Nation[8];
 new Casino[2];
 new LSPD[2];

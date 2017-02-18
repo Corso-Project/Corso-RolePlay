@@ -27,6 +27,7 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_sex], "Sex");
 	orm_addvar_int(ormid, P[playerid][p_skin], "Skin");
 	orm_addvar_int(ormid, P[playerid][p_job_team], "Job_Team");
+	orm_addvar_int(ormid, P[playerid][p_rang], "Rang");
 	orm_addvar_int(ormid, P[playerid][p_level], "Level");
 	orm_addvar_int(ormid, P[playerid][p_exp], "Exp");
 	orm_addvar_int(ormid, P[playerid][p_health], "Health");
@@ -263,7 +264,7 @@ public OnPlayerText(playerid, text[])
 	strtolower(text);
 	format(P[playerid][_p_chat_msg], 128, text);
 	SetPlayerChatBubble(playerid, text, 0xFFFFFFFF, 35.0, 5000);
-	ApplyAnimation(playerid, "PED", "IDLE_CHAT", 8.1, 0, 0, 0, 0, 2000, 1);
+	ApplyAnimation(playerid,"PED","IDLE_chat", 4.1, 0, 1, 1, 1, 1, 1);
 	new Float: x, Float: y, Float: z;
 	new line1[128], line2[128];
 	if(strlen(text) > 64) {
@@ -484,18 +485,13 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	        if(Vehicle_Speed(vehicleid) > 270) P[playerid][_p_cheater]++;
 	    }
 	}
-	// Меню
-	if(newkeys & KEY_NO)
-	{
-	    ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Главное меню", "Информация о персонаже\nНастройки учётной записи\nСправка о доступных командах\nСправка о правилах сервера\nОбратная связь", "Открыть", "Выход");
-	}
 	// Открытие ворот и/или шлагбаумов
 	if(newkeys & KEY_CROUCH)
 	{
-		if(IsPlayerInRangeOfPoint(playerid, 15.0, 1286.1700,-1652.1000,16.5500)) {
+		if(IsPlayerInRangeOfPoint(playerid, 15.0, -2436.89941, 495.46875, 29.8)) {
 		    if(P[playerid][p_job_team] == ORG_FBI && obj_state_FBI == false) {
 		        obj_state_FBI = true;
-				MoveDynamicObject(obj_FBI, 1286.1700,-1652.1000,22.0000, MOVE_GATE_SPEED, 0.0000,0.0000,90.0000);
+				MoveDynamicObject(obj_FBI, -2436.89941, 495.46875, 29.8, MOVE_BARRIER_SPEED, 0.00, 0.00, 90.0);
 				defer OnGateClosed(obj_FBI);
 		    }
 	    }
@@ -861,6 +857,8 @@ public OnPlayerEnterCheckpoint(playerid)
 }
 public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 {
+	if(PickupGetTime[playerid] > gettime()) return true;
+	PickupGetTime[playerid] = gettime() + 1;
 	if(pickupid == Ammu_Nation[0])
 	{
 		if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, -1,"{FF6600}Чтобы войти Вам нужно иметь лицензию на оружие");
@@ -1077,9 +1075,10 @@ public ShowStats(playerid,targetid){
 	Уровень:\t\t\t\t%d\n\
 	Очки опыта:\t\t\t\t%d из %d\n\
 	Организация:\t\t\t\t%s\n\
+	Ранг:\t\t\t\t\t%s\n\
 	Пол:\t\t\t\t\t%s\n\
 	Денег:\t\t\t\t\t$%.2f\n",
-		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),sex,P[playerid][p_cash]);
+		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash]);
 	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
 	return true;
 }
