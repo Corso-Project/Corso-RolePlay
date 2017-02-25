@@ -1,10 +1,7 @@
 timer OnWeatherChanger[60*60*1000]()
 {
-	/*SetWorldTime(g_hour);
-	SetWeather(random(20));
-	defer OnWeatherChanger[random(60)*60*1000]();*/
 	SetWorldTime(g_hour);
-	SetWeather(1);
+	SetWeather(random(20));
 	defer OnWeatherChanger[random(60)*60*1000]();
 }
 
@@ -106,6 +103,9 @@ ptask SpectateUpdatePlayer[1000](playerid){
     new Float:Total = Armour + Healt;
     format(string,sizeof(string), "%s ~n~~g~~h~H~w~ealth: ~g~~h~%d ~r~~h~/ ~y~P~w~ING: ~y~%d~n~ ~r~W~w~eapons:~n~ ~r~%s",Name(gSpectateID[playerid]), floatround(Total), GetPlayerPing(gSpectateID[playerid]), ReturnPlayerWeaponsString(gSpectateID[playerid]));
 	PlayerTextDrawSetString(playerid, P[playerid][SpecText], string);
+}
+timer OnPlayerClearAnimation[500](playerid){
+	ApplyAnimation(playerid,"CARRY","crry_prtial",4.0,0,0,0,0,0,1);
 }
 ptask OnPlayerVehicleFuelSync[1000](playerid)
 {

@@ -270,29 +270,6 @@ CMD:mn(playerid, params[])
 	return 1;
 }
 alias:mn("menu","mm");
-CMD:gotopos(playerid, params[])
-{
- 	new Float:paramss[3];
-	if(sscanf(params, "fff", paramss[0], paramss[1], paramss[2])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /gotopos [X] [Y] [Z]");
-	SetPlayerPos(playerid, paramss[0], paramss[1], paramss[2]);
-	va_SendClientMessage(playerid, 0xB9C9BFFF, "Вы телепортированы: X:%f; Y:%f; Z:%f.", paramss[0], paramss[1], paramss[2]);
-	return true;
-}
-CMD:gethere(playerid, params[])
-{
-	new string[104];
-	if(P[playerid][p_access] < 1) return 1;
-	if(sscanf(params, "u", params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /gethere [ID игрока]");
-	new Float:plocx,Float:plocy,Float:plocz;
-	GetPlayerPos(playerid, plocx, plocy, plocz);
-	SetPlayerPos(params[0], plocx,plocy+2, plocz);
-	SetPlayerVirtualWorld(params[0], GetPlayerVirtualWorld(playerid));
-	SetPlayerInterior(params[0], GetPlayerInterior(playerid));
-	va_SendClientMessage(params[0],COLOR_GREY,"Администратор %s[%d] тепелепортировал Вас к себе.",Name(playerid),playerid);
-	format(string,104,"[A] %s[%d] телепортировал к себе игрока %s[%d]",Name(playerid),playerid,Name(params[0]),params[0]);
-	Message_ToAdmins(COLOR_GREY,string);
-	return 1;
-}
 CMD:makeleader(playerid, params[])
 {
   	new string[115],
@@ -300,12 +277,23 @@ CMD:makeleader(playerid, params[])
 	if(P[playerid][p_access] < 6) return 1;
 	if(sscanf(params, "ui", user,org)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /makeleader [ID игрока] [ID Фракции]");
 	if(org > 18) return 1;
-	P[user][p_job_team] = org;
-	P[user][p_rang] = 10;
-	va_SendClientMessage(user,COLOR_YELLOW, "%s[%d] назначил Вас лидером организации \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
-	va_SendClientMessage(playerid,COLOR_ORANGE, "Вы назначили игрока %s[%d] на лидерство фракции \"%s\" ",Name(user), user, Get_TeamName(user));
-	format(string, 144, "[A] %s[%d] назначил %s[%d] лидером организации \"%s\"",Name(playerid), playerid, Name(user), user, Get_TeamName(user));
-	Message_ToAdmins(COLOR_GREY, string);
+	if(P[playerid][p_job_team] == org) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот игрок уже лидер этой организаций.");
+	if(org == 0){
+		va_SendClientMessage(user,COLOR_YELLOW,"Вы были сняты %s[%d] с поста лидера \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
+		va_SendClientMessage(playerid,COLOR_ORANGE,"Вы сняли лидера %s[%d] организации \"%s\" ",Name(user), user, Get_TeamName(user));
+		format(string, 144, "[A] %s[%d] снял %s[%d] с поста лидера организации \"%s\"",Name(playerid), playerid, Name(user), user, Get_TeamName(user));
+		Message_ToAdmins(COLOR_GREY, string);
+		P[user][p_job_team] = 0;
+		P[user][p_rang] = 0;
+	}
+	else{
+		P[user][p_job_team] = org;
+		P[user][p_rang] = 10;
+		va_SendClientMessage(user,COLOR_YELLOW, "%s[%d] назначил Вас лидером организации \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
+		va_SendClientMessage(playerid,COLOR_ORANGE, "Вы назначили игрока %s[%d] на лидерство фракции \"%s\" ",Name(user), user, Get_TeamName(user));
+		format(string, 144, "[A] %s[%d] назначил %s[%d] лидером организации \"%s\"",Name(playerid), playerid, Name(user), user, Get_TeamName(user));
+		Message_ToAdmins(COLOR_GREY, string);
+	}
   	orm_update(P[user][_p_ormid]);
 	return 1;
 }
@@ -382,31 +370,25 @@ CMD:ans(playerid,params[])
 	return true;
 }
 CMD:stats(playerid,params[]){
-	ShowStats(playerid,playerid);
+	Show_PlayerStats(playerid,playerid);
 	return true;
 }
 CMD:lic(playerid, params[])
 {
-	new output[570],lic_car[26],lic_aircraft[26],lic_boat[26],lic_moto[26],lic_weapon[26],lic_business[26],lic_freight[26],lic_helicopter[26];
-	lic_car = (P[playerid][p_lic_car] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_aircraft = (P[playerid][p_lic_aircraft] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_boat = (P[playerid][p_lic_boat] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_moto = (P[playerid][p_lic_moto] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_weapon = (P[playerid][p_lic_weapon] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_business = (P[playerid][p_lic_business] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_freight = (P[playerid][p_lic_freight] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_helicopter = (P[playerid][p_lic_helicopter] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	format(output, sizeof(output),
-	    "{FFFFFF}Водительские права:\t\t\t\t\t%s\n\
-	    Лицензия пилотирования самолётом:\t\t%s\n\
-	    Лицензия на водный транспорт:\t\t\t%s\n\
-	    Лицензия на вождения спорт байка:\t\t%s\n\
-	    Лицензия на оружие:\t\t\t\t\t%s\n\
-	    Лицензия на бизнес:\t\t\t\t\t%s\n\
-	    Лицензия на грузо-перевозку:\t\t\t%s\n\
-        Лицензия на пилотирования вертолётом:\t\t%s",
-        lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_business,lic_freight,lic_helicopter);
-    ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
+	new user;
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid,0xB22222FF, "[Справка]: {FFFFFF}Используйте /lic [ID игрока]");
+	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере");
+	if(playerid != user){
+		va_SendClientMessage(playerid,0x269BD8FF, "Вы предложили {FFFFFF}%s{269BD8} показать лицензии.",Name(user));
+		va_SendClientMessage(user,-1,"%s {269BD8}хочет показать Вам лицензии. Чтобы подтвердить нажмите {007F0E}Y{269BD8} для просмотра, {FF0000}N{269BD8} для отказа.",Name(playerid));
+
+		SetPVarInt(user, "Show_PlayerLic", 1);
+		SetPVarInt(user, "IdShow", user);
+	}
+	if(playerid == user){
+		Show_PlayerLic(playerid,playerid);
+		SetPlayerChatBubble(playerid, "Просматривает свои лицензий", 0xDDA0DDFF, 35.0, 5000);
+	}
     return 1;
 }
 alias:lic("licenses","showlicense","showlic");
@@ -458,7 +440,7 @@ CMD:spec(playerid,params[]){
 	if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Игрока с таким ID нету в игре.");
 	if(params[0] == playerid) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Нельзя следить за собой.");
 
-	SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Что бы выйти из слежки нажмите - {4682B4}SPACE");
+	SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Что бы выйти из режима слежки нажмите - {4682B4}SPACE");
 
 	if(GetPlayerState(params[0]) == PLAYER_STATE_ONFOOT){
 		TogglePlayerSpectating(playerid, 1);
@@ -468,16 +450,20 @@ CMD:spec(playerid,params[]){
 		gSpectateID[playerid] = params[0];
 		gSpectateType[playerid] = 1;
 		StartSpectate(playerid, params[0]);
-		new Float:health;
-		GetPlayerHealth(params[0], health);
-		va_SendClientMessage(playerid, -1, "{efd331}%s[%d] {efd331}Здоровье: {a58a10}H:%.2f",Name(params[0]),params[0],health);
 	}
 	else if(GetPlayerState(params[0]) == PLAYER_STATE_PASSENGER || PLAYER_STATE_DRIVER){
-		SendClientMessage(playerid,-1,"PLAYER_STATE_PASSENGER || PLAYER_STATE_DRIVER");
+		new vehicleid = GetPlayerVehicleID(params[0]);
+		TogglePlayerSpectating(playerid, 1);
+		PlayerSpectateVehicle(playerid,vehicleid);
+		SetPlayerInterior(playerid,GetPlayerInterior(params[0]));
+		SetPlayerVirtualWorld(playerid,GetPlayerVirtualWorld(params[0]));
+		gSpectateID[playerid] = params[0];
+		gSpectateType[playerid] = 1;
+		StartSpectate(playerid, params[0]);
 	}
 	return true;
 }
-alias:spec("spectate","recon","rec");
+alias:spec("spectate","recon","rec","re");
 CMD:specoff(playerid,params[]){
 	if(P[playerid][p_access] < 1) return true;
 	if(gSpectateType[playerid] == 1)
@@ -536,6 +522,8 @@ CMD:pay(playerid,params[]){
 	if(money < 1 || money > 5000) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Можно передавать от 1$ до 5000$");
 	va_SendClientMessage(playerid,-1,"Вы передали %s $%.2f",Name(user),money);
 	va_SendClientMessage(user,-1,"%s передал Вам $%.2f",Name(playerid),money);
+	Cash_Give(playerid, -money);
+	Cash_Give(user, money);
 	return true;
 }
 CMD:cleaner(playerid,params[]){
@@ -566,7 +554,7 @@ CMD:gnews(playerid,params[]){ // Note: Доработать
 		}
 		default: return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вам не доступна эта функция.");
 	}
-	return true;
+	return 1;
 }
 CMD:slap(playerid,params[])
 {
@@ -584,11 +572,13 @@ CMD:slap(playerid,params[])
 CMD:r(playerid,params[]){
 	new text[66];
 	if(sscanf(params,"s[66]",text)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /r [Текст]");
-	if(P[playerid][p_job_team] == 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не состоите в организаций.");
+	if(P[playerid][p_job_team] == 0 || P[playerid][p_job_team] > 18) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не состоите в организаций.");
 	new mes[126];
 	format(mes, sizeof(mes),"[R] %s %s[%d]: %s",Get_RangName(playerid), Name(playerid),playerid,text);
 	Message_ToJobTeam(playerid,0x6699ccAA,mes);
-	IC_Me(playerid,"Сообщение по рации");
+	new Float: x, Float: y, Float: z;
+	GetPlayerPos(playerid, x,y,z);
+	SetPlayerChatBubble(playerid, "Сообщение по рации", 0xDDA0DDFF, 35.0, 5000);
 	return true;
 }
 CMD:setrang(playerid,params[]){
@@ -610,11 +600,95 @@ CMD:invite(playerid,params[]){
 	if(P[playerid][p_job_team] == 0 || P[playerid][p_rang] < 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не уполномочены использовать данную команду.");
 	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /invite [Frac] [ID игрока] [Rang]");
 	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере");
-	if(P[user][p_job_team] >= 1 || P[user][p_job_team] <= 18) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Игрок уже состоит в организаций.");
+	//if(P[user][p_job_team] >= 1 || P[user][p_job_team] <= 18) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Игрок уже состоит в организаций.");
 	if(P[user][p_level] < 3) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Для вступления в организацию у игрока должен быть 3 уровень или выше.");
 	P[user][p_job_team] = P[playerid][p_job_team];
 	P[user][p_rang] = 1;
-	SetPlayerSkin(user, random(305));
 	orm_update(P[user][_p_ormid]);
 	return true;
 }
+CMD:id(playerid,params[]){ //Concept from GTO
+    new ids[5];
+	if(sscanf(params, "?<MATCH_NAME_PARTIAL=1>u[5]", ids)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /id [ID игрока/Часть Ника]");
+	new i, insert_pos, string[265];
+	SendClientMessage(playerid, 0xB22222FF,"[Результаты]:");
+	while (ids[i] != INVALID_PLAYER_ID)
+	{
+        if (ids[i] == cellmin)
+		{
+            SendClientMessage(playerid,0xFFCC66FF,"* {FFFFFF}и другие...");
+            break;
+        }
+		GetPlayerName(ids[i], string, sizeof(string));
+		insert_pos = strfind(string, params, true);
+		if (insert_pos != -1) {
+			strins(string, "{FFFFFF}", strlen(params) + insert_pos);
+			strins(string, "{FF8888}", insert_pos);
+		}
+		va_SendClientMessage(playerid, -1,"%s [%d]",string, ids[i]);
+		i++;
+	}
+	if (i == 0) {
+		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Никто не найден");
+	}
+	return true;
+}
+CMD:teleport(playerid,params[]){ //concept from GTO
+	if(P[playerid][p_access] < 1) return true;
+	new subcmd[7], subparams[64];
+	if (sscanf(params, "s[7]s[64]", subcmd, subparams)){
+		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /t{FFCC66}[ele]{FFFFFF}p{FFCC66}[ort]{FFFFFF} to [ID игрока/Часть Ника]");
+		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /t{FFCC66}[ele]{FFFFFF}p{FFCC66}[ort]{FFFFFF} here [ID игрока/Часть Ника]");
+		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /t{FFCC66}[ele]{FFFFFF}p{FFCC66}[ort]{FFFFFF} coord <x> <y> <z> <интерьер> <мир>");
+		return 1;
+	}
+	new targetid = INVALID_PLAYER_ID;
+
+	if (sscanf(subparams, "u", targetid)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден");
+	new Float:p_pos_x,            Float:t_pos_x,
+		Float:p_pos_y,            Float:t_pos_y,
+		Float:p_pos_z,            Float:t_pos_z,
+		Float:p_pos_a,            Float:t_pos_a,
+		p_interior,               t_interior,
+		p_world,                  t_world;
+
+	GetPlayerPos(playerid, p_pos_x, p_pos_y, p_pos_z);
+	GetPlayerFacingAngle(playerid, p_pos_a);
+	p_interior = GetPlayerInterior(playerid);
+	p_world = GetPlayerVirtualWorld(playerid);
+
+	if (targetid != -1) {
+		GetPlayerPos(targetid, t_pos_x, t_pos_y, t_pos_z);
+		GetPlayerFacingAngle(targetid, t_pos_a);
+		t_interior = GetPlayerInterior(targetid);
+		t_world = GetPlayerVirtualWorld(targetid);
+	}
+	if(strcmp(subcmd, "to", true) == 0) {
+		if (targetid == INVALID_PLAYER_ID || targetid == -1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден");
+		SetPlayerPos(playerid, t_pos_x + random(2) - random(4), t_pos_y + random(2) - random(4), t_pos_z);
+		SetPlayerFacingAngle(playerid, t_pos_a);
+		SetPlayerInterior(playerid, t_interior);
+		SetPlayerVirtualWorld(playerid, t_world);
+		new mes[87+1];
+		format(mes, sizeof(mes),"Администратор %s телепортировался к %s", Name(playerid), Name(targetid));
+		Message_ToAdmins(0xAFAFAFFF, mes);
+	}
+	else if(strcmp(subcmd, "here", true) == 0) {
+		if (targetid == INVALID_PLAYER_ID) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден");
+		SetPlayerPos(targetid, p_pos_x + random(2) - random(4), p_pos_y + random(2) - random(4), p_pos_z);
+		SetPlayerFacingAngle(targetid, p_pos_a);
+		SetPlayerInterior(targetid, p_interior);
+		SetPlayerVirtualWorld(targetid, p_world);
+		new mes[100];
+		format(mes, sizeof(mes),"Администратор %s[%d] телепортировал к себе %s[%d]",Name(playerid),playerid,Name(targetid),targetid);
+		Message_ToAdmins(0xAFAFAFFF, mes);
+	}
+	else if (strcmp(subcmd, "coord", true) == 0) {
+		if (sscanf(subparams, "p<,>fffI(0)I(0)", t_pos_x, t_pos_y, t_pos_z, t_interior, t_world)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}/t[ele]p[ort] coord <x> <y> <z> <интерьер> <мир>");
+		SetPlayerPos(playerid,t_pos_x, t_pos_y, t_pos_z);
+		SetPlayerInterior(playerid, t_interior);
+		SetPlayerVirtualWorld(playerid, t_world);
+	}
+	return true;
+}
+alias:teleport("tp");

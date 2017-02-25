@@ -8,7 +8,7 @@
 #include <color>
 #include <kick>
 #include <crashdetect>
-// ОБНОВИТЬ /SPECTATE
+
 #include <YSI_Coding\y_timers>
 #include <YSI_Coding\y_va>
 #include <YSI_Data\y_iterate>

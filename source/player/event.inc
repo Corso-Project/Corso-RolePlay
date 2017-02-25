@@ -264,7 +264,8 @@ public OnPlayerText(playerid, text[])
 	strtolower(text);
 	format(P[playerid][_p_chat_msg], 128, text);
 	SetPlayerChatBubble(playerid, text, 0xFFFFFFFF, 35.0, 5000);
-	ApplyAnimation(playerid,"PED","IDLE_chat", 4.1, 0, 1, 1, 1, 1, 1);
+	ApplyAnimation(playerid,"PED","IDLE_chat",4.1,0,1,1,1,1,1);
+	defer OnPlayerClearAnimation[6000](playerid);
 	new Float: x, Float: y, Float: z;
 	new line1[128], line2[128];
 	if(strlen(text) > 64) {
@@ -439,13 +440,13 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
 	if(P[playerid][_p_in_game] == false) return 0;
 
-	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
+	// Управление автомобилем
+	if(newkeys & KEY_YES)
 	{
-		new vehicleid = GetPlayerVehicleID(playerid);
+		if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
+		{
+			new vehicleid = GetPlayerVehicleID(playerid);
 
-	    // Управление автомобилем
-	    if(newkeys & KEY_YES)
-	    {
 	    	new source[202],str_engine[36],str_lights[32],str_doors[30],str_bonnet[30],str_boot[33];
 	    	new engine,lights,alarm,doors,bonnet,boot,objective;
 	    	GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
@@ -479,11 +480,18 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			}
 	    	ShowPlayerDialog(playerid, d_vehicle_panel, DIALOG_STYLE_LIST, "Управление автомобилем",source,"Выбор","Отмена");
 	    }
-	    // Anti Speed Hack
-	    if(newkeys & KEY_FIRE || oldkeys & KEY_FIRE)
-	    {
-	        if(Vehicle_Speed(vehicleid) > 270) P[playerid][_p_cheater]++;
-	    }
+		if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
+			Show_PlayerLic(playerid, GetPVarInt(playerid, "IdShow"));
+			DeletePVar(playerid, "Show_PlayerLic");
+			DeletePVar(playerid, "IdShow");
+		}
+	}
+	if(newkeys & KEY_NO){
+		if(GetPVarInt(playerid, "ShowLic") == 1) {
+		    va_SendClientMessage(GetPVarInt(playerid, "IdShow"), -1, "%s отказался смотреть ваш список лицензий", Name(playerid));
+		    DeletePVar(playerid, "ShowLic");
+		    DeletePVar(playerid, "IdShow");
+		}
 	}
 	// Открытие ворот и/или шлагбаумов
 	if(newkeys & KEY_CROUCH)
@@ -1066,27 +1074,51 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
 	}
 	return true;
 }
-forward ShowStats(playerid,targetid);
-public ShowStats(playerid,targetid){
+forward Show_PlayerStats(playerid,targetid);
+public Show_PlayerStats(playerid,targetid){
 	new string[256];
 	new sex[8];
 	sex = (P[playerid][p_sex] == 0) ? "Женский" : "Мужской";
-	format(string,sizeof string,"{FFFFFF}Имя:\t\t\t\t\t{0099FF}%s{FFFFFF}\n\
-	Уровень:\t\t\t\t%d\n\
-	Очки опыта:\t\t\t\t%d из %d\n\
-	Организация:\t\t\t\t%s\n\
-	Ранг:\t\t\t\t\t%s\n\
-	Пол:\t\t\t\t\t%s\n\
-	Денег:\t\t\t\t\t$%.2f\n",
+
+	format(string,sizeof string,"{FFFFFF}Имя:\t\t\t\t\t\t{0099FF}%s{FFFFFF}\n\
+	Уровень:\t\t\t\t\t%d\n\
+	Очки опыта:\t\t\t\t\t%d из %d\n\
+	Работа/Организация:\t\t\t\t%s\n\
+	Должность:\t\t\t\t\t%s\n\
+	Пол:\t\t\t\t\t\t%s\n\
+	Денег:\t\t\t\t\t\t$%.2f\n",
 		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash]);
 	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
 	return true;
+}
+forward Show_PlayerLic(playerid,targetid);
+public Show_PlayerLic(playerid,targetid){
+	new output[570],lic_car[26],lic_aircraft[26],lic_boat[26],lic_moto[26],lic_weapon[26],lic_business[26],lic_freight[26],lic_helicopter[26];
+	lic_car = (P[playerid][p_lic_car] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	lic_aircraft = (P[playerid][p_lic_aircraft] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	lic_boat = (P[playerid][p_lic_boat] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	lic_moto = (P[playerid][p_lic_moto] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	lic_weapon = (P[playerid][p_lic_weapon] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	lic_business = (P[playerid][p_lic_business] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	lic_freight = (P[playerid][p_lic_freight] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	lic_helicopter = (P[playerid][p_lic_helicopter] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
+	format(output, sizeof(output),
+		"{FFFFFF}Водительские права:\t\t\t\t\t%s\n\
+		Лицензия пилотирования самолётом:\t\t%s\n\
+		Лицензия на водный транспорт:\t\t\t%s\n\
+		Лицензия на вождения спорт байка:\t\t%s\n\
+		Лицензия на оружие:\t\t\t\t\t%s\n\
+		Лицензия на бизнес:\t\t\t\t\t%s\n\
+		Лицензия на грузо-перевозку:\t\t\t%s\n\
+		Лицензия на пилотирования вертолётом:\t\t%s",
+		lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_business,lic_freight,lic_helicopter);
+	ShowPlayerDialog(targetid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
+	return 1;
 }
 forward StartSpectate(playerid, specid);
 public StartSpectate(playerid, specid)
 {
 	PlayerTextDrawShow(playerid, P[playerid][SpecText]);
     SpectateUpdatePlayer(playerid);
-    //SpectorsShow(playerid);
     return true;
 }

@@ -308,7 +308,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     // Мену
 	case d_player_menu: if(response) switch(listitem)
 	{
-	    case 0:ShowStats(playerid,playerid);
+	    case 0:Show_PlayerStats(playerid,playerid);
         case 1:ShowPlayerDialog(playerid,d_player_settings, DIALOG_STYLE_LIST,"Настройки учётной записи","Сменить пароль","Выход","");
         case 2:ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Справка о доступных командах", "{FFFFFF}/lock - закрыть/открыть двери автомобиля\n/fill - заправить ТС\n/mn - меню\n/lic - посмотреть список лицензий", "Выход", "");
         case 3:{

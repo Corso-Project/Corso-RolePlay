@@ -17,8 +17,6 @@ public OnGameModeInit()
 	mysql_tquery(MySQL:1,"SELECT * FROM `petrol_stations`", "OnMySQL_SelectPetrolStations");
 	// GangZones
 	mysql_tquery(MySQL:1,"SELECT * FROM `gangzones`", "OnMySQL_SelectGangZones");
-	// Rangs
-	mysql_tquery(MySQL:1,"SELECT * FROM `rangs`", "OnMySQL_SelectRangs");
 	// Параметры игрового режима
 	SendRconCommand("loadfs map");
 	SetGameModeText(GAMEMODE_VERSION);

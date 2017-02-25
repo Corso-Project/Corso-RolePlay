@@ -45,9 +45,9 @@ stock Get_TeamName(playerid)
 }
 stock Get_RangName(playerid)
 {
-	new dests[43];
+	new dests[41+1];
 	switch(P[playerid][p_job_team]){
-		case ORG_UNKNOWN: dests = "Безработный";
+		case ORG_UNKNOWN, JOB_TAXI, JOB_ENGINEER, JOB_FREIGHTER, JOB_WHITEWING : dests = "-";
 		case ORG_GOVERNMENT:{
 			switch(P[playerid][p_rang]){
 				case 1: dests = "Водитель";
@@ -104,6 +104,35 @@ stock Get_RangName(playerid)
 				case 8: dests = "Старший специалист";
 				case 9: dests = "Заведующий отделением";
 				case 10: dests = "Главный врач";
+			}
+		}
+		case ORG_GROVE:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Newman";
+				case 2: dests = "Hustla";
+				case 3: dests = "Huckster";
+				case 4: dests = "True";
+				case 5: dests = "Warrior";
+				case 6: dests = "Gangsta";
+				case 7: dests = "O.G";
+				case 8: dests = "Big Bro";
+				case 9: dests = "Legend";
+				case 10: dests = "Daddy";
+
+			}
+		}
+		case ORG_ITALIAN:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Novizio";
+				case 2: dests = "Associato";
+				case 3: dests = "Controllato";
+				case 4: dests = "Razionate";
+				case 5: dests = "Combatento";
+				case 6: dests = "Soldato";
+				case 7: dests = "Capo";
+				case 8: dests = "Strada Boss";
+				case 9: dests = "Consigliere";
+				case 10: dests = "Don";
 			}
 		}
 	}
@@ -197,7 +226,6 @@ stock Weapon_Sync(playerid)
 				P[playerid][p_ammo_2] = 0;
 				P[playerid][p_ammo_3] = 0;
 				P[playerid][p_ammo_4] = 0;
-				//Message_ToAdmins(0xB9C9BFFF, "[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
 
 				format(mes, sizeof(mes),"[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
 				Message_ToAdmins(0xB9C9BFFF, mes);
