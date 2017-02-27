@@ -221,6 +221,41 @@ public OnPlayerSpawn(playerid)
 				SetPlayerFacingAngle(playerid, 269.2349);
 				SetPlayerColor(playerid, 0x1C5A8DFF);
 	    	}
+			case ORG_GROVE:{
+				SetPlayerColor(playerid, 0x33AA33AA);
+				SetPlayerPos(playerid, 2450.4082,-1688.8137,1013.5078);
+				SetPlayerFacingAngle(playerid, 183.1466);
+				SetPlayerVirtualWorld(playerid, 2);
+				SetPlayerInterior(playerid, 2);
+			}
+			case ORG_BALLAS:{
+				SetPlayerColor(playerid, 0x800080AA);
+				SetPlayerPos(playerid, -49.8330,1399.4309,1084.4297);
+				SetPlayerVirtualWorld(playerid, 2);
+				SetPlayerFacingAngle(playerid, 1.5980);
+				SetPlayerInterior(playerid, 8);
+			}
+			case ORG_AZTECAS:{
+				SetPlayerColor(playerid, 0x33CCFFAA);
+				SetPlayerPos(playerid, 232.1111,1247.3945,1082.1406);
+				SetPlayerVirtualWorld(playerid, 2);
+				SetPlayerFacingAngle(playerid, 127.5216);
+				SetPlayerInterior(playerid, 2);
+			}
+			case ORG_VAGOS:{
+				SetPlayerColor(playerid, 0xFFFF00AA);
+				SetPlayerPos(playerid, 332.5013,1120.7383,1083.8903);
+				SetPlayerVirtualWorld(playerid, 2);
+				SetPlayerFacingAngle(playerid, 75.3197);
+				SetPlayerInterior(playerid, 5);
+			}
+			case ORG_RIFA:{
+				SetPlayerColor(playerid, 0x88CCCCBB);
+				SetPlayerPos(playerid, -59.2154,1364.5841,1080.2109);
+				SetPlayerVirtualWorld(playerid, 2);
+				SetPlayerFacingAngle(playerid, 90.8673);
+				SetPlayerInterior(playerid, 6);
+			}
 	    	default:
 			{
 	        	SetPlayerInterior(playerid, 0);
@@ -989,6 +1024,76 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,-2483.6584,514.0369,51.0638);
 		SetPlayerFacingAngle(playerid, 270.0022);
+	}
+	else if(pickupid == Grove[0]){
+		SetPlayerPos(playerid, 2466.4688,-1698.4783,1013.5078);
+		SetPlayerFacingAngle(playerid, 86.2566);
+		SetPlayerVirtualWorld(playerid, 2);
+		SetPlayerInterior(playerid, 2);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Grove[1]){
+		SetPlayerPos(playerid, 2495.3022,-1688.5438,13.8722);
+		SetPlayerFacingAngle(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerInterior(playerid, 0);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Ballas[0]){
+		SetPlayerPos(playerid, -42.6860,1408.4878,1084.4297);
+		SetPlayerFacingAngle(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 2);
+		SetPlayerInterior(playerid, 8);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Ballas[1]){
+		SetPlayerPos(playerid, 2022.9169,-1122.8164,26.2401);
+		SetPlayerFacingAngle(playerid, 179.8987);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Aztecas[0]){
+		SetPlayerPos(playerid, 222.9479,1240.1484,1082.1406);
+		SetPlayerFacingAngle(playerid, 84.5630);
+		SetPlayerVirtualWorld(playerid, 2);
+		SetPlayerInterior(playerid, 2);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Aztecas[1]){
+		SetPlayerPos(playerid, 2185.6555,-1812.5112,13.5650);
+	    SetPlayerFacingAngle(playerid, 0);
+	    SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerInterior(playerid, 0);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Vagos[0]){
+		SetPlayerPos(playerid, 318.564971,1118.209960,1083.882812);
+		SetPlayerFacingAngle(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 2);
+		SetPlayerInterior(playerid, 5);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Vagos[1]){
+		SetPlayerPos(playerid, 2756.1492,-1180.2386,69.3978);
+		SetPlayerFacingAngle(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerInterior(playerid, 0);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Rifa[0]){
+		SetPlayerPos(playerid, -68.9146,1353.8420,1080.2109);
+		SetPlayerFacingAngle(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 2);
+		SetPlayerInterior(playerid, 6);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Rifa[1]){
+		SetPlayerPos(playerid, 2784.4846,-1926.1527,13.5469);
+		SetPlayerFacingAngle(playerid, 87.2075);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerInterior(playerid, 0);
+		SetCameraBehindPlayer(playerid);
 	}
     return 1;
 }

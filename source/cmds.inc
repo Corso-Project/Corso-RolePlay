@@ -692,3 +692,8 @@ CMD:teleport(playerid,params[]){ //concept from GTO
 	return true;
 }
 alias:teleport("tp");
+CMD:spawn(playerid,params[]){
+	if(P[playerid][p_access] < 1) return true;
+	SpawnPlayer(playerid);
+	return true;
+}

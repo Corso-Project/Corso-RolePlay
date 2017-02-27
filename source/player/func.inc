@@ -121,16 +121,100 @@ stock Get_RangName(playerid)
 
 			}
 		}
+		case ORG_BALLAS:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Stranger";
+				case 2: dests = "Newman";
+				case 3: dests = "Campbell";
+				case 4: dests = "Nigga";
+				case 5: dests = "Dre Papo";
+				case 6: dests = "Gangsta";
+				case 7: dests = "Shooter";
+				case 8: dests = "Warrior";
+				case 9: dests = "De King";
+				case 10: dests = "Big Daddy";
+			}
+		}
+		case ORG_AZTECAS:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Macho";
+				case 2: dests = "Muchachos";
+				case 3: dests = "El Mundo";
+				case 4: dests = "De Mucho";
+				case 5: dests = "El Papo";
+				case 6: dests = "Amigos";
+				case 7: dests = "Comproma";
+				case 8: dests = "Aproximado";
+				case 9: dests = "Sientes";
+				case 10: dests = "Sientes";
+			}
+		}
+		case ORG_VAGOS:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Papo";
+				case 2: dests = "El Mundo";
+				case 3: dests = "De Mucho";
+				case 4: dests = "Amigos";
+				case 5: dests = "Muchachos";
+				case 6: dests = "Eltodor";
+				case 7: dests = "Luchador";
+				case 8: dests = "Comproma";
+				case 9: dests = "Loco";
+				case 10: dests = "Padre";
+			}
+		}
+		case ORG_RIFA:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Macho";
+				case 2: dests = "Muchachos";
+				case 3: dests = "Amigo";
+				case 4: dests = "Mirame";
+				case 5: dests = "Matangos";
+				case 6: dests = "El Pachino";
+				case 7: dests = "Latin Dema";
+				case 8: dests = "Vercificado";
+				case 9: dests = "Del Sombra";
+				case 10: dests = "Sie Padre";
+			}
+		}
+		case ORG_CHINESE:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Cumite";
+				case 2: dests = "Blue Lantern";
+				case 3: dests = "49'er";
+				case 4: dests = "Straw Sandal";
+				case 5: dests = "White Paper Fan";
+				case 6: dests = "Red Poles";
+				case 7: dests = "Vanguard";
+				case 8: dests = "Incense Master";
+				case 9: dests = "Assistant Mountain Lord";
+				case 10: dests = "Dragon";
+			}
+		}
+		case ORG_RUSSIAN:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Чистый";
+				case 2: dests = "Арестант";
+				case 3: dests = "Смотрящий";
+				case 4: dests = "Правильный";
+				case 5: dests = "Жулик";
+				case 6: dests = "Босяк";
+				case 7: dests = "Бродяга";
+				case 8: dests = "Козырный фраер";
+				case 9: dests = "Авторитет";
+				case 10: dests = "Вор в законе";
+			}
+		}
 		case ORG_ITALIAN:{
 			switch(P[playerid][p_rang]){
-				case 1: dests = "Novizio";
+				case 1: dests = "Picciotti";
 				case 2: dests = "Associato";
 				case 3: dests = "Controllato";
 				case 4: dests = "Razionate";
 				case 5: dests = "Combatento";
 				case 6: dests = "Soldato";
-				case 7: dests = "Capo";
-				case 8: dests = "Strada Boss";
+				case 7: dests = "Sottocapo";
+				case 8: dests = "Cappo of Caporagimes";
 				case 9: dests = "Consigliere";
 				case 10: dests = "Don";
 			}

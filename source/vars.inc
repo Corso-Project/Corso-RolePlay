@@ -187,11 +187,11 @@ new V_GOVERNMENT[7],
 	V_EMERGENCY[14],
 	//V_SANNEWS[],
 	V_AUTOSCHOOL[8],
-	//V_GROVE[],
-	//V_BALLAS[],
-	//V_AZTECAS[],
-	//V_VAGOS[],
-	//V_RIFA[],
+	V_GROVE[5],
+	V_BALLAS[7],
+	V_AZTECAS[7],
+	V_VAGOS[5],
+	V_RIFA[8],
 	//V_CHINESE[],
 	//V_RUSSIAN[],
 	//V_ITALIAN[],
@@ -251,6 +251,11 @@ new LSPD[2];
 new CityHall[2];
 new Whitewing[2];
 new FBI[4];
+new Grove[2];
+new Ballas[2];
+new Aztecas[2];
+new Vagos[2];
+new Rifa[2];
 // CheckPoint
 new Buy_Weapon;
 // Text-Draws
