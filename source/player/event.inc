@@ -516,7 +516,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	    	ShowPlayerDialog(playerid, d_vehicle_panel, DIALOG_STYLE_LIST, "Управление автомобилем",source,"Выбор","Отмена");
 	    }
 		if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
-			Show_PlayerLic(playerid, GetPVarInt(playerid, "IdShow"));
+			Show_PlayerLic(targetid, GetPVarInt(playerid, "IdShow"));
 			DeletePVar(playerid, "Show_PlayerLic");
 			DeletePVar(playerid, "IdShow");
 		}

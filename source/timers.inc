@@ -105,7 +105,8 @@ ptask SpectateUpdatePlayer[1000](playerid){
 	PlayerTextDrawSetString(playerid, P[playerid][SpecText], string);
 }
 timer OnPlayerClearAnimation[500](playerid){
-	ApplyAnimation(playerid,"CARRY","crry_prtial",4.0,0,0,0,0,0,1);
+	ClearAnimations(playerid);
+	printf("OnPlayerClearAnimation");
 }
 ptask OnPlayerVehicleFuelSync[1000](playerid)
 {

@@ -32,7 +32,22 @@ stock Message_ToJobTeam(playerid,color, const fmat[], va_args<>)
 {
 	foreach(new i : Player)
 		if (P[playerid][p_job_team] == P[i][p_job_team])
-			SendClientMessage(i, color, va_return(fmat, va_start<2>));
+			SendClientMessage(i, color, va_return(fmat, va_start<3>));
+}
+stock Message_ToComuneTeam(job,color, const fmat[], va_args<>){
+	foreach(new i : Player){
+		switch(job){
+			case 2..5: if(P[i][p_job_team] >= 2 && P[i][p_job_team] <= 5) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 10: if(P[i][p_job_team] == 10) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 11: if(P[i][p_job_team] == 11) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 12: if(P[i][p_job_team] == 12) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 13: if(P[i][p_job_team] == 13) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 14: if(P[i][p_job_team] == 14) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 15: if(P[i][p_job_team] == 15) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 16: if(P[i][p_job_team] == 16) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			case 17: if(P[i][p_job_team] == 17) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+		}
+	}
 }
 stock containsAnyIP(const string[])
 {

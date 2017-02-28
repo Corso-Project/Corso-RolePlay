@@ -411,8 +411,11 @@ public OnCheatDetected(playerid, ip_address[], type, code)
 		switch(code) //Какой чит?
 		{
 			case 5: return 1; //Телепорт незанятых авто (античит в любом случае вернёт её на прежнее место, наказание лучше не делать)
+			case 8:{
+				Message_ToAdmins(0xB9C9BFFF, "[Защита]: {FFFFFF}Подозрение на FlyHack (in vehicle)- %s[%d]",Name(playerid),playerid);
+			}
 			case 11: //Починка транспорта, лучше вернуть ему старое хп (если не применит его - сработает уже анти-ноп)
-			 {
+			{
 				new vehid = GetPlayerVehicleID(playerid), Float:vhealth;
 				AntiCheatGetVehicleHealth(vehid, vhealth);
 				SetVehicleHealth(vehid, vhealth);
