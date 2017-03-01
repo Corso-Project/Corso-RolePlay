@@ -10,7 +10,7 @@ timer OnRentVehicleEnd[30*60*1000](vehicleid, category)
 	switch(category) {
 	    case ORG_UNKNOWN: {
 			for(new i; i < sizeof(V_RENT); i++) {
-			    if(vehicleid != V_RENT[i]) continue;
+			    if(vehicleid != V_RENT[i] || vehicleid != V_RENT_STANDART[i] || vehicleid != V_RENT_PREMIUM[i]) continue;
 			    V_RENT_OWNER[i] = 0;
 			}
 			new engine,lights,alarm,doors,bonnet,boot,objective;
@@ -106,7 +106,6 @@ ptask SpectateUpdatePlayer[1000](playerid){
 }
 timer OnPlayerClearAnimation[500](playerid){
 	ClearAnimations(playerid);
-	printf("OnPlayerClearAnimation");
 }
 ptask OnPlayerVehicleFuelSync[1000](playerid)
 {
@@ -116,8 +115,8 @@ ptask OnPlayerVehicleFuelSync[1000](playerid)
 		new KMH = Vehicle_Speed(vehicleid);
 		GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
 		if(engine == 1) switch(KMH) {
-			case 0: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], 0.00040);
-			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00072));
+			case 0: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], 0.00080);
+			default: V[vehicleid][v_fuel] = floatsub(V[vehicleid][v_fuel], (KMH * 0.00099));
 		}
 		if(Vehicle_WithoutFuel(GetVehicleModel(vehicleid)) == 0) {
 			if(V[vehicleid][v_fuel] <= 0) {

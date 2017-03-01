@@ -30,6 +30,36 @@ stock Vehicle_IsNotForPlayer(vehicleid, playerid)
 	    if(P[playerid][p_job_team] != ORG_FBI && P[playerid][p_job_team] != ORG_EMERGENCY) return 1;
 	    return 0;
 	}
+	for(new i; i < sizeof(V_AUTOSCHOOL); i++) {
+		if(vehicleid != V_AUTOSCHOOL[i]) continue;
+		if(P[playerid][p_job_team] != ORG_FBI && P[playerid][p_job_team] != ORG_AUTOSCHOOL) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_GROVE); i++) {
+		if(vehicleid != V_GROVE[i]) continue;
+		if(P[playerid][p_job_team] != ORG_GROVE) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_BALLAS); i++) {
+		if(vehicleid != V_BALLAS[i]) continue;
+		if(P[playerid][p_job_team] != ORG_BALLAS) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_AZTECAS); i++) {
+		if(vehicleid != V_AZTECAS[i]) continue;
+		if(P[playerid][p_job_team] != ORG_AZTECAS) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_VAGOS); i++) {
+		if(vehicleid != V_VAGOS[i]) continue;
+		if(P[playerid][p_job_team] != ORG_VAGOS) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_RIFA); i++) {
+		if(vehicleid != V_RIFA[i]) continue;
+		if(P[playerid][p_job_team] != ORG_RIFA) return 1;
+		return 0;
+	}
 	for(new i; i < sizeof(V_TAXI); i++) {
 		if(vehicleid != V_TAXI[i]) continue;
 		if(P[playerid][p_job_team] != JOB_TAXI) return 1;
@@ -54,6 +84,16 @@ stock Vehicle_IsNotForPlayer(vehicleid, playerid)
 	    if(vehicleid != V_RENT[i]) continue;
 	    if(V_RENT_OWNER[i] != P[playerid][p_uid]) return 1;
 	    return 0;
+	}
+	for(new i; i < sizeof(V_RENT_STANDART); i++) {
+		if(vehicleid != V_RENT_STANDART[i]) continue;
+		if(V_RENT_OWNER[i] != P[playerid][p_uid]) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
+		if(vehicleid != V_RENT_PREMIUM[i]) continue;
+		if(V_RENT_OWNER[i] != P[playerid][p_uid]) return 1;
+		return 0;
 	}
 	return 0;
 }
