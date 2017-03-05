@@ -256,6 +256,13 @@ public OnPlayerSpawn(playerid)
 				SetPlayerFacingAngle(playerid, 90.8673);
 				SetPlayerInterior(playerid, 6);
 			}
+			case ORG_CHINESE:{
+				SetPlayerPos(playerid,1266.6045,-787.2869,1084.0149);
+				SetPlayerFacingAngle(playerid, 144.7664);
+				SetPlayerVirtualWorld(playerid, 0);
+				SetPlayerInterior(playerid, 5);
+				SetCameraBehindPlayer(playerid);
+			}
 	    	default:
 			{
 	        	SetPlayerInterior(playerid, 0);
@@ -744,16 +751,18 @@ public OnPlayerTakeDamage(playerid, issuerid, Float: amount, weaponid, bodypart)
 public OnPlayerEnterDynamicCP(playerid,checkpointid)
 {
 	if(checkpointid == Buy_Weapon){
-		new source[180];
-		format(source, sizeof(source),
-			"Оружие\tЦена\tПатроны\n\
-			Desert Eagle\t$%.2f\t100\n\
-			Shotgun\t$%.2f\t100\n\
-			Micro SMG/Uzi\t$%.2f\t100\n\
-			MP5\t$%.2f\t100\n\
-			Country Rifle\t$%.2f\t100\n",
-			Prices_Deagle,Prices_ShotGun,Prices_Uzi,Prices_MP5,Prices_CRifle);
-		ShowPlayerDialog(playerid, d_player_buy_gun, DIALOG_STYLE_TABLIST_HEADERS, "Покупка оружия",source,"Выбор","Выйти");
+		if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете купить оружие без лицензий.");
+		ShowPlayerDialog(playerid, d_player_buy_gun, DIALOG_STYLE_TABLIST_HEADERS, "Покупка оружия",
+			"{FFFFFF}Оружие\t{FFFFFF}Цена\t{FFFFFF}Количество патронов\n\
+			Пистолет\t$200\t30\n\
+			Пистолет с глушителем\t$600\t30\n\
+			Desert Deagle\t$1200\t15\n\
+			Tec-9\t$300\t60\n\
+			Micro-Uzi\t$500\t60\n\
+			Помповый дробовик\t$600\t15\n\
+			MP5\t$2000\t90\n\
+			AK47\t$3500\t120\n\
+			M4\t$4500\t150","Выбор","Выйти");
 	}
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
 		if(P[playerid][p_job_team] == JOB_WHITEWING){
@@ -904,7 +913,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	PickupGetTime[playerid] = gettime() + 1;
 	if(pickupid == Ammu_Nation[0])
 	{
-		if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, -1,"{FF6600}Чтобы войти Вам нужно иметь лицензию на оружие");
+		SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,1);
 		SetPlayerPos(playerid,286.9145,-38.6596,1001.5156);
 		SetPlayerFacingAngle(playerid, 329.0564);
@@ -912,6 +921,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	}
 	else if(pickupid == Ammu_Nation[1])
 	{
+		SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,1366.5776,-1279.5397,13.5469);
 		SetPlayerFacingAngle(playerid, 89.7301);
@@ -919,7 +929,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	}
 	else if(pickupid == Ammu_Nation[2])
 	{
-		if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, -1,"{FF6600}Чтобы войти Вам нужно иметь лицензию на оружие");
+		SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,4);
 		SetPlayerPos(playerid,286.8773,-83.5809,1001.5156);
 		SetPlayerFacingAngle(playerid, 334.2157);
@@ -927,6 +937,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	}
 	else if(pickupid == Ammu_Nation[3])
 	{
+		SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,-2626.6384,210.3960,4.5971);
 		SetPlayerFacingAngle(playerid, 13.1113);
@@ -934,7 +945,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	}
 	else if(pickupid == Ammu_Nation[4])
 	{
-	    if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, -1,"{FF6600}Чтобы войти Вам нужно иметь лицензию на оружие");
+	    SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,7);
 		SetPlayerPos(playerid,313.7110,-140.3784,999.6016);
 		SetPlayerFacingAngle(playerid, 334.2157);
@@ -942,6 +953,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
  	}
 	else if(pickupid == Ammu_Nation[5])
 	{
+		SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,2156.1997,943.3864,10.8203);
 		SetPlayerFacingAngle(playerid, 81.7582);
@@ -949,7 +961,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	}
 	else if(pickupid == Ammu_Nation[6])
 	{
-	    if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, -1,"{FF6600}Чтобы войти Вам нужно иметь лицензию на оружие");
+	    SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,6);
 		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
 		SetPlayerFacingAngle(playerid, 1.2438);
@@ -959,6 +971,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
  	}
  	else if(pickupid == Ammu_Nation[7])
 	{
+		SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,2400.5554,-1980.2947,13.5469);
 		SetPlayerFacingAngle(playerid, 5.1592);
@@ -1093,6 +1106,18 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerFacingAngle(playerid, 87.2075);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerInterior(playerid, 0);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Chinese[0]){
+		SetPlayerPos(playerid, 1299.0084,-794.9550,1084.0078);
+		SetPlayerFacingAngle(playerid, 359.8387);
+		SetPlayerInterior(playerid,5);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Chinese[1]){
+		SetPlayerPos(playerid, 2597.6270,1898.6757,11.0312);
+		SetPlayerFacingAngle(playerid, 178.7144);
+		SetPlayerInterior(playerid,0);
 		SetCameraBehindPlayer(playerid);
 	}
     return 1;

@@ -192,7 +192,7 @@ new V_GOVERNMENT[7],
 	V_AZTECAS[7],
 	V_VAGOS[5],
 	V_RIFA[8],
-	//V_CHINESE[],
+	V_CHINESE[8],
 	//V_RUSSIAN[],
 	//V_ITALIAN[],
 	V_TAXI[21],
@@ -234,12 +234,7 @@ new g_MySQL_Host[46],
 // prices.ini
 new Float: Prices_RentCar_Econom,
 	Float: Prices_RentCar_Standart,
-	Float: Prices_RentCar_Premium,
-	Float: Prices_Deagle,
-	Float: Prices_ShotGun,
-	Float: Prices_Uzi,
-	Float: Prices_MP5,
-	Float: Prices_CRifle;
+	Float: Prices_RentCar_Premium;
 // settings.ini
 new g_Chat_OOC,
 	Float: g_Payment_Register;
@@ -256,6 +251,7 @@ new Ballas[2];
 new Aztecas[2];
 new Vagos[2];
 new Rifa[2];
+new Chinese[2];
 // CheckPoint
 new Buy_Weapon;
 // Text-Draws

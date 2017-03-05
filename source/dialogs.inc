@@ -344,45 +344,50 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	case d_player_buy_gun: if(response) switch(listitem)
     {
 		case 0:{
-			Weapon_Give(playerid,24,100);
-			Cash_Give(playerid, -Prices_Deagle);
-            va_SendClientMessage(playerid, -1, "Вы купили Desert Eagle, с 100 патронами за $%.2f",Prices_Deagle);
-            new string[16];
-            format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-            PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
+            if(P[playerid][p_cash] < 200) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+			Weapon_Give(playerid,22,30);
+			Cash_Give(playerid, -200);
 		}
-		case 1:{
-			Weapon_Give(playerid,25,100);
-			Cash_Give(playerid, -Prices_ShotGun);
-            va_SendClientMessage(playerid, -1, "Вы купили ShotGun, с 100 патронами за $%.2f",Prices_ShotGun);
-            new string[16];
-            format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-            PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
-		}
-		case 2:{
-			Weapon_Give(playerid,28,100);
-			Cash_Give(playerid, -Prices_Uzi);
-            va_SendClientMessage(playerid, -1, "Вы купили UZI, с 100 патронами за $%.2f",Prices_Uzi);
-            new string[16];
-            format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-            PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
-		}
-		case 3:{
-			Weapon_Give(playerid,29,100);
-			Cash_Give(playerid, -Prices_MP5);
-            va_SendClientMessage(playerid, -1, "Вы купили MP5, с 100 патронами за $%.2f",Prices_MP5);
-            new string[16];
-            format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-            PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
-		}
-		case 4:{
-			Weapon_Give(playerid,33,100);
-			Cash_Give(playerid, -Prices_CRifle);
-            va_SendClientMessage(playerid, -1, "Вы купили Country Rifle, с 100 патронами за $%.2f",Prices_CRifle);
-            new string[16];
-            format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-            PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
-		}
+        case 1:{
+            if(P[playerid][p_cash] < 600) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,23,30);
+            Cash_Give(playerid, -600);
+        }
+        case 2:{
+            if(P[playerid][p_cash] < 1200) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,24,15);
+            Cash_Give(playerid,-1200);
+        }
+        case 3:{
+            if(P[playerid][p_cash] < 300) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,32,60);
+            Cash_Give(playerid, -300);
+        }
+        case 4:{
+            if(P[playerid][p_cash] < 500) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,28,60);
+            Cash_Give(playerid,-500);
+        }
+        case 5:{
+            if(P[playerid][p_cash] < 600) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,25,15);
+            Cash_Give(playerid,-600);
+        }
+        case 6:{
+            if(P[playerid][p_cash] < 2000) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,29, 90);
+            Cash_Give(playerid,-2000);
+        }
+        case 7:{
+            if(P[playerid][p_cash] < 3500) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,30,120);
+            Cash_Give(playerid,-3500);
+        }
+        case 8:{
+            if(P[playerid][p_cash] < 4500) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+            Weapon_Give(playerid,31,150);
+            Cash_Give(playerid,-4500);
+        }
 	}
     // Основное меню GPS
     case d_player_gps: if(response) switch(listitem){

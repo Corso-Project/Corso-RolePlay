@@ -201,6 +201,15 @@ public OnGameModeInit()
 	V_RIFA[5] = Vehicle_Add(566,2764.1392,-1923.2371,13.1346,0.6155,198,198);
 	V_RIFA[6] = Vehicle_Add(566,2764.4043,-1935.8153,13.1914,0.3832,198,198);
 	V_RIFA[7] = Vehicle_Add(566,2764.5476,-1945.1934,13.1941,0.4081,198,198);
+	// Триды
+	V_CHINESE[0] = Vehicle_Add(429,2602.2261,1862.5442,10.5000,268.9338,0,0);
+	V_CHINESE[1] = Vehicle_Add(429,2602.1470,1856.1696,10.5005,270.5139,0,0);
+	V_CHINESE[2] = Vehicle_Add(561,2592.5845,1862.6935,10.6381,90.7983,0,0);
+	V_CHINESE[3] = Vehicle_Add(561,2592.6694,1856.2819,10.6340,90.2919,0,0);
+	V_CHINESE[4] = Vehicle_Add(560,2602.0710,1849.7856,10.5253,270.5330,0,0);
+	V_CHINESE[5] = Vehicle_Add(560,2602.1421,1843.4707,10.5256,269.5220,0,0);
+	V_CHINESE[6] = Vehicle_Add(562,2592.8848,1849.8975,10.4790,90.0678,0,0);
+	V_CHINESE[7] = Vehicle_Add(562,2592.8557,1843.4615,10.4790,90.2454,0,0);
 	// Такси
 	V_TAXI[0] = Vehicle_Add(420, 1552.7000, -2211.7000, 13.5000, 180.0000, 1,1);
 	V_TAXI[1] = Vehicle_Add(438, 1546.2400, -2211.7000, 13.7000, 180.0000, 1,1);
@@ -397,20 +406,23 @@ public OnGameModeInit()
 	FBI[2] = CreateDynamicPickup(1318,23,-2486.0371,514.0226,51.4849);
 	FBI[3] = CreateDynamicPickup(1318,23,288.8309,166.9291,1007.1719);
 	// Пикапы Grove
-	Grove[0] = CreateDynamicPickup(1318,23,2495.4309,-1691.1400,14.7656);//GROVE ENTER
-	Grove[1] = CreateDynamicPickup(1318,23,2468.4163,-1698.2432,1013.5078,2);
+	Grove[0] = CreateDynamicPickup(1318,23,2495.4309,-1691.1400,14.7656);
+	Grove[1] = CreateDynamicPickup(1318,23,2468.4163,-1698.2432,1013.5078);
 	// Пикапы Ballas
 	Ballas[0] = CreateDynamicPickup(1318,23,2022.8790,-1120.2637,26.4210);
-	Ballas[1] = CreateDynamicPickup(1318,23,-42.6055,1405.7949,1084.4297,2);
+	Ballas[1] = CreateDynamicPickup(1318,23,-42.6055,1405.7949,1084.4297);
 	// Пикапы Aztecas
 	Aztecas[0] = CreateDynamicPickup(1318,23,2185.8176,-1814.6786,13.5469);
-	Aztecas[1] = CreateDynamicPickup(1318,23,225.756989,1240.000000,1082.149902,2);
+	Aztecas[1] = CreateDynamicPickup(1318,23,225.756989,1240.000000,1082.149902);
 	// Пикапы Vagos
 	Vagos[0] = CreateDynamicPickup(1318,23,2756.2825,-1182.4691,69.3998);
-	Vagos[1] = CreateDynamicPickup(1318,23,318.6152,1114.8966,1083.8828,2);
+	Vagos[1] = CreateDynamicPickup(1318,23,318.6152,1114.8966,1083.8828);
 	// Пикапы Rifa
 	Rifa[0] = CreateDynamicPickup(1318,23,2787.0759,-1926.1780,13.5469);
-	Rifa[1] = CreateDynamicPickup(1318,23,-68.8279,1351.3553,1080.2109, 2);
+	Rifa[1] = CreateDynamicPickup(1318,23,-68.8279,1351.3553,1080.2109);
+	// Пикапы Chinese
+	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312);
+	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078);
 	// NPC's
 	CreateActor(179, 287.9097,-104.5135,1001.5156,176.2943); // Ammu-Nation LS Ghetto
 	// FBI NPC

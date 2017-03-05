@@ -288,7 +288,6 @@ stock IC_Me(playerid, action[])
 
 stock Weapon_Sync(playerid)
 {
-	new mes[164];
     if(P[playerid][_p_spawned] == false) return 1;
 	switch(GetPlayerState(playerid)) {
 	    case 0,7..9: return 1;
@@ -310,9 +309,7 @@ stock Weapon_Sync(playerid)
 				P[playerid][p_ammo_2] = 0;
 				P[playerid][p_ammo_3] = 0;
 				P[playerid][p_ammo_4] = 0;
-
-				format(mes, sizeof(mes),"[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
-				Message_ToAdmins(0xB9C9BFFF, mes);
+				Message_ToAdmins(0xB9C9BFFF, "[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
 				printf("[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
 				P[playerid][_p_cheater]++;
 			}
@@ -357,7 +354,6 @@ stock Weapon_Sync(playerid)
 			} // default
 	    } // switch
 	} // for
-	printf("debug12451 67");
 	return 1;
 }
 
@@ -411,8 +407,13 @@ public OnCheatDetected(playerid, ip_address[], type, code)
 		switch(code) //Какой чит?
 		{
 			case 5: return 1; //Телепорт незанятых авто (античит в любом случае вернёт её на прежнее место, наказание лучше не делать)
+			case 7:{
+				Message_ToAdmins(0xB22222FF, "[Защита]: {FFFFFF}Подозрение на FlyHack (onfoot) - %s[%d]",Name(playerid),playerid);
+				return 1;
+			}
 			case 8:{
-				Message_ToAdmins(0xB9C9BFFF, "[Защита]: {FFFFFF}Подозрение на FlyHack (in vehicle)- %s[%d]",Name(playerid),playerid);
+				Message_ToAdmins(0xB22222FF, "[Защита]: {FFFFFF}Подозрение на FlyHack (in vehicle) - %s[%d]",Name(playerid),playerid);
+				return 1;
 			}
 			case 11: //Починка транспорта, лучше вернуть ему старое хп (если не применит его - сработает уже анти-ноп)
 			{
@@ -511,7 +512,7 @@ stock Weapon_Give(playerid, weaponid, ammo)
             GivePlayerWeapon(playerid, weaponid, ammo);
 			GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
         }
-        case 25..27, 30, 31,33:
+        case 25..27, 30, 31, 33:
 		{
             P[playerid][p_weapon_4] = weaponid;
             P[playerid][p_ammo_4] += ammo;
