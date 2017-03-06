@@ -197,7 +197,6 @@ public OnFilterScriptInit()
 	CreateObject(1238, -2076.6001, -209.10001, 34.6, 0.00, 0.00, 0.00); //object (trafficcone) (178)
 	CreateObject(1238, -2076.6001, -209.8, 34.6, 0.00, 0.00, 0.00); //object (trafficcone) (179)
 	CreateObject(19425, -2078.80005, -209.8, 34.3, 0.00, 0.00, 0.00); //object (speed_bump01) (3)
-
 	print("map.pwn [loaded]");
 	return 1;
 }
@@ -205,5 +204,10 @@ public OnFilterScriptInit()
 public OnPlayerConnect(playerid)
 {
 	RemoveBuildingForPlayer(playerid,968,-2436.8125, 495.4688, 29.6797,10);
+	// Русская Мафия шлагбаумы
+	RemoveBuildingForPlayer(playerid, 1250, 997.4141, 1707.5234, 10.8516, 0.25);
+	RemoveBuildingForPlayer(playerid, 1250, 997.7266, 1759.1250, 10.8516, 0.25);
+	RemoveBuildingForPlayer(playerid, 1251, 997.0469, 1710.9531, 11.2656, 0.25);
+	RemoveBuildingForPlayer(playerid, 1251, 998.0938, 1755.6875, 11.2656, 0.25);
 	return 1;
 }
