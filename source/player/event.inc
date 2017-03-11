@@ -193,8 +193,6 @@ public OnPlayerDisconnect(playerid, reason)
 	for (new i = 0; i < sizeof(P[]); i++)
         P[playerid][E_PLAYER_DATA: i] = 0;
 
-    DeletePVar(playerid, "firstspawn");
-
 	StopAudioStreamForPlayer(playerid);
 	return 1;
 }
@@ -315,7 +313,7 @@ public OnPlayerDeath(playerid, killerid, reason)
 		format(string, sizeof(string), "%d~n~%d", gangskills[0], gangskills[1]);
 		TextDrawSetString(Capture[1],string);
 		foreach(new i : Player)
-			TextDrawShowForPlayer(i, Capture[0]);
+			TextDrawShowForPlayer(i, Capture[1]);
 	}
 	return 1;
 }
@@ -479,11 +477,13 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
                 break;
             }
-			new stri[115];
-			new string[80];
-			format(string,sizeof(string),"{FF8000}Мэрия\t[LS]\t{FFFFFF}— Уровень загрязнения {ff0000}%d %%",Whitewing_[0]); strcat(stri,string);
-			ShowPlayerDialog(playerid,d_job_whitewing,DIALOG_STYLE_LIST, "{FF8000}Выберите точку",stri,"Выбрать","Отмена");
-			break;
+			if(P[playerid][p_job_team] == 21){
+				new stri[115];
+				new string[80];
+				format(string,sizeof(string),"{FF8000}Мэрия\t[LS]\t{FFFFFF}— Уровень загрязнения {ff0000}%d %%",Whitewing_[0]); strcat(stri,string);
+				ShowPlayerDialog(playerid,d_job_whitewing,DIALOG_STYLE_LIST, "{FF8000}Выберите точку",stri,"Выбрать","Отмена");
+				break;
+			}
 		}
 	}
 	if(oldstate == PLAYER_STATE_DRIVER) {

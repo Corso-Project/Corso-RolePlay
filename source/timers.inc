@@ -83,23 +83,19 @@ task OnSecUpdate[1000](){
 	foreach(new i : Player)
 		if(P[i][_p_in_game] == false) return true;
 	if(waractive == true){
-		new string[50];
+		new string[76];
 		GangZoneSeconds--;
 		if(GangZoneSeconds < 0) {
 			GangZoneSeconds = 59;
 			GangZoneMinuts--;
 			if(GangZoneMinuts < 0) {
-				//Определяем по киллам что да как и даём победу, сам сделаешь, думаю
-				//HideZoneForAll
-				//ShowZoneForAll
-				//for(new i; i < 2; i++) TextDrawHideForAll(i);
 				if(gangskills[0] > gangskills[1]){
 					foreach(new i: Player){
 						if(P[i][p_job_team] == gangs[0]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы успешно захватили данную территорию.");
 						if(P[i][p_job_team] == gangs[1]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы проиграли в защите своей территорий...");
 						GZ[zone][gz_team] = gangs[0]-9;
 						GangZoneHideForAll(zone);
-						GangZoneShowForAll(zone, Get_TeamZoneColor(GZ[i][gz_team]));
+						GangZoneShowForAll(zone, Get_TeamZoneColor(GZ[zone][gz_team]));
 					}
 				}else if(gangskills[1] > gangskills[0]){
 					foreach(new i: Player){
@@ -119,6 +115,7 @@ task OnSecUpdate[1000](){
 				CaptureTime = TimeForCapt;
 				stop OnSecUpdate();
 				for(new x; x < 2; x++) TextDrawHideForAll(Capture[x]);
+				orm_update(GZ[zone][_gz_ormid]);
 				return true;
 			}
 		}

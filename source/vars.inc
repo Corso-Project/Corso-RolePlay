@@ -6,7 +6,7 @@
 #define MOVE_GATE_SPEED     	3.0
 #define MOVE_BARRIER_SPEED  	0.2
 #define TimeForCapt 25 // Дефайн отлёжки для капта
-#define GangZoneMinutsDef 7 // Дефайн минуты для капта
+#define GangZoneMinutsDef 1 // Дефайн минуты для капта
 
 
 enum {
@@ -378,7 +378,7 @@ public SetPlayerCameraPos_(playerid)
 
 new bool:waractive = false; // Проверяем активна ли борьба за квадрат
 
-new gangs[2] = 0; // Присвоение 
+new gangs[2] = 0; // Присвоение
 new CaptureTime=0; // Время капта
 new zone = 0; // Id зоны
 new gangskills[2] = 0; // Киллы

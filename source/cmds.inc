@@ -739,6 +739,7 @@ CMD:find(playerid,params[]){
 }
 
 CMD:capture(playerid, params[]){
+	if(P[playerid][p_job_team] < 10 || P[playerid][p_job_team] > 14) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете начать захват территорий.");
 	if(CaptureTime) return va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Следующий захват территоий будет доступен через %d минут", CaptureTime);
 	if(waractive == true) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Уже идёт захват!");
 	new Float:XX,
