@@ -5,6 +5,8 @@
 
 #define MOVE_GATE_SPEED     	3.0
 #define MOVE_BARRIER_SPEED  	0.2
+#define TimeForCapt 25 // Дефайн отлёжки для капта
+#define GangZoneMinutsDef 7 // Дефайн минуты для капта
 
 
 enum {
@@ -373,3 +375,13 @@ public SetPlayerCameraPos_(playerid)
 	InterpolateCameraPos(playerid, cam_start_pos[rand][0], cam_start_pos[rand][1], cam_start_pos[rand][2], cam_start_pos[rand][3], cam_start_pos[rand][4], cam_start_pos[rand][5], 1000);
 	InterpolateCameraLookAt(playerid, cam_start_look[rand][0], cam_start_look[rand][1], cam_start_look[rand][2], cam_start_look[rand][3], cam_start_look[rand][4], cam_start_look[rand][5], 1000);
 }
+
+new bool:waractive = false; // Проверяем активна ли борьба за квадрат
+
+new gangs[2] = 0; // Присвоение 
+new CaptureTime=0; // Время капта
+new zone = 0; // Id зоны
+new gangskills[2] = 0; // Киллы
+new Text:Capture[2]; // Текстдравы
+new GangZoneSeconds;
+new GangZoneMinuts;

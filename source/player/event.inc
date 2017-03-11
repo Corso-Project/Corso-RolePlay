@@ -176,6 +176,8 @@ public OnPlayerConnect(playerid)
 	//
 	TextDrawShowForPlayer(playerid, Corso);
 
+	SetPVarInt(playerid, "firstspawn", 1);
+
 	SetTimerEx("SetPlayerCameraPos_", 500, 0, "d", playerid);
 
 	return 1;
@@ -190,6 +192,8 @@ public OnPlayerDisconnect(playerid, reason)
 	}
 	for (new i = 0; i < sizeof(P[]); i++)
         P[playerid][E_PLAYER_DATA: i] = 0;
+
+    DeletePVar(playerid, "firstspawn");
 
 	StopAudioStreamForPlayer(playerid);
 	return 1;
@@ -282,8 +286,16 @@ public OnPlayerSpawn(playerid)
 		if(P[playerid][p_weapon_2] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
 		if(P[playerid][p_weapon_3] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
 		if(P[playerid][p_weapon_4] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
-		for(new i=0; i < sizeof(GZ); i++)
-			GangZoneShowForPlayer(playerid, GZ[i][_gz_local], GetTeamZoneColor(GZ[i][gz_team]));
+		if(GetPVarInt(playerid, "firstspawn") == 1){
+			for(new i=0; i < sizeof(GZ); i++)
+				GangZoneShowForPlayer(playerid, GZ[i][_gz_local], Get_TeamZoneColor(GZ[i][gz_team]));
+			SetPVarInt(playerid, "firstspawn", 0);
+			if(waractive == true && P[playerid][p_job_team] == gangs[0] || waractive == true && P[playerid][p_job_team] == gangs[1]){
+				GangZoneFlashForPlayer(playerid, zone, 0xFF000080);
+				va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Сейчас у вас проходит бой за территорию с бандой {FF8888}%s{FFFFFF}. Берите оружие и вступайте в бой.",Get_GangName(gangs[1]));
+				for(new x; x < 2; x++) TextDrawShowForPlayer(playerid, Capture[x]);
+			}
+		}
 	}
 	return 1;
 }
@@ -293,6 +305,18 @@ public OnPlayerDeath(playerid, killerid, reason)
 	PlayerTextDrawHide(playerid, P[playerid][_p_cent]);
 	P[playerid][p_health] = 0;
 	P[playerid][_p_spawned] = false;
+	if(waractive == true){ // Проверяем активно ли
+		if(P[killerid][p_job_team] == gangs[0] && P[playerid][p_job_team] == gangs[1]) {
+			gangskills[0]++;
+		}else if(P[killerid][p_job_team] == gangs[1] && P[playerid][p_job_team] == gangs[0]) {
+			gangskills[1]++;
+		}
+		new string[12];
+		format(string, sizeof(string), "%d~n~%d", gangskills[0], gangskills[1]);
+		TextDrawSetString(Capture[1],string);
+		foreach(new i : Player)
+			TextDrawShowForPlayer(i, Capture[0]);
+	}
 	return 1;
 }
 public OnPlayerText(playerid, text[])

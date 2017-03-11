@@ -523,7 +523,7 @@ stock Weapon_Give(playerid, weaponid, ammo)
         }
     }
 }
-stock GetTeamZoneColor(teamid)
+stock Get_TeamZoneColor(teamid)
 {
 	switch(teamid)
 	{
@@ -608,9 +608,33 @@ stock ReturnPlayerWeaponsString(playerid)
 	if(strlen(string) < 3) string = "N~w~/~r~A";
 	return string;
 }
-stock GetPlayerRegCountry(playerid)
+stock Get_PlayerRegCountry(playerid)
 {
     new dest[128];
     GetIPCountry(P[playerid][p_reg_ip], dest);
     return dest;
+}
+stock Get_PlayerLastIpCountry(playerid){
+	new dest[128];
+	GetIPCountry(P[playerid][p_last_ip], dest);
+	return dest;
+}
+stock Get_GangOnline(gangid){
+	foreach(new i:Player)
+	{
+		if(!IsPlayerConnected(i)) continue;
+		if(P[i][p_job_team] == gangid) return true;
+	}
+	return false;
+}
+stock Get_GangName(gangid){
+	new dests[19];
+	switch(gangid){
+		case ORG_GROVE: dests = "Grove Street";
+		case ORG_BALLAS: dests = "Ballas Gangs";
+		case ORG_AZTECAS: dests = "Varios Los Aztecas";
+		case ORG_VAGOS: dests = "Los Santos Vagos";
+		case ORG_RIFA: dests = "The Rifa";
+	}
+	return dests;
 }

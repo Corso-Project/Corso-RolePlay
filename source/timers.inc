@@ -79,6 +79,61 @@ timer OnGateClosed[7500](objectid)
 	}
 }
 
+task OnSecUpdate[1000](){
+	foreach(new i : Player)
+		if(P[i][_p_in_game] == false) return true;
+	if(waractive == true){
+		new string[50];
+		GangZoneSeconds--;
+		if(GangZoneSeconds < 0) {
+			GangZoneSeconds = 59;
+			GangZoneMinuts--;
+			if(GangZoneMinuts < 0) {
+				//Определяем по киллам что да как и даём победу, сам сделаешь, думаю
+				//HideZoneForAll
+				//ShowZoneForAll
+				//for(new i; i < 2; i++) TextDrawHideForAll(i);
+				if(gangskills[0] > gangskills[1]){
+					foreach(new i: Player){
+						if(P[i][p_job_team] == gangs[0]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы успешно захватили данную территорию.");
+						if(P[i][p_job_team] == gangs[1]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы проиграли в защите своей территорий...");
+						GZ[zone][gz_team] = gangs[0]-9;
+						GangZoneHideForAll(zone);
+						GangZoneShowForAll(zone, Get_TeamZoneColor(GZ[i][gz_team]));
+					}
+				}else if(gangskills[1] > gangskills[0]){
+					foreach(new i: Player){
+						if(P[i][p_job_team] == gangs[0]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вам не удалось захватить данную территорию.");
+						if(P[i][p_job_team] == gangs[1]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы защитили свою территорию!");
+						GangZoneStopFlashForAll(zone);
+					}
+				}else if(gangskills[1] == gangskills[0]){
+					foreach(new i: Player){
+						if(P[i][p_job_team] == gangs[0]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Ничья! Попробуйте в следующий раз.");
+						if(P[i][p_job_team] == gangs[1]) SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Ничья! Территория остаётся под вашим контролем!");
+						GangZoneStopFlashForAll(zone);
+					}
+				}
+				gangs[0] = 0, gangs[1] = 0, gangskills[0] = 0, gangskills[1] = 0;
+				waractive = false;
+				CaptureTime = TimeForCapt;
+				stop OnSecUpdate();
+				for(new x; x < 2; x++) TextDrawHideForAll(Capture[x]);
+				return true;
+			}
+		}
+		format(string, sizeof(string), "       Time: %d:%02d~n~%s~n~%s", GangZoneMinuts,GangZoneSeconds, Get_GangName(gangs[0]), Get_GangName(gangs[1]));
+		TextDrawSetString(Capture[0],string);
+		foreach(new i : Player)
+			TextDrawShowForPlayer(i, Capture[0]);
+	}
+	return true;
+}
+
+timer OnMinUpdate[60000](){
+	if(CaptureTime) CaptureTime--;
+}
+
 task OnUpdateTime[10*1000]()
 {
 	switch(g_minute) {

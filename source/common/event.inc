@@ -57,10 +57,11 @@ public OnGameModeInit()
 	CreateDynamicMapIcon(-2625.8296,208.2379,4.8125,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(2159.5449,943.2165,10.8203,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(2400.5959,-1981.9949,13.5469,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(2539.5420,2084.0088,10.8203,6,0xFFFFFFFF,0,0);
+	CreateDynamicMapIcon(2539.5420,2084.0088,10.8203,6,0xFFFFFFFF,0,0);// Без пикапа
 	CreateDynamicMapIcon(-2093.7271,-2464.8933,30.6250,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(-316.1618,829.9474,14.2422,6,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(776.7205,1871.4976,4.9072,6,0xFFFFFFFF,0,0);
+	CreateDynamicMapIcon(2333.0837,61.5298,26.7058,6,0xFFFFFFFF,0,0);
 	// Casino
 	CreateDynamicMapIcon(2019.3190,1007.7921,10.8203,43,0xFFFFFFFF,0,0);
 	// Работы
@@ -462,6 +463,29 @@ public OnGameModeInit()
 	TextDrawSetOutline(Corso, 0);
 	TextDrawSetProportional(Corso, 1);
 	TextDrawSetShadow(Corso, 0);
+	// Capture textdraw
+	Capture[0] = TextDrawCreate(31.599884, 295.680114, "_");
+	TextDrawLetterSize(Capture[0], 0.273199, 1.171911);
+	TextDrawTextSize(Capture[0], 147.199981, 42.311103);
+	TextDrawAlignment(Capture[0], 1);
+	TextDrawColor(Capture[0], -1);
+	TextDrawUseBox(Capture[0], true);
+	TextDrawBoxColor(Capture[0], 70);
+	TextDrawSetShadow(Capture[0], 0);
+	TextDrawSetOutline(Capture[0], 1);
+	TextDrawBackgroundColor(Capture[0], 51);
+	TextDrawFont(Capture[0], 1);
+	TextDrawSetProportional(Capture[0], 1);
+
+	Capture[1] = TextDrawCreate(134.000015, 307.128845, "_");
+	TextDrawLetterSize(Capture[1], 0.273198, 1.171911);
+	TextDrawAlignment(Capture[1], 1);
+	TextDrawColor(Capture[1], -5963521);
+	TextDrawSetShadow(Capture[1], 0);
+	TextDrawSetOutline(Capture[1], 1);
+	TextDrawBackgroundColor(Capture[1], 51);
+	TextDrawFont(Capture[1], 1);
+	TextDrawSetProportional(Capture[1], 1);	
 	// 3D текст
 	CreateDynamic3DTextLabel("Уборщик улиц",0x1E90FFFF, 1622.3585, -1552.2335, 13.6824, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	CreateDynamic3DTextLabel("Уборщик улиц",0x1E90FFFF, -2070.7686, 8.4370, 35.3203, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);

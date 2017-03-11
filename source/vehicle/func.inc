@@ -5,6 +5,11 @@ stock Vehicle_IsNotForPlayer(vehicleid, playerid)
 	    if(P[playerid][p_job_team] != ORG_FBI) return 1;
 	    return 0;
 	}
+	for(new i; i < sizeof(V_GOVERNMENT); i++) {
+		if(vehicleid != V_GOVERNMENT[i]) continue;
+		if(P[playerid][p_job_team] != ORG_GOVERNMENT) return 1;
+		return 0;
+	}
 	for(new i; i < sizeof(V_LSPD); i++) {
 	    if(vehicleid != V_LSPD[i]) continue;
 	    if(P[playerid][p_job_team] != ORG_FBI && P[playerid][p_job_team] != ORG_LSPD) return 1;

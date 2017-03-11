@@ -509,8 +509,8 @@ CMD:getip(playerid,params[]){
 		{1C5A8D}Уровень:\t\t\t\t{FFFFFF}%d\n\
 		{1C5A8D}IP адресс(регис.):\t\t\t{FFFFFF}%s (%s)\n\
 		{1C5A8D}IP адресс(послед.):\t\t\t{FFFFFF}%s (%s)",Name(params[0]),P[params[0]][p_uid],P[params[0]][p_cash],P[params[0]][p_level],
-			P[params[0]][p_reg_ip],GetPlayerRegCountry(params[0]),
-			P[params[0]][p_last_ip],country_last_ip);
+			P[params[0]][p_reg_ip],Get_PlayerRegCountry(params[0]),
+			P[params[0]][p_last_ip],Get_PlayerLastIpCountry(params[0]));
 	ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Информация об IP игроке", output, "Закрыть","");
 	return true;
 }
@@ -730,9 +730,43 @@ CMD:find(playerid,params[]){
 	str = "{FFFFFF}Уровень - Ранг - Имя игрока\n\n";
 	strcat(string,str);
 	foreach(new i : Player){
+		if(P[playerid][p_job_team] == P[i][p_job_team]) continue;
 		format(str, sizeof(str), "%d - %s - %s",P[i][p_level],Get_RangName(i),Name(i));
 		strcat(string,str);
 	}
 	ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Игроков онлайн:",string,"Закрыть","");
+	return true;
+}
+
+CMD:capture(playerid, params[]){
+	if(CaptureTime) return va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Следующий захват территоий будет доступен через %d минут", CaptureTime);
+	if(waractive == true) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Уже идёт захват!");
+	new Float:XX,
+		Float:YY,
+		Float:ZZ;
+	GetPlayerPos(playerid, XX, YY, ZZ);
+	for(new i = 0; i < 104; i++){
+		if((XX <= GZ[i][gz_max_pos_x] && XX >= GZ[i][gz_min_pos_x]) && (YY <= GZ[i][gz_max_pos_y] && YY >= GZ[i][gz_min_pos_y])){
+			if(P[playerid][p_job_team]-9 == GZ[i][gz_team]) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете начать захватить собственную территорию.");
+			//if(!Get_GangOnline(GZ[i][gz_team]+9)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Территорию этой банды некому защищать.");
+			GangZoneMinuts = GangZoneMinutsDef;
+			GangZoneSeconds = 0;
+			gangs[0] = P[playerid][p_job_team];
+			gangs[1] = GZ[i][gz_team]+9;
+			waractive = true;
+			zone = i;
+			OnSecUpdate();
+			GangZoneFlashForAll(zone, 0xFF000090);
+			foreach(new z : Player){
+				if(P[z][p_job_team] == gangs[0])
+					return va_SendClientMessage(z, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напал на территорию {FF8888}%s(№%d){FFFFFF}, помогите ему!", Name(playerid),Get_GangName(gangs[1]),zone);
+				if(P[z][p_job_team] == gangs[1])
+					return va_SendClientMessage(z, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напали на территорию {FF8888}%s(№%d){FFFFFF}, войну начал: {0095b6}%s",Get_GangName(gangs[0]),Get_GangName(gangs[1]),zone,Name(playerid));
+				for(new x; x < 2; x++) TextDrawShowForPlayer(z, Capture[x]);
+			}
+			return true;
+		}
+	}
+	SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не находитесь у какой-либо территорий.");
 	return true;
 }
