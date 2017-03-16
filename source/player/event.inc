@@ -214,7 +214,6 @@ public OnPlayerSpawn(playerid)
 				SetPlayerVirtualWorld(playerid, 0);
 				SetPlayerPos(playerid, 1128.7860,-2043.8292,69.4214);
 				SetPlayerFacingAngle(playerid,273.4582);
-				SetPlayerColor(playerid, 0xe6FB0122);
 			}
 	    	case ORG_FBI:
 			{
@@ -224,39 +223,39 @@ public OnPlayerSpawn(playerid)
 				SetPlayerColor(playerid, 0x1C5A8DFF);
 	    	}
 			case ORG_GROVE:{
-				SetPlayerColor(playerid, 0x33AA33AA);
 				SetPlayerPos(playerid, 2450.4082,-1688.8137,1013.5078);
 				SetPlayerFacingAngle(playerid, 183.1466);
 				SetPlayerVirtualWorld(playerid, 2);
 				SetPlayerInterior(playerid, 2);
+				SetPlayerColor(playerid, 0x33AA33AA);
 			}
 			case ORG_BALLAS:{
-				SetPlayerColor(playerid, 0x800080AA);
 				SetPlayerPos(playerid, -49.8330,1399.4309,1084.4297);
 				SetPlayerVirtualWorld(playerid, 2);
 				SetPlayerFacingAngle(playerid, 1.5980);
 				SetPlayerInterior(playerid, 8);
+				SetPlayerColor(playerid, 0x800080AA);
 			}
 			case ORG_AZTECAS:{
-				SetPlayerColor(playerid, 0x33CCFFAA);
 				SetPlayerPos(playerid, 232.1111,1247.3945,1082.1406);
 				SetPlayerVirtualWorld(playerid, 2);
 				SetPlayerFacingAngle(playerid, 127.5216);
 				SetPlayerInterior(playerid, 2);
+				SetPlayerColor(playerid, 0x33CCFFAA);
 			}
 			case ORG_VAGOS:{
-				SetPlayerColor(playerid, 0xFFFF00AA);
 				SetPlayerPos(playerid, 332.5013,1120.7383,1083.8903);
 				SetPlayerVirtualWorld(playerid, 2);
 				SetPlayerFacingAngle(playerid, 75.3197);
 				SetPlayerInterior(playerid, 5);
+				SetPlayerColor(playerid, 0xFFFF00AA);
 			}
 			case ORG_RIFA:{
-				SetPlayerColor(playerid, 0x88CCCCBB);
 				SetPlayerPos(playerid, -59.2154,1364.5841,1080.2109);
 				SetPlayerVirtualWorld(playerid, 2);
 				SetPlayerFacingAngle(playerid, 90.8673);
 				SetPlayerInterior(playerid, 6);
+				SetPlayerColor(playerid, 0x88CCCCBB);
 			}
 			case ORG_CHINESE:{
 				SetPlayerPos(playerid,1266.6045,-787.2869,1084.0149);
@@ -271,6 +270,7 @@ public OnPlayerSpawn(playerid)
 				SetPlayerVirtualWorld(playerid, 0);
 				SetPlayerPos(playerid, 1642.4329,-2239.0205,13.4967);
 				SetPlayerFacingAngle(playerid, 180.0);
+				SetPlayerColor(playerid,0x00000055);
 			}
 		}
 		TogglePlayerClock(playerid, 1);
@@ -511,40 +511,55 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	{
 		if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
-			new vehicleid = GetPlayerVehicleID(playerid);
+			if(GetPVarInt(playerid,"id_repair") == 1){
+				new engineer = GetPVarInt(playerid,"id_repair")-1;
+				new Float: price_offer = GetPVarInt(engineer,"price_repair");
 
-	    	new source[202],str_engine[36],str_lights[32],str_doors[30],str_bonnet[30],str_boot[33];
-	    	new engine,lights,alarm,doors,bonnet,boot,objective;
-	    	GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-	    	switch(engine) {
-	    	    case -1,0: str_engine = "{00FF00}Включить {FFFFFF}двигатель";
-	    	    case 1: str_engine = "{FF0000}Отключить {FFFFFF}двигатель";
-	    	}
-	    	switch(lights) {
-	    	    case -1,0: str_lights = "{00FF00}Включить {FFFFFF}фары";
-	    	    case 1: str_lights = "{FF0000}Отключить {FFFFFF}фары";
-	    	}
-	    	switch(doors) {
-	    	    case -1,0: str_doors = "{FF0000}Закрыть {FFFFFF}двери";
-	    	    case 1: str_doors = "{00FF00}Открыть {FFFFFF}двери";
-	    	}
-	    	switch(bonnet) {
-	    	    case -1,0: str_bonnet = "{00FF00}Открыть {FFFFFF}капот";
-	    	    case 1: str_bonnet = "{FF0000}Закрыть {FFFFFF}капот";
-	    	}
-	    	switch(boot) {
-	    	    case -1,0: str_boot = "{00FF00}Открыть {FFFFFF}багажник";
-	    	    case 1: str_boot = "{FF0000}Закрыть {FFFFFF}багажник";
-	    	}
-	    	switch(IsTrailerAttachedToVehicle(vehicleid)) {
-	    		case 0: format(source, sizeof(source),
-					"%s\n%s\n%s\n%s\n%s\nАвтомобильное радио",
-					str_engine,str_lights,str_doors,str_bonnet,str_boot);
-				case 1: format(source, sizeof(source),
-					"%s\n%s\n%s\n%s\n%s\nАвтомобильное радио\nОтцепить трейлер",
-					str_engine,str_lights,str_doors,str_bonnet,str_boot);
+				DeletePVar(engineer,"id_repair");
+				DeletePVar(engineer,"price_repair");
+				DeletePVar(playerid,"id_repair");
+				RepairVehicle(GetPlayerVehicleID(playerid));
+				va_SendClientMessage(engineer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s приянял ваше предложение на починку Т.С.", Name(playerid));
+				SendClientMessage(playerid,  0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы приняли предложение на починку вашего Т.С.");
+				Cash_Give(playerid, -price_offer);
+				Cash_Give(engineer, price_offer);
 			}
-	    	ShowPlayerDialog(playerid, d_vehicle_panel, DIALOG_STYLE_LIST, "Управление автомобилем",source,"Выбор","Отмена");
+			else{
+				new vehicleid = GetPlayerVehicleID(playerid);
+
+		    	new source[202],str_engine[36],str_lights[32],str_doors[30],str_bonnet[30],str_boot[33];
+		    	new engine,lights,alarm,doors,bonnet,boot,objective;
+		    	GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+		    	switch(engine) {
+		    	    case -1,0: str_engine = "{00FF00}Включить {FFFFFF}двигатель";
+		    	    case 1: str_engine = "{FF0000}Отключить {FFFFFF}двигатель";
+		    	}
+		    	switch(lights) {
+		    	    case -1,0: str_lights = "{00FF00}Включить {FFFFFF}фары";
+		    	    case 1: str_lights = "{FF0000}Отключить {FFFFFF}фары";
+		    	}
+		    	switch(doors) {
+		    	    case -1,0: str_doors = "{FF0000}Закрыть {FFFFFF}двери";
+		    	    case 1: str_doors = "{00FF00}Открыть {FFFFFF}двери";
+		    	}
+		    	switch(bonnet) {
+		    	    case -1,0: str_bonnet = "{00FF00}Открыть {FFFFFF}капот";
+		    	    case 1: str_bonnet = "{FF0000}Закрыть {FFFFFF}капот";
+		    	}
+		    	switch(boot) {
+		    	    case -1,0: str_boot = "{00FF00}Открыть {FFFFFF}багажник";
+		    	    case 1: str_boot = "{FF0000}Закрыть {FFFFFF}багажник";
+		    	}
+		    	switch(IsTrailerAttachedToVehicle(vehicleid)) {
+		    		case 0: format(source, sizeof(source),
+						"%s\n%s\n%s\n%s\n%s\nАвтомобильное радио",
+						str_engine,str_lights,str_doors,str_bonnet,str_boot);
+					case 1: format(source, sizeof(source),
+						"%s\n%s\n%s\n%s\n%s\nАвтомобильное радио\nОтцепить трейлер",
+						str_engine,str_lights,str_doors,str_bonnet,str_boot);
+				}
+		    	ShowPlayerDialog(playerid, d_vehicle_panel, DIALOG_STYLE_LIST, "Управление автомобилем",source,"Выбор","Отмена");
+			}
 	    }
 		if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
 			Show_PlayerLic(playerid, GetPVarInt(playerid, "IdShow"));
@@ -554,9 +569,20 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
 	if(newkeys & KEY_NO){
 		if(GetPVarInt(playerid, "ShowLic") == 1) {
-		    va_SendClientMessage(GetPVarInt(playerid, "IdShow"), -1, "%s отказался смотреть ваш список лицензий", Name(playerid));
+		    va_SendClientMessage(GetPVarInt(playerid, "IdShow"), 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть ваш список лицензий", Name(playerid));
 		    DeletePVar(playerid, "ShowLic");
 		    DeletePVar(playerid, "IdShow");
+		}
+		if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
+		{
+			if(GetPVarInt(playerid, "id_repair") == 1){
+				new enginer = GetPVarInt(playerid,"id_repair");
+				DeletePVar(enginer,"id_repair");
+				DeletePVar(enginer,"price_repair");
+				DeletePVar(playerid,"id_repair");
+				SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы отказались от починки вашего Т.С.");
+				va_SendClientMessage(enginer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался от ваших услуг в ввиде починки авто",Name(playerid));
+			}
 		}
 	}
 	// Открытие ворот и/или шлагбаумов
@@ -690,6 +716,27 @@ public OnPlayerUpdate(playerid)
 
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {
 		Speedo_Sync(playerid);
+	}
+
+	new Float:X,Float:Y,Float:Z,weapon;
+	FCNPC_GetPosition(testbot,X, Y, Z);
+	//if((targetplayer) == testbot){
+	if(IsPlayerInRangeOfPoint(playerid, 25.0, X, Y, Z)){
+	    if(FCNPC_GetAmmo(testbot) == 0){
+	        FCNPC_StopAim(testbot);
+	        FCNPC_SetAmmo(testbot,500);
+	    }
+	    new Float: x, Float: y, Float: z;
+	    GetPlayerPos(playerid, x, y, z);
+	    FCNPC_AimAt(testbot,x,y,z,true);
+	    weapon = 1;
+	}
+	else{
+	    if(weapon == 1)
+	    {
+	        FCNPC_StopAim(testbot);
+	        weapon = 0;
+	    }
 	}
 
 	SetPlayerTime(playerid, g_hour, g_minute);

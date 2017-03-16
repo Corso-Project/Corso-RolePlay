@@ -1,4 +1,4 @@
-CMD:repair(playerid, params[])
+CMD:arepair(playerid, params[])
 {
 	if(P[playerid][p_access] < 1) return true;
 	if (IsPlayerInAnyVehicle(playerid) == 0)
@@ -276,7 +276,7 @@ CMD:makeleader(playerid, params[])
     user,org;
 	if(P[playerid][p_access] < 6) return 1;
 	if(sscanf(params, "ui", user,org)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /makeleader [ID игрока] [ID Фракции]");
-	if(org > 18) return 1;
+	if(org > 22) return 1;
 	if(P[playerid][p_job_team] == org) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот игрок уже лидер этой организаций.");
 	if(org == 0){
 		va_SendClientMessage(user,COLOR_YELLOW,"Вы были сняты %s[%d] с поста лидера \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
@@ -380,7 +380,7 @@ CMD:lic(playerid, params[])
 	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере");
 	if(playerid != user){
 		va_SendClientMessage(playerid,0x269BD8FF, "Вы предложили {FFFFFF}%s{269BD8} показать лицензии.",Name(user));
-		va_SendClientMessage(user,-1,"%s {269BD8}хочет показать Вам лицензии. Чтобы подтвердить нажмите {007F0E}Y{269BD8} для просмотра, {FF0000}N{269BD8} для отказа.",Name(playerid));
+		va_SendClientMessage(user,-1,"%s {269BD8}хочет показать Вам лицензии. Что-бы подтвердить нажмите {007F0E}Y{269BD8} для просмотра, {FF0000}N{269BD8} для отказа.",Name(playerid));
 
 		SetPVarInt(user, "Show_PlayerLic", 1);
 		SetPVarInt(user, "IdShow", user);
@@ -746,28 +746,47 @@ CMD:capture(playerid, params[]){
 		Float:YY,
 		Float:ZZ;
 	GetPlayerPos(playerid, XX, YY, ZZ);
-	for(new i = 0; i < 104; i++){
-		if((XX <= GZ[i][gz_max_pos_x] && XX >= GZ[i][gz_min_pos_x]) && (YY <= GZ[i][gz_max_pos_y] && YY >= GZ[i][gz_min_pos_y])){
-			if(P[playerid][p_job_team]-9 == GZ[i][gz_team]) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете начать захватить собственную территорию.");
-			//if(!Get_GangOnline(GZ[i][gz_team]+9)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Территорию этой банды некому защищать.");
+	for(new x = 0; x < 104; x++){
+		if((XX <= GZ[x][gz_max_pos_x] && XX >= GZ[x][gz_min_pos_x]) && (YY <= GZ[x][gz_max_pos_y] && YY >= GZ[x][gz_min_pos_y])){
+			if(P[playerid][p_job_team]-9 == GZ[x][gz_team]) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете начать захватить собственную территорию.");
+			if(!Get_GangOnline(GZ[x][gz_team]+9)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Территорию этой банды некому защищать.");
 			GangZoneMinuts = GangZoneMinutsDef;
 			GangZoneSeconds = 0;
 			gangs[0] = P[playerid][p_job_team];
-			gangs[1] = GZ[i][gz_team]+9;
+			gangs[1] = GZ[x][gz_team]+9;
 			waractive = true;
-			zone = i;
+			zone = x;
 			OnSecUpdate();
 			GangZoneFlashForAll(zone, 0xFF000090);
-			foreach(new z : Player){
-				if(P[z][p_job_team] == gangs[0])
-					return va_SendClientMessage(z, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напал на территорию {FF8888}%s(№%d){FFFFFF}, помогите ему!", Name(playerid),Get_GangName(gangs[1]),zone);
-				if(P[z][p_job_team] == gangs[1])
-					return va_SendClientMessage(z, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напали на территорию {FF8888}%s(№%d){FFFFFF}, войну начал: {0095b6}%s",Get_GangName(gangs[0]),Get_GangName(gangs[1]),zone,Name(playerid));
-				for(new x; x < 2; x++) TextDrawShowForPlayer(z, Capture[x]);
+			foreach(new i : Player){
+				if(P[i][p_job_team] == gangs[0])
+					return va_SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напал на территорию {FF8888}%s(№%d){FFFFFF}, помогите ему!", Name(playerid),Get_GangName(gangs[1]),zone);
+				if(P[i][p_job_team] == gangs[1])
+					return va_SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напали на территорию {FF8888}%s(№%d){FFFFFF}, войну начал: {0095b6}%s",Get_GangName(gangs[0]),Get_GangName(gangs[1]),zone,Name(playerid));
+				for(new c; c < 2; c++)
+					TextDrawShowForPlayer(i, Capture[c]);
 			}
 			return true;
 		}
 	}
 	SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не находитесь у какой-либо территорий.");
+	return true;
+}
+CMD:repair(playerid,params[]){
+	new user,Float: price;
+	if(P[playerid][p_job_team] != 19) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете ченить Т.С.");
+	if(sscanf(params,"uf",user,price)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /repair [ID Игрока] [Цена за починку]");
+	if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 525) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не на рабочем автомобиле.");
+	if(playerid == user) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете починить Т.С. самому себе");
+	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере");
+	if(price < 1 || price > 2000) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Цена за починку автомобиля: 1$ до 2000$");
+	if(!IsPlayerInAnyVehicle(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Указанный вами игрок не находится в Т.С.");
+	if(price > P[user][p_cash]) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У этого человека не достаточно денег для воспользования ваших услуг.");
+	va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s починить его транспортное средство за $%.2f",Name(user), price);
+	va_SendClientMessage(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s предлагает вам починить транспортное средство за $%.2f",Name(playerid), price);
+	va_SendClientMessage(user, 0xB22222FF, "[Справка]: {FFFFFF}Что-бы подвердить нажмите {007F0E}Y{FFFFFF} для соглашение, {FF0000}N{FFFFFF} для отказа.");
+	SetPVarInt(playerid,"id_repair",user + 1);
+	SetPVarFloat(playerid,"price_repair", price);
+	SetPVarInt(user,"id_repair",playerid + 1);
 	return true;
 }

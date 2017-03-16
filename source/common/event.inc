@@ -67,6 +67,12 @@ public OnGameModeInit()
 	// Работы
 	CreateDynamicMapIcon(1622.3585,-1552.2335,13.6824,56,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(-2070.7686,8.4370,35.3203,56,0xFFFFFFFF,0,0);
+	// Банды
+	CreateDynamicMapIcon(2495.4309,-1691.1400,14.7656,62,0xFFFFFFFF,0,0);
+	CreateDynamicMapIcon(2022.8790,-1120.2637,26.4210,59,0xFFFFFFFF,0,0);
+	CreateDynamicMapIcon(2185.8176,-1814.6786,13.5469,58,0xFFFFFFFF,0,0);
+	CreateDynamicMapIcon(2756.2825,-1182.4691,69.3998,60,0xFFFFFFFF,0,0);
+	CreateDynamicMapIcon(2787.0759,-1926.1780,13.5469,61,0xFFFFFFFF,0,0);
 	//==========================================================================
 	// Правительство Штата
 	V_GOVERNMENT[0] = Vehicle_Add(533, 1245.3002, -2043.3801, 59.5569, 270.6839,1,1);
@@ -443,7 +449,12 @@ public OnGameModeInit()
 	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312);
 	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078);
 	// NPC's
-	CreateActor(179, 287.9097,-104.5135,1001.5156,176.2943); // Ammu-Nation LS Ghetto
+	testbot = FCNPC_Create("Bot_1");
+	FCNPC_Spawn(testbot,179,287.9097,-104.5135,1001.5156);
+	FCNPC_GiveAngle(testbot,176.2943);
+	FCNPC_SetArmour(testbot,100);
+	FCNPC_SetWeapon(testbot, 31);
+	FCNPC_SetAmmo(testbot, 500);
 	// FBI NPC
 	FBI_Actors[0] = CreateActor(286,293.1147,182.5184,1007.1719,133.6613);
 	FBI_Actors[1] = CreateActor(163,231.9374,159.9906,1003.0234,219.8474);
@@ -533,4 +544,12 @@ public OnRconLoginAttempt(ip[], password[], success)
 		}
 	}
 	return 1;
+}
+public FCNPC_OnDeath(npcid, killerid, weaponid)
+{
+	//FCNPC_OnSpawn(testbot);
+    return 1;
+}
+public FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss){
+	return true;
 }

@@ -1,7 +1,8 @@
 timer OnWeatherChanger[60*60*1000]()
 {
 	SetWorldTime(g_hour);
-	SetWeather(random(20));
+	//SetWeather(random(20));
+	SetWeather(10);
 	defer OnWeatherChanger[random(60)*60*1000]();
 }
 

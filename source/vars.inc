@@ -5,9 +5,10 @@
 
 #define MOVE_GATE_SPEED     	3.0
 #define MOVE_BARRIER_SPEED  	0.2
-#define TimeForCapt 25 // Дефайн отлёжки для капта
-#define GangZoneMinutsDef 1 // Дефайн минуты для капта
 
+#define TimeForCapt 25
+#define GangZoneMinutsDef 7
+#define maxnpc 10
 
 enum {
 	ORG_UNKNOWN,
@@ -121,12 +122,15 @@ enum E_GANG_ZONES_DATA{
 enum
 {
 	d_null,
+	// account dialogs
 	d_account_login,
 	d_account_register,
 	d_account_loggin_error,
 	d_account_choose_sex,
 	d_account_name_error,
 	d_account_banned,
+	d_account_change_password,
+	// vehicle dialogs
 	d_vehicle_panel,
 	d_vehicle_radio,
 	d_vehicle_url_radio,
@@ -136,11 +140,13 @@ enum
 	d_vehicle_rent_taxi,
 	d_vehicle_rent_officecar,
 	d_vehicle_rent_truck,
+	// player dialogs
 	d_player_menu,
 	d_player_buy_gun,
 	d_player_settings,
 	d_player_report,
 	d_player_gps,
+	// gps dialogs
 	d_gps_public_places,
 	d_gps_jobs,
 	d_gps_state_organizations,
@@ -258,6 +264,7 @@ new Chinese[2];
 new Buy_Weapon;
 // Text-Draws
 new Text:Corso;
+new Text:Capture[2];
 // Spec
 new gSpectateID[MAX_PLAYERS];
 new gSpectateType[MAX_PLAYERS];
@@ -267,6 +274,15 @@ new Whitewing_GPS[MAX_PLAYERS];
 new Whitewinc_CP[22];
 // NPC's
 new FBI_Actors[3];
+new testbot;
+// Capture
+new bool:waractive = false;
+new gangs[2] = 0;
+new CaptureTime=0;
+new zone = 0;
+new gangskills[2] = 0;
+new GangZoneSeconds;
+new GangZoneMinuts;
 // All
 new male_skins[][] = {
 {156,	1,2,3,4,5,6,7,8,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,32,33,34,35,36,37,38,42,43,44,45,46,47,48,49,50,51,52,58,59,60,62,66,67,68,72,73,78,79,80,81,82,83,84,86,94,95,96,97,98,99,100,101,119,128,132,133,134,135,136,137,142,143,144,146,149,153,154,155,156,158,159,160,161,162,167,168,170,171,176,177,180,181,182,183,184,185,186,188,189,200,202,203,204,206,208,209,210,212,213,217,220,221,222,223,229,230,234,235,236,239,240,241,242,247,248,249,250,252,253,254,255,258,259,260,261,262,264,268,272,273,289,290,291,292,293,294,295,296,297,299},
@@ -375,13 +391,3 @@ public SetPlayerCameraPos_(playerid)
 	InterpolateCameraPos(playerid, cam_start_pos[rand][0], cam_start_pos[rand][1], cam_start_pos[rand][2], cam_start_pos[rand][3], cam_start_pos[rand][4], cam_start_pos[rand][5], 1000);
 	InterpolateCameraLookAt(playerid, cam_start_look[rand][0], cam_start_look[rand][1], cam_start_look[rand][2], cam_start_look[rand][3], cam_start_look[rand][4], cam_start_look[rand][5], 1000);
 }
-
-new bool:waractive = false; // Проверяем активна ли борьба за квадрат
-
-new gangs[2] = 0; // Присвоение
-new CaptureTime=0; // Время капта
-new zone = 0; // Id зоны
-new gangskills[2] = 0; // Киллы
-new Text:Capture[2]; // Текстдравы
-new GangZoneSeconds;
-new GangZoneMinuts;

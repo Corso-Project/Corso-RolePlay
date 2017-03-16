@@ -38,7 +38,7 @@ stock Message_ToComuneTeam(job,color, const fmat[], va_args<>){
 	foreach(new i : Player){
 		switch(job){
 			case 2..5: if(P[i][p_job_team] >= 2 && P[i][p_job_team] <= 5) SendClientMessage(i, color, va_return(fmat, va_start<3>));
-			default: if (P[i][p_job_team] == job) SendClientMessage(i, color, va_return(fmat, va_start<3>));
+			default: if(P[i][p_job_team] == job) SendClientMessage(i, color, va_return(fmat, va_start<3>));
 		}
 	}
 }

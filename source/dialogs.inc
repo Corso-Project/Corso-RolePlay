@@ -4,7 +4,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	// Вход в учётную запись
 	case d_account_login: {
 	    if(!response) return Kick(playerid);
-	    if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_account_login, DIALOG_STYLE_PASSWORD, "Вход в учётную запись",SERVER_NAME"\n\n{FFFFFF}Введите пароль от своей учётной записи для входа в игру","Вход","Выход");
+	    if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_account_login, DIALOG_STYLE_INPUT, "Вход в учётную запись",SERVER_NAME"\n\n{FFFFFF}Введите пароль от своей учётной записи для входа в игру","Вход","Выход");
 	    WP_Hash(inputtext, 129, inputtext);
 	    if(strcmp(P[playerid][p_password], inputtext, false) != 0) return ShowPlayerDialog(playerid, d_account_loggin_error, DIALOG_STYLE_MSGBOX, "Ошибка входа","{B22222}Ошибка входа в учётную запись.\nВы ввели неверный пароль!\n\n{FFFFFF}Повторить или покинуть игру?","Повтор","Выход");
 
@@ -29,7 +29,6 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         SetPlayerScore(playerid, P[playerid][p_level]);
 	    SendClientMessage(playerid, 0xB9C9BFFF, "Вход в учётную запись успешно выполнен.");
 	    SendClientMessage(playerid, 0xB9C9BFFF, "Добро пожаловать, в игру на "SERVER_NAME);
-	    SendClientMessage(playerid, 0xB9C9BFFF, "Главное меню, клавиша - '{00FF00}~k~~CONVERSATION_NO~{FFFFFF}'");
 	    SendClientMessage(playerid, 0xB9C9BFFF, "Управление автомобилем, клавиша - '{00FF00}~k~~CONVERSATION_YES~{FFFFFF}'");
 	    if(P[playerid][p_access] > 0)
 		{
@@ -68,6 +67,22 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	}
 	// Имя персонажа | Учётная запись заблокирована
 	case d_account_name_error,d_account_banned: Kick(playerid);
+    // Смена пароля
+    case d_account_change_password: if(response){
+        if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT,"Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:","Сменить","Назад");
+        if(strlen(inputtext) < 5 || strlen(inputtext) > 18)
+            return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT, "Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:\nУсловия:\n\t- {B22222}От 5 до 18 символов\n\t{FFFFFF}- Английские буквы и цифры","Далее","Выход");
+        for(new i; i < strlen(inputtext); i++) switch(inputtext[i]) {
+            case '0'..'9': continue;
+            case 'a'..'z': continue;
+            case 'A'..'Z': continue;
+            default: return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT, "Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:\nУсловия:\n\t- От 5 до 18 символов\n\t- {B22222}Английские буквы и цифры","Далее","Выход");
+        }
+        WP_Hash(P[playerid][p_password], 129, inputtext);
+        va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы успешно сменили пароль на: {FF8888}%s{FFFFFF}.",inputtext);
+        va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Рекомендуем сделать скрин (клавиша - F8) что-бы не забыть его.");
+        orm_update(P[playerid][_p_ormid]);
+    }
 	// Управление автомобилем
 	case d_vehicle_panel: {
 	    new engine,lights,alarm,doors,bonnet,boot,objective;
@@ -323,9 +338,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     case d_player_settings: if(response) switch(listitem){
         case 0:{
-            SendClientMessage(playerid, -1, "Сменить пароль");
+            ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT,"Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:","Сменить","Назад");
         }
     }
+    // Репорт
     case d_player_report:{
         if(!response) return ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Главное меню", "Информация о персонаже\nНастройки учётной записи\nСправка о доступных командах\nСправка о правилах сервера\nОбратная связь", "Открыть", "Выход");
         if(!strlen(inputtext)){
