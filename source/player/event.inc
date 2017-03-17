@@ -562,16 +562,16 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			}
 	    }
 		if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
-			Show_PlayerLic(playerid, GetPVarInt(playerid, "IdShow"));
+			new player_lic = GetPVarInt(playerid,"Show_PlayerLic")-1;
+			Show_PlayerLic(playerid,player_lic);
 			DeletePVar(playerid, "Show_PlayerLic");
-			DeletePVar(playerid, "IdShow");
 		}
 	}
 	if(newkeys & KEY_NO){
-		if(GetPVarInt(playerid, "ShowLic") == 1) {
-		    va_SendClientMessage(GetPVarInt(playerid, "IdShow"), 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть ваш список лицензий", Name(playerid));
-		    DeletePVar(playerid, "ShowLic");
-		    DeletePVar(playerid, "IdShow");
+		if(GetPVarInt(playerid, "Show_PlayerLic") == 1) {
+			new player_lic = GetPVarInt(playerid,"Show_PlayerLic")-1;
+		    va_SendClientMessage(player_lic, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть ваш список лицензий", IC_Name(playerid));
+			DeletePVar(playerid, "Show_PlayerLic");
 		}
 		if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
@@ -1289,7 +1289,7 @@ public Show_PlayerStats(playerid,targetid){
 	Пол:\t\t\t\t\t\t%s\n\
 	Денег:\t\t\t\t\t\t$%.2f\n",
 		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash]);
-	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
+	ShowPlayerDialog(targetid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
 	return true;
 }
 forward Show_PlayerLic(playerid,targetid);

@@ -11,8 +11,16 @@ timer OnRentVehicleEnd[30*60*1000](vehicleid, category)
 	switch(category) {
 	    case ORG_UNKNOWN: {
 			for(new i; i < sizeof(V_RENT); i++) {
-			    if(vehicleid != V_RENT[i] || vehicleid != V_RENT_STANDART[i] || vehicleid != V_RENT_PREMIUM[i]) continue;
+			  	if(vehicleid != V_RENT[i]) continue;
 			    V_RENT_OWNER[i] = 0;
+			}
+			for(new i; i < sizeof(V_RENT_STANDART); i++) {
+				if(vehicleid != V_RENT_STANDART[i]) continue;
+				V_RENT_OWNER_STANDART[i] = 0;
+			}
+			for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
+				if(vehicleid != V_RENT_PREMIUM[i]) continue;
+				V_RENT_OWNER_PREMIUM[i] = 0;
 			}
 			new engine,lights,alarm,doors,bonnet,boot,objective;
 			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);

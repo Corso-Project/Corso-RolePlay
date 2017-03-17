@@ -97,12 +97,12 @@ stock Vehicle_IsNotForPlayer(vehicleid, playerid)
 	}
 	for(new i; i < sizeof(V_RENT_STANDART); i++) {
 		if(vehicleid != V_RENT_STANDART[i]) continue;
-		if(V_RENT_OWNER[i] != P[playerid][p_uid]) return 1;
+		if(V_RENT_OWNER_STANDART[i] != P[playerid][p_uid]) return 1;
 		return 0;
 	}
 	for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
 		if(vehicleid != V_RENT_PREMIUM[i]) continue;
-		if(V_RENT_OWNER[i] != P[playerid][p_uid]) return 1;
+		if(V_RENT_OWNER_PREMIUM[i] != P[playerid][p_uid]) return 1;
 		return 0;
 	}
 	return 0;

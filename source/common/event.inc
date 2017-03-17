@@ -510,7 +510,7 @@ public OnGameModeExit()
     foreach(new i : Player) CallLocalFunction("OnPlayerDisconnect", "dd", i,1);
 	// Обновление конфигурации
 	new INI: txtfile = INI_Open("budget.ini");
-	INI_WriteFloat(txtfile, "Government", Budget_GOVERNMENT);
+	INI_WriteFloat(txtfile, "Government", Budget_GOVERNMENT,2);
 	INI_Close(txtfile);
 	txtfile = INI_Open("settings.ini");
 	INI_WriteInt(txtfile, "Chat_OOC", g_Chat_OOC);

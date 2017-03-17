@@ -16,6 +16,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        if(month2 >= month1) {
 	            if(day2 > day1) {
 	                new source[256+1];
+                    Kick(playerid);
 					format(source, sizeof(source), SERVER_NAME"\n\n{B22222}Учётная запись {FFFFFF}%s {B22222}заблокирована\n\nДата разблокировки: {FFFFFF}%s", Name(playerid),P[playerid][p_unban_date]);
 					return ShowPlayerDialog(playerid, d_account_banned, DIALOG_STYLE_MSGBOX, "Учётная запись заблокирована",source,"Выход","");
 	            }
@@ -67,22 +68,6 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	}
 	// Имя персонажа | Учётная запись заблокирована
 	case d_account_name_error,d_account_banned: Kick(playerid);
-    // Смена пароля
-    case d_account_change_password: if(response){
-        if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT,"Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:","Сменить","Назад");
-        if(strlen(inputtext) < 5 || strlen(inputtext) > 18)
-            return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT, "Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:\nУсловия:\n\t- {B22222}От 5 до 18 символов\n\t{FFFFFF}- Английские буквы и цифры","Далее","Выход");
-        for(new i; i < strlen(inputtext); i++) switch(inputtext[i]) {
-            case '0'..'9': continue;
-            case 'a'..'z': continue;
-            case 'A'..'Z': continue;
-            default: return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT, "Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:\nУсловия:\n\t- От 5 до 18 символов\n\t- {B22222}Английские буквы и цифры","Далее","Выход");
-        }
-        WP_Hash(P[playerid][p_password], 129, inputtext);
-        va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы успешно сменили пароль на: {FF8888}%s{FFFFFF}.",inputtext);
-        va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Рекомендуем сделать скрин (клавиша - F8) что-бы не забыть его.");
-        orm_update(P[playerid][_p_ormid]);
-    }
 	// Управление автомобилем
 	case d_vehicle_panel: {
 	    new engine,lights,alarm,doors,bonnet,boot,objective;
@@ -218,7 +203,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             Budget_GOVERNMENT += amount;
             for(new i; i < sizeof(V_RENT_STANDART); i++) {
                 if(V_RENT_STANDART[i] != GetPlayerVehicleID(playerid)) continue;
-                V_RENT_OWNER[i] = P[playerid][p_uid];
+                V_RENT_OWNER_STANDART[i] = P[playerid][p_uid];
                 defer OnRentVehicleEnd[minute*60*1000](V_RENT_STANDART[i], ORG_UNKNOWN);
             }
         }
@@ -242,7 +227,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             Budget_GOVERNMENT += amount;
             for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
                 if(V_RENT_PREMIUM[i] != GetPlayerVehicleID(playerid)) continue;
-                V_RENT_OWNER[i] = P[playerid][p_uid];
+                V_RENT_OWNER_PREMIUM[i] = P[playerid][p_uid];
                 defer OnRentVehicleEnd[minute*60*1000](V_RENT_PREMIUM[i], ORG_UNKNOWN);
             }
         }
@@ -355,6 +340,22 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         new string[144];
         format(string, 144, "Жалоба от %s [ID:%d]:{ffffff} %s",Name(playerid), playerid, inputtext);
         Message_ToAdmins(COLOR_RED, string);
+    }
+    // Смена пароля
+    case d_account_change_password: if(response){
+        if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT,"Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:","Сменить","Назад");
+        if(strlen(inputtext) < 5 || strlen(inputtext) > 18)
+            return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT, "Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:\nУсловия:\n\t- {B22222}От 5 до 18 символов\n\t{FFFFFF}- Английские буквы и цифры","Далее","Выход");
+        for(new i; i < strlen(inputtext); i++) switch(inputtext[i]) {
+            case '0'..'9': continue;
+            case 'a'..'z': continue;
+            case 'A'..'Z': continue;
+            default: return ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT, "Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:\nУсловия:\n\t- От 5 до 18 символов\n\t- {B22222}Английские буквы и цифры","Далее","Выход");
+        }
+        WP_Hash(P[playerid][p_password], 129, inputtext);
+        va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы успешно сменили пароль на: {FF8888}%s{FFFFFF}.",inputtext);
+        va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Рекомендуем сделать скрин (клавиша - F8) что-бы не забыть его.");
+        orm_update(P[playerid][_p_ormid]);
     }
     // Покупка оружия
 	case d_player_buy_gun: if(response) switch(listitem)

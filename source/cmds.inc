@@ -266,7 +266,12 @@ CMD:veh(playerid, params[])
 }
 CMD:mn(playerid, params[])
 {
-	ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Главное меню", "Информация о персонаже\nНастройки учётной записи\nСправка о доступных командах\nСправка о правилах сервера\nОбратная связь", "Открыть", "Выход");
+	ShowPlayerDialog(playerid, d_player_menu, DIALOG_STYLE_LIST, "Главное меню",
+		"Информация о персонаже\n\
+		Настройки учётной записи\n\
+		Справка о доступных командах\n\
+		Справка о правилах сервера\n\
+		Обратная связь", "Открыть", "Выход");
 	return 1;
 }
 alias:mn("menu","mm");
@@ -317,19 +322,6 @@ CMD:getadmin(playerid,params[]){
 	SendClientMessage(playerid, COLOR_GREY, "Вы дали себе админку 6 lvl");
 	return true;
 }
-CMD:goto(playerid, params[])
-{
-	if(P[playerid][p_access] < 1) return 1;
-	if(sscanf(params, "u", params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /goto [ID игрока] ");
-	if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Неверный ID");
-	new Float:fX,Float:fY,Float:fZ;
-	GetPlayerPos(params[0], fX, fY, fZ);
-	SetPlayerPos(playerid,fX,fY+2, fZ);
-	SetPlayerVirtualWorld(playerid, GetPlayerVirtualWorld(params[0]));
-	SetPlayerInterior(playerid, GetPlayerInterior(params[0]));
-	SetVehiclePos(GetPlayerVehicleID(playerid), fX,fY,fZ+0.1);
-	return 1;
-}
 CMD:msg(playerid, params[])
 {
 	if(P[playerid][p_access] < 1) return 1;
@@ -378,12 +370,13 @@ CMD:lic(playerid, params[])
 	new user;
 	if(sscanf(params,"u",user)) return SendClientMessage(playerid,0xB22222FF, "[Справка]: {FFFFFF}Используйте /lic [ID игрока]");
 	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере");
+	if(GetPVarInt(user,"Show_PlayerLic")) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вы уже предлагаете другому человеку показать свои лицензий.");
 	if(playerid != user){
-		va_SendClientMessage(playerid,0x269BD8FF, "Вы предложили {FFFFFF}%s{269BD8} показать лицензии.",Name(user));
-		va_SendClientMessage(user,-1,"%s {269BD8}хочет показать Вам лицензии. Что-бы подтвердить нажмите {007F0E}Y{269BD8} для просмотра, {FF0000}N{269BD8} для отказа.",Name(playerid));
+		va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s показать лицензии.",IC_Name(user));
+		va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s хочет показать Вам лицензии.",IC_Name(playerid));
+		va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить нажмите {007F0E}Y{FFFFFF} для просмотра, {FF0000}N{FFFFFF} для отказа.",IC_Name(playerid));
 
-		SetPVarInt(user, "Show_PlayerLic", 1);
-		SetPVarInt(user, "IdShow", user);
+		SetPVarInt(user,"Show_PlayerLic",playerid+1);
 	}
 	if(playerid == user){
 		Show_PlayerLic(playerid,playerid);
@@ -405,10 +398,18 @@ CMD:setskin(playerid,params[]){
 	return true;
 }
 alias:setskin("ss");
+CMD:sethealth(playerid,params[]){
+	if(P[playerid][p_access] < 1) return true;
+	new user, health;
+	if(sscanf(params,"ui",user,health)) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Используйте /sethealth [ID игрока] [кол. HP]");
+	SetPlayerHealth(user,health);
+	return true;
+}
+alias:sethealth("sh");
 CMD:sinf(playerid,params[]){
 	if(P[playerid][p_access] < 1) return true;
 	new output[128];
-	format(output, sizeof(output),"{FFFFFF} Бюджет штата: %2.f",Budget_GOVERNMENT);
+	format(output, sizeof(output),"{FFFFFF} Бюджет штата: %.2f",Budget_GOVERNMENT);
 	ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Данные об штате",output,"Ок","");
 	return true;
 }
@@ -580,7 +581,7 @@ CMD:setrang(playerid,params[]){
 	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере");
 	if(P[playerid][p_job_team] != P[user][p_job_team]) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Этот игрок не состоит в вашей организаций.");
 	if(rang < 0 || rang > 10) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Ранг можно устоновлять от 1 до 10");
-	//if(playerid == user) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете самому себе поднять/снизить ранг.");
+	if(playerid == user) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете самому себе поднять/снизить ранг.");
 	va_SendClientMessage(user, 0x0099FFAA, "%s %s назначил Вас на должность \"%s\" ",Get_RangName(playerid),Name(playerid), Get_RangName(user));
 	va_SendClientMessage(playerid, 0x0099FFAA, "Вы назначили игрока %s на должность\"%s\" ",Name(user), Get_RangName(user));
 	P[user][p_rang] = rang;
@@ -717,7 +718,7 @@ CMD:leaders(playerid,params[]){
 	foreach(new i : Player){
 		if(P[i][p_rang] == 10)
 	    {
-			format(str, sizeof(str), "%s - %s - %s[%d]", Get_TeamName(i), Get_RangName(i), Name(i), i);
+			format(str, sizeof(str), "%s - %s - %s[%d]", Get_TeamName(i), Get_RangName(i), IC_Name(i), i);
 			strcat(string, str);
 		}
 	}
@@ -731,7 +732,7 @@ CMD:find(playerid,params[]){
 	strcat(string,str);
 	foreach(new i : Player){
 		if(P[playerid][p_job_team] == P[i][p_job_team]) continue;
-		format(str, sizeof(str), "%d - %s - %s",P[i][p_level],Get_RangName(i),Name(i));
+		format(str, sizeof(str), "%d - %s - %s",P[i][p_level],Get_RangName(i),IC_Name(i));
 		strcat(string,str);
 	}
 	ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Игроков онлайн:",string,"Закрыть","");
@@ -760,7 +761,7 @@ CMD:capture(playerid, params[]){
 			GangZoneFlashForAll(zone, 0xFF000090);
 			foreach(new i : Player){
 				if(P[i][p_job_team] == gangs[0])
-					return va_SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напал на территорию {FF8888}%s(№%d){FFFFFF}, помогите ему!", Name(playerid),Get_GangName(gangs[1]),zone);
+					return va_SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напал на территорию {FF8888}%s(№%d){FFFFFF}, помогите ему!", IC_Name(playerid),Get_GangName(gangs[1]),zone);
 				if(P[i][p_job_team] == gangs[1])
 					return va_SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FF8888}%s {FFFFFF}напали на территорию {FF8888}%s(№%d){FFFFFF}, войну начал: {0095b6}%s",Get_GangName(gangs[0]),Get_GangName(gangs[1]),zone,Name(playerid));
 				for(new c; c < 2; c++)
@@ -775,18 +776,54 @@ CMD:capture(playerid, params[]){
 CMD:repair(playerid,params[]){
 	new user,Float: price;
 	if(P[playerid][p_job_team] != 19) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете ченить Т.С.");
-	if(sscanf(params,"uf",user,price)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /repair [ID Игрока] [Цена за починку]");
 	if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 525) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не на рабочем автомобиле.");
+	if(sscanf(params,"uf",user,price)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /repair [ID Игрока] [Цена за починку]");
 	if(playerid == user) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете починить Т.С. самому себе");
 	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере");
 	if(price < 1 || price > 2000) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Цена за починку автомобиля: 1$ до 2000$");
 	if(!IsPlayerInAnyVehicle(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Указанный вами игрок не находится в Т.С.");
 	if(price > P[user][p_cash]) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У этого человека не достаточно денег для воспользования ваших услуг.");
-	va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s починить его транспортное средство за $%.2f",Name(user), price);
-	va_SendClientMessage(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s предлагает вам починить транспортное средство за $%.2f",Name(playerid), price);
+	va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s починить его транспортное средство за $%.2f",IC_Name(user), price);
+	va_SendClientMessage(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s предлагает вам починить транспортное средство за $%.2f",IC_Name(playerid), price);
 	va_SendClientMessage(user, 0xB22222FF, "[Справка]: {FFFFFF}Что-бы подвердить нажмите {007F0E}Y{FFFFFF} для соглашение, {FF0000}N{FFFFFF} для отказа.");
 	SetPVarInt(playerid,"id_repair",user + 1);
 	SetPVarFloat(playerid,"price_repair", price);
 	SetPVarInt(user,"id_repair",playerid + 1);
+	return true;
+}
+CMD:time(playerid,params[]){
+	new time[35+9],
+		mtext[9+1];
+	new year,month,day,
+		hour,minute,second;
+	getdate(year,month,day);
+	gettime(hour,minute,second);
+	switch(month)
+	{
+		case 1: mtext = "January"; 		case 7: mtext = "July";
+		case 2: mtext = "February"; 	case 8: mtext = "August";
+		case 3: mtext = "March"; 		case 9: mtext = "September";
+		case 4: mtext = "April"; 		case 10: mtext = "October";
+		case 5: mtext = "May"; 			case 11: mtext = "November";
+		case 6: mtext = "June"; 		case 12: mtext = "December";
+	}
+	format(time,sizeof(time),"~y~%d:%02d ~n~~g~%02d-%s-%d",hour,minute,day,mtext,year);
+	GameTextForPlayer(playerid,time,5000,1);
+	switch(P[playerid][p_sex]) {
+		case SEX_FEMALE: SetPlayerChatBubble(playerid, "Взглянула на часы", 0xDDA0DDFF, 35.0, 5000);
+		case SEX_MALE: SetPlayerChatBubble(playerid, "Взглянул на часы", 0xDDA0DDFF, 35.0, 5000);
+	}
+	if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT) ApplyAnimation(playerid, "COP_AMBIENT", "Coplook_watch",4.1,0,0,0,0,0);
+	return true;
+}
+CMD:eject(playerid,params[]){
+	new user;
+	if(!IsPlayerInAnyVehicle(playerid)) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вы должны находится в Т.С.");
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /eject [ID игрока]");
+	if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока.");
+	if(GetPlayerVehicleID(playerid) != GetPlayerVehicleID(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF} Этот игрок находится не в вашем Т.С.");
+	va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы выбросили из машини %s", IC_Name(user));
+	va_SendClientMessage(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s выбросил вас из Т.С.",IC_Name(playerid));
+	RemovePlayerFromVehicle(user);
 	return true;
 }
