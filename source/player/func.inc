@@ -638,3 +638,8 @@ stock Get_GangName(gangid){
 	}
 	return dests;
 }
+stock TeleportPlayerToPos(playerid, Float:x, Float:y, Float:z, interiorid, worldid){
+	SetPlayerPos(playerid, x, y, z);
+	SetPlayerInterior(playerid, interiorid);
+	SetPlayerVirtualWorld(playerid, worldid);
+}

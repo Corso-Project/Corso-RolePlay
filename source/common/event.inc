@@ -448,13 +448,8 @@ public OnGameModeInit()
 	// ѕикапы Chinese
 	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312);
 	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078);
-	// NPC's
-	testbot = FCNPC_Create("Bot_1");
-	FCNPC_Spawn(testbot,179,287.9097,-104.5135,1001.5156);
-	FCNPC_GiveAngle(testbot,176.2943);
-	FCNPC_SetArmour(testbot,100);
-	FCNPC_SetWeapon(testbot, 31);
-	FCNPC_SetAmmo(testbot, 500);
+	// ѕ»кап —дачи Ёкзамена в јвтоЎколе
+	AutoSchool_Exam[0] = CreateDynamicPickup(19133,32,-2034.9918,-119.1462,35.2370);
 	// FBI NPC
 	FBI_Actors[0] = CreateActor(286,293.1147,182.5184,1007.1719,133.6613);
 	FBI_Actors[1] = CreateActor(163,231.9374,159.9906,1003.0234,219.8474);
@@ -500,6 +495,7 @@ public OnGameModeInit()
 	// 3D текст
 	CreateDynamic3DTextLabel("”борщик улиц",0x1E90FFFF, 1622.3585, -1552.2335, 13.6824, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	CreateDynamic3DTextLabel("”борщик улиц",0x1E90FFFF, -2070.7686, 8.4370, 35.3203, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
+	CreateDynamic3DTextLabel("—дача ѕƒƒ",0x1E90FFFF, -2034.9918,-119.1462,35.2370, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	return 1;
 }
 
@@ -544,12 +540,4 @@ public OnRconLoginAttempt(ip[], password[], success)
 		}
 	}
 	return 1;
-}
-public FCNPC_OnDeath(npcid, killerid, weaponid)
-{
-	//FCNPC_OnSpawn(testbot);
-    return 1;
-}
-public FCNPC_OnTakeDamage(npcid, damagerid, weaponid, bodypart, Float:health_loss){
-	return true;
 }

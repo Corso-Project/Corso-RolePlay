@@ -11,7 +11,7 @@ public OnPlayerConnect(playerid)
 {
 	TogglePlayerSpectating(playerid, 1);
 	GetPlayerName(playerid, P[playerid][p_name], MAX_PLAYER_NAME);
-	if (Name_IsValid(P[playerid][p_name]) == 0)
+	if(Name_IsValid(P[playerid][p_name]) == 0)
         return ShowPlayerDialog(playerid, d_account_name_error, DIALOG_STYLE_MSGBOX, "Имя персонажа",SERVER_NAME"\n\n{B22222}Имя вашего персонажа несоответствует нашим условиям.\nПравильный формат:\n\n\t{FFFFFF}Имя_Фамилия (на английском)","Выход","");
 
 	new ORM: ormid = P[playerid][_p_ormid] = orm_create("accounts");
@@ -32,6 +32,7 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_exp], "Exp");
 	orm_addvar_int(ormid, P[playerid][p_health], "Health");
 	orm_addvar_int(ormid, P[playerid][p_armour], "Armour");
+	orm_addvar_int(ormid, P[playerid][p_vehicle], "Vehicle");
 	orm_addvar_int(ormid, P[playerid][p_weapon_1], "Weapon_1");
 	orm_addvar_int(ormid, P[playerid][p_weapon_2], "Weapon_2");
 	orm_addvar_int(ormid, P[playerid][p_weapon_3], "Weapon_3");
@@ -200,7 +201,6 @@ public OnPlayerSpawn(playerid)
 {
 	if(P[playerid][_p_in_game] == true)
 	{
-		SetPlayerColor(playerid, 0xFFFFFF22);
 		ResetPlayerMoney(playerid);
 		GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
 		new string[16];
@@ -270,7 +270,7 @@ public OnPlayerSpawn(playerid)
 				SetPlayerVirtualWorld(playerid, 0);
 				SetPlayerPos(playerid, 1642.4329,-2239.0205,13.4967);
 				SetPlayerFacingAngle(playerid, 180.0);
-				SetPlayerColor(playerid,0x00000055);
+				SetPlayerColor(playerid,0xFFFFFF55);
 			}
 		}
 		TogglePlayerClock(playerid, 1);
@@ -717,28 +717,6 @@ public OnPlayerUpdate(playerid)
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {
 		Speedo_Sync(playerid);
 	}
-
-	new Float:X,Float:Y,Float:Z,weapon;
-	FCNPC_GetPosition(testbot,X, Y, Z);
-	//if((targetplayer) == testbot){
-	if(IsPlayerInRangeOfPoint(playerid, 25.0, X, Y, Z)){
-	    if(FCNPC_GetAmmo(testbot) == 0){
-	        FCNPC_StopAim(testbot);
-	        FCNPC_SetAmmo(testbot,500);
-	    }
-	    new Float: x, Float: y, Float: z;
-	    GetPlayerPos(playerid, x, y, z);
-	    FCNPC_AimAt(testbot,x,y,z,true);
-	    weapon = 1;
-	}
-	else{
-	    if(weapon == 1)
-	    {
-	        FCNPC_StopAim(testbot);
-	        weapon = 0;
-	    }
-	}
-
 	SetPlayerTime(playerid, g_hour, g_minute);
 	return 1;
 }
@@ -1190,6 +1168,11 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerFacingAngle(playerid, 178.7144);
 		SetPlayerInterior(playerid,0);
 		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == AutoSchool_Exam[0]){
+		new lawstring[256];
+		format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
+		ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
 	}
     return 1;
 }

@@ -1,5 +1,6 @@
-#include <a_mysql>
 #include <a_samp>
+
+#include <a_mysql>
 #include <fixes>
 #include <callbacks>
 #include <sscanf2>
@@ -17,7 +18,7 @@
 #include <nex-ac>
 
 #include <Pawn.CMD>
-#include <gangzonesc>
+#include <gangzone>
 #include <geolocation>
 
 #include "..\source\vars.inc"

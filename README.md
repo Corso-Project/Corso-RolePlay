@@ -15,5 +15,9 @@
 	* Модуль [Streamer](https://github.com/samp-incognito/samp-streamer-plugin) для увеличения количества объектов, иконок, пикапов и т.д.
 	* Анти-Чит Nexus ([Nex-AC](https://github.com/NexiusTailer/Nex-AC))
 
-
-P.S: Нужен маппер.
+# Благодарности:
+|  |  |
+| ------ | ------ |
+| [eXeGOODER](https://github.com/eXeGOODER) | Помощь с кодом |
+| [ZiGGi](https://github.com/ziggi) | Помощь с кодом |
+| [ShimaNeko](https://github.com/ShimaNeko) | Помощьс кодом,Gang Capture System |

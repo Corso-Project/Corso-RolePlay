@@ -506,6 +506,143 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             Whitewinc_CP[0] = CreateDynamicCP(1655.8282,-1579.3132,13.1099,7.0);
         }
     }
+    case d_law_test:{
+        if(!response) return SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы прекратили теоретическую сдачу ПДД.");
+        new ans_true = GetPVarInt(playerid,"answer_true");
+        new ans_false = GetPVarInt(playerid,"answer_false");
+        if(ans_true == 0 && ans_false == 0){
+            switch(listitem){
+                case 0:{
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+                case 1: if(Traffic_Laws_ExamAnswers[0][0][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[1],Traffic_Laws_ExamAnswers[1][0],Traffic_Laws_ExamAnswers[1][1],Traffic_Laws_ExamAnswers[1][2],Traffic_Laws_ExamAnswers[1][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",1);
+                }
+                case 2: if(Traffic_Laws_ExamAnswers[0][1][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[1],Traffic_Laws_ExamAnswers[1][0],Traffic_Laws_ExamAnswers[1][1],Traffic_Laws_ExamAnswers[1][2],Traffic_Laws_ExamAnswers[1][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_true",1);
+                }
+                case 3: if(Traffic_Laws_ExamAnswers[0][2][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[1],Traffic_Laws_ExamAnswers[1][0],Traffic_Laws_ExamAnswers[1][1],Traffic_Laws_ExamAnswers[1][2],Traffic_Laws_ExamAnswers[1][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",1);
+                }
+                case 4: if(Traffic_Laws_ExamAnswers[0][3][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[1],Traffic_Laws_ExamAnswers[1][0],Traffic_Laws_ExamAnswers[1][1],Traffic_Laws_ExamAnswers[1][2],Traffic_Laws_ExamAnswers[1][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",1);
+                }
+            }
+        }
+        else if((ans_true == 1 && ans_false == 0) || (ans_true == 0 && ans_false == 1)){
+            va_SendClientMessage(playerid,-1,"%d | %d",ans_true,ans_false);
+            switch(listitem){
+                case 0: {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[1],Traffic_Laws_ExamAnswers[1][0],Traffic_Laws_ExamAnswers[1][1],Traffic_Laws_ExamAnswers[1][2],Traffic_Laws_ExamAnswers[1][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+                case 1: if(Traffic_Laws_ExamAnswers[1][0][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[2],Traffic_Laws_ExamAnswers[2][0],Traffic_Laws_ExamAnswers[2][1],Traffic_Laws_ExamAnswers[2][2],Traffic_Laws_ExamAnswers[2][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",2);
+                }
+                case 2: if(Traffic_Laws_ExamAnswers[1][1][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[2],Traffic_Laws_ExamAnswers[2][0],Traffic_Laws_ExamAnswers[2][1],Traffic_Laws_ExamAnswers[2][2],Traffic_Laws_ExamAnswers[2][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_true",2);
+                }
+                case 3: if(Traffic_Laws_ExamAnswers[1][2][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[2],Traffic_Laws_ExamAnswers[2][0],Traffic_Laws_ExamAnswers[2][1],Traffic_Laws_ExamAnswers[2][2],Traffic_Laws_ExamAnswers[2][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",2);
+                }
+                case 4: if(Traffic_Laws_ExamAnswers[1][3][e_exam_is_answer]) {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[2],Traffic_Laws_ExamAnswers[2][0],Traffic_Laws_ExamAnswers[2][1],Traffic_Laws_ExamAnswers[2][2],Traffic_Laws_ExamAnswers[2][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",2);
+                }
+            }
+        }
+        else if((ans_true == 2 && ans_false == 1) || (ans_true == 1 && ans_false == 2)){
+            switch(listitem){
+                case 0: {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[2],Traffic_Laws_ExamAnswers[2][0],Traffic_Laws_ExamAnswers[2][1],Traffic_Laws_ExamAnswers[2][2],Traffic_Laws_ExamAnswers[2][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+                case 1: if(Traffic_Laws_ExamAnswers[2][0][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[3],Traffic_Laws_ExamAnswers[3][0],Traffic_Laws_ExamAnswers[3][1],Traffic_Laws_ExamAnswers[3][2],Traffic_Laws_ExamAnswers[3][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",3);
+                }
+                case 2: if(Traffic_Laws_ExamAnswers[2][1][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[3],Traffic_Laws_ExamAnswers[3][0],Traffic_Laws_ExamAnswers[3][1],Traffic_Laws_ExamAnswers[3][2],Traffic_Laws_ExamAnswers[3][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_true",3);
+                }
+                case 3: if(Traffic_Laws_ExamAnswers[2][2][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[3],Traffic_Laws_ExamAnswers[3][0],Traffic_Laws_ExamAnswers[3][1],Traffic_Laws_ExamAnswers[3][2],Traffic_Laws_ExamAnswers[3][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",3);
+                }
+                case 4: if(Traffic_Laws_ExamAnswers[2][3][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[3],Traffic_Laws_ExamAnswers[3][0],Traffic_Laws_ExamAnswers[3][1],Traffic_Laws_ExamAnswers[3][2],Traffic_Laws_ExamAnswers[3][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                    SetPVarInt(playerid,"answer_false",3);
+                }
+            }
+        }
+        else if((ans_true == 3 && ans_false == 2) || (ans_true ==2 && ans_false == 3)){
+            switch(listitem){
+                case 0: {
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[3],Traffic_Laws_ExamAnswers[3][0],Traffic_Laws_ExamAnswers[3][1],Traffic_Laws_ExamAnswers[3][2],Traffic_Laws_ExamAnswers[3][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+                case 1: if(Traffic_Laws_ExamAnswers[3][0][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[4],Traffic_Laws_ExamAnswers[4][0],Traffic_Laws_ExamAnswers[4][1],Traffic_Laws_ExamAnswers[4][2],Traffic_Laws_ExamAnswers[4][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+                case 2: if(Traffic_Laws_ExamAnswers[3][1][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[4],Traffic_Laws_ExamAnswers[4][0],Traffic_Laws_ExamAnswers[4][1],Traffic_Laws_ExamAnswers[4][2],Traffic_Laws_ExamAnswers[4][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+                case 3: if(Traffic_Laws_ExamAnswers[3][2][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[4],Traffic_Laws_ExamAnswers[4][0],Traffic_Laws_ExamAnswers[4][1],Traffic_Laws_ExamAnswers[4][2],Traffic_Laws_ExamAnswers[4][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+                case 4: if(Traffic_Laws_ExamAnswers[3][3][e_exam_is_answer]){
+                    new lawstring[256];
+                    format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[4],Traffic_Laws_ExamAnswers[4][0],Traffic_Laws_ExamAnswers[4][1],Traffic_Laws_ExamAnswers[4][2],Traffic_Laws_ExamAnswers[4][3]);
+                    ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+                }
+            }
+        }
+        else if(ans_true >= ans_false){
+            SendClientMessage(playerid, -1, "Поздравляем, ты сдал экзамен [TEST]");
+        }
+    }
     }
     return 1;
 }

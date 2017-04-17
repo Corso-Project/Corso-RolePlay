@@ -675,25 +675,17 @@ CMD:teleport(playerid,params[]){ //concept from GTO
 	}
 	if(strcmp(subcmd, "to", true) == 0) {
 		if (targetid == INVALID_PLAYER_ID || targetid == -1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден");
-		SetPlayerPos(playerid, t_pos_x + random(2) - random(4), t_pos_y + random(2) - random(4), t_pos_z);
-		SetPlayerFacingAngle(playerid, t_pos_a);
-		SetPlayerInterior(playerid, t_interior);
-		SetPlayerVirtualWorld(playerid, t_world);
+		TeleportPlayerToPos(playerid,t_pos_x + random(2) - random(4), t_pos_y + random(2) - random(4), t_pos_z,t_interior, t_world);
 		Message_ToAdmins(0xAFAFAFFF, "Администратор %s[%d] телепортировался к %s[%d]", Name(playerid), playerid, Name(targetid), targetid);
 	}
 	else if(strcmp(subcmd, "here", true) == 0) {
 		if (targetid == INVALID_PLAYER_ID) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден");
-		SetPlayerPos(targetid, p_pos_x + random(2) - random(4), p_pos_y + random(2) - random(4), p_pos_z);
-		SetPlayerFacingAngle(targetid, p_pos_a);
-		SetPlayerInterior(targetid, p_interior);
-		SetPlayerVirtualWorld(targetid, p_world);
+		TeleportPlayerToPos(targetid, p_pos_x + random(2) - random(4), p_pos_y + random(2) - random(4), p_pos_z, p_interior, p_world);
 		Message_ToAdmins(0xAFAFAFFF, "Администратор %s[%d] телепортировал к себе %s[%d]",Name(playerid),playerid,Name(targetid),targetid);
 	}
 	else if(strcmp(subcmd, "coord", true) == 0) {
 		if(sscanf(subparams, "p<,>fffI(0)I(0)", t_pos_x, t_pos_y, t_pos_z, t_interior, t_world)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}/t[ele]p[ort] coord <x> <y> <z> <интерьер> <мир>");
-		SetPlayerPos(playerid,t_pos_x, t_pos_y, t_pos_z);
-		SetPlayerInterior(playerid, t_interior);
-		SetPlayerVirtualWorld(playerid, t_world);
+		TeleportPlayerToPos(playerid, t_pos_x, t_pos_y, t_pos_z, t_interior, t_world);
 	}
 	return true;
 }
@@ -807,7 +799,7 @@ CMD:time(playerid,params[]){
 		case 5: mtext = "May"; 			case 11: mtext = "November";
 		case 6: mtext = "June"; 		case 12: mtext = "December";
 	}
-	format(time,sizeof(time),"~y~%d:%02d ~n~~g~%02d-%s-%d",hour,minute,day,mtext,year);
+	format(time,sizeof(time),"~h~~b~%d:%02d ~n~~~h~g~%02d-%s-%d",hour,minute,day,mtext,year);
 	GameTextForPlayer(playerid,time,5000,1);
 	switch(P[playerid][p_sex]) {
 		case SEX_FEMALE: SetPlayerChatBubble(playerid, "Взглянула на часы", 0xDDA0DDFF, 35.0, 5000);
@@ -821,9 +813,29 @@ CMD:eject(playerid,params[]){
 	if(!IsPlayerInAnyVehicle(playerid)) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вы должны находится в Т.С.");
 	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /eject [ID игрока]");
 	if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока.");
-	if(GetPlayerVehicleID(playerid) != GetPlayerVehicleID(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF} Этот игрок находится не в вашем Т.С.");
+	if(GetPlayerVehicleID(playerid) != GetPlayerVehicleID(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот игрок находится не в вашем Т.С.");
 	va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы выбросили из машини %s", IC_Name(user));
 	va_SendClientMessage(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s выбросил вас из Т.С.",IC_Name(playerid));
 	RemovePlayerFromVehicle(user);
+	return true;
+}
+CMD:handsup(playerid,params[]){
+	SetPlayerSpecialAction(playerid,SPECIAL_ACTION_HANDSUP);
+	return true;
+}
+CMD:test(playerid,params[]){
+	new lawstring[256];
+	format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
+	ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+	return true;
+}
+CMD:givelic(playerid,params[]){
+	new user;
+	if(P[playerid][p_job_team] != 19) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не инструктор.");
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /givelic [ID игрока]");
+	if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
+	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_LIST,"Выдать","Права на легковые автомобили, небольшие грузовики {FFCC66}[B]\n\
+	Права на мотоциклы {FFCC66}[A]\n\
+	Права на грузовые автомобили + прицеп {FFCC66}[DE]","Закрыть","");
 	return true;
 }
