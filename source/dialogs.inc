@@ -643,6 +643,17 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             SendClientMessage(playerid, -1, "Поздравляем, ты сдал экзамен [TEST]");
         }
     }
+    case d_elevator_chose_floor:{
+        if(!response)
+            return 0;
+        if(FloorRequestedBy[listitem] != INVALID_PLAYER_ID || IsFloorInQueue(listitem))
+            GameTextForPlayer(playerid, "~r~The floor is already in the queue", 3500, 4);
+        else if(DidPlayerRequestElevator(playerid))
+            GameTextForPlayer(playerid, "~r~You already requested the elevator", 3500, 4);
+        else
+            CallElevator(playerid, listitem);
+        return 1;
+    }
     }
     return 1;
 }

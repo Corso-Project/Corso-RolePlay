@@ -201,6 +201,7 @@ public OnPlayerSpawn(playerid)
 {
 	if(P[playerid][_p_in_game] == true)
 	{
+		SetPlayerRussifierType(playerid, RussifierType_SanLtd);
 		ResetPlayerMoney(playerid);
 		GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
 		new string[16];
@@ -566,6 +567,50 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			Show_PlayerLic(playerid,player_lic);
 			DeletePVar(playerid, "Show_PlayerLic");
 		}
+		if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT){
+			new Float:pos[3];
+			GetPlayerPos(playerid, pos[0], pos[1], pos[2]);
+
+			if (pos[1] > (Y_ELEVATOR_POS - 1.8) && pos[1] < (Y_ELEVATOR_POS + 1.8) && pos[0] < (X_ELEVATOR_POS + 1.8) && pos[0] > (X_ELEVATOR_POS - 1.8))
+			{
+				ShowElevatorDialog(playerid);
+			}
+			else
+			{
+				if(pos[1] < (Y_ELEVATOR_POS - 1.81) && pos[1] > (Y_ELEVATOR_POS - 3.8) && pos[0] > (X_ELEVATOR_POS + 1.21) && pos[0] < (X_ELEVATOR_POS + 3.8))
+				{
+					new i = 13;
+					while(pos[2] < GetDoorsZCoordForFloor(i) + 3.5 && i > 0)
+						i --;
+					if(i == 0 && pos[2] < GetDoorsZCoordForFloor(0) + 2.0)
+						i = -1;
+					if (i <= 12)
+					{
+						if (ElevatorState != ELEVATOR_STATE_MOVING)
+						{
+							if (ElevatorFloor == i + 1)
+							{
+								GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~y~~h~Лифт ~n~~y~~h~уже находится на вашем этаже!", 3500, 3);
+								SendClientMessage(playerid, -1, "Лифт уже находится на данным этаже, войдите в него и нажмите'{FFCC66}~k~~CONVERSATION_YES~{FFFFFF}'");
+								return 1;
+							}
+						}
+						CallElevator(playerid, i + 1);
+						GameTextForPlayer(playerid, "~n~~n~~n~~n~~n~~n~~n~~n~~g~~h~Лифт~n~~g~~h~Уже направляется к вам,~n~~w~пожалуйста, подождите...", 3000, 3);
+						if (ElevatorState == ELEVATOR_STATE_MOVING)
+							va_SendClientMessage(playerid,-1,"Лифт в данный момент движится в сторону {FFCC66}%s{FFFFFF}",FloorNames[ElevatorFloor]);
+						else
+						{
+							if (ElevatorFloor == 0)
+								va_SendClientMessage(playerid,-1,"Лифт в данный момент находится у {FFCC66}%s{FFFFFF}.",FloorNames[ElevatorFloor]);
+							else
+								va_SendClientMessage(playerid,-1,"Лифт в данный момент находится на {FFCC66}%s{FFFFFF}.",FloorNames[ElevatorFloor]);
+						}
+						return 1;
+					}
+				}
+			}
+		}
 	}
 	if(newkeys & KEY_NO){
 		if(GetPVarInt(playerid, "Show_PlayerLic") == 1) {
@@ -637,6 +682,13 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	            defer OnGateClosed(obj_MILITARY[1]);
 	        }
 	    }
+		if(IsPlayerInRangeOfPoint(playerid, 15.0, -2057.275634, -94.831848, 34.890388)){
+			if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL == false){
+				obj_state_AUTOSCHOOL = true;
+				MoveDynamicObject(obj_AUTOSCHOOL,-2057.275634, -94.831848+0.05, 34.890388, 0.03 ,0.000000, 0.000000, 270.000000);
+				defer OnGateClosed(obj_AUTOSCHOOL);
+			}
+		}
 	}
 	if(newkeys & KEY_ACTION)
 	{

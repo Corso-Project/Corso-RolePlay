@@ -86,6 +86,10 @@ timer OnGateClosed[7500](objectid)
 		obj_state_MILITARY[1] = false;
 		MoveDynamicObject(obj_MILITARY[1], 134.85001, 1941.53406, 21.71000, MOVE_GATE_SPEED, 0.00000, 0.00000, 180.00000);
 	}
+	if(objectid == obj_AUTOSCHOOL){
+		obj_state_AUTOSCHOOL = false;
+		MoveDynamicObject(obj_AUTOSCHOOL, -2057.275634, -94.831848-0.05, 34.890388, 0.03,  0.000000, 90.000000, 270.000000);
+	}
 }
 
 task OnSecUpdate[1000](){

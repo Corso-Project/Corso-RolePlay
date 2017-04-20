@@ -5,9 +5,28 @@
 
 #define MOVE_GATE_SPEED     	3.0
 #define MOVE_BARRIER_SPEED  	0.2
-
+// Capture
 #define TimeForCapt 25
 #define GangZoneMinutsDef 7
+// Лифт
+#define ELEVATOR_SPEED      (5.0)
+#define DOORS_SPEED         (5.0)
+#define ELEVATOR_WAIT_TIME  (5000)
+#define X_DOOR_R_OPENED     (289.542419)
+#define X_DOOR_L_OPENED     (286.342407)
+#define Y_DOOR_R_OPENED     (-1609.640991)
+#define Y_DOOR_L_OPENED     (-1609.076049)
+#define X_FDOOR_R_OPENED    (289.492431)
+#define X_FDOOR_L_OPENED    (286.292419)
+#define Y_FDOOR_R_OPENED    (-1609.870971)
+#define Y_FDOOR_L_OPENED    (-1609.306030)
+#define GROUND_Z_COORD      (18.755348)
+#define X_ELEVATOR_POS      (287.942413)
+#define Y_ELEVATOR_POS      (-1609.341064)
+#define ELEVATOR_STATE_IDLE     (0)
+#define ELEVATOR_STATE_WAITING  (1)
+#define ELEVATOR_STATE_MOVING   (2)
+#define INVALID_FLOOR           (-1)
 
 enum {
 	ORG_UNKNOWN,
@@ -155,12 +174,17 @@ enum
 	d_gps_nearest_filling,
 	// job dialogs
 	d_job_whitewing,
-	// Law's dialogs
-	d_law_test
+	// law's dialogs
+	d_law_test,
+	// elevator's dialogs
+	d_elevator_chose_floor
 }
 enum E_EXAM_ANSWER {
 	e_exam_question[88],
     bool:e_exam_is_answer
+}
+enum E_ELEVATOR_FLOOR{
+	e_elevator_floor[20]
 }
 enum
 {
@@ -229,13 +253,15 @@ new obj_FBI,
 	obj_LSPD,
 	obj_SFPD[2],
 	obj_LVPD,
-	obj_MILITARY[2];
+	obj_MILITARY[2],
+	obj_AUTOSCHOOL;
 
 new bool: obj_state_FBI,
 	bool: obj_state_LSPD,
 	bool: obj_state_SFPD[2],
 	bool: obj_state_LVPD,
-	bool: obj_state_MILITARY[2];
+	bool: obj_state_MILITARY[2],
+	bool: obj_state_AUTOSCHOOL;
 
 new g_hour,
 	g_minute;
@@ -291,6 +317,8 @@ new zone = 0;
 new gangskills[2] = 0;
 new GangZoneSeconds;
 new GangZoneMinuts;
+// Для специальных объектов
+new autoschool_obj;
 // All
 new male_skins[][] = {
 {156,	1,2,3,4,5,6,7,8,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,32,33,34,35,36,37,38,42,43,44,45,46,47,48,49,50,51,52,58,59,60,62,66,67,68,72,73,78,79,80,81,82,83,84,86,94,95,96,97,98,99,100,101,119,128,132,133,134,135,136,137,142,143,144,146,149,153,154,155,156,158,159,160,161,162,167,168,170,171,176,177,180,181,182,183,184,185,186,188,189,200,202,203,204,206,208,209,210,212,213,217,220,221,222,223,229,230,234,235,236,239,240,241,242,247,248,249,250,252,253,254,255,258,259,260,261,262,264,268,272,273,289,290,291,292,293,294,295,296,297,299},
@@ -509,3 +537,49 @@ new Traffic_Laws_ExamAnswers[15][4][E_EXAM_ANSWER] =
 		{"4. Все ответы верны.",true}
 	}
 };
+// Лифт
+new FloorNames[14][] =
+{
+	"Парковка",
+	"Нижний этаж",
+	"Первый этаж",
+	"Второй этаж",
+	"Третий этаж",
+	"Четвертый этаж",
+	"Пятый этаж",
+	"Шестой этаж",
+	"Седьмой этаж",
+	"Восьмой этаж",
+	"Девятый этаж",
+	"Десятый этаж",
+	"Одиннадцатый этаж",
+	"Двенадцатый этаж"
+};
+new Float:FloorZOffsets[14] =
+{
+    0.0,
+    15.069729,
+    29.130733,
+    33.630733,
+    38.130733,
+    42.630733,
+    47.130733,
+    51.630733,
+    56.130733,
+    60.630733,
+    65.130733,
+    69.630733,
+    74.130733,
+    78.630733,
+};
+
+new Obj_Elevator, Obj_ElevatorDoors[2], Obj_FloorDoors[14][2];
+new Text3D:Label_Elevator, Text3D:Label_Floors[14];
+new ElevatorState;
+new	ElevatorFloor;
+new ElevatorQueue[14];
+new	FloorRequestedBy[14];
+new ElevatorBoostTimer;
+
+forward Float:GetElevatorZCoordForFloor(floorid);
+forward Float:GetDoorsZCoordForFloor(floorid);

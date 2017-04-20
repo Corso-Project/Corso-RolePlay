@@ -397,14 +397,7 @@ public OnGameModeInit()
 	obj_LVPD = CreateDynamicObject(968, 2238.18994, 2450.21997, 10.71000,   0.00000, 90.00000, 90.00000);
 	obj_MILITARY[0] = CreateDynamicObject(19313, 286.00000, 1822.00000, 20.03000,   0.00000, 0.00000, 90.00000);
 	obj_MILITARY[1] = CreateDynamicObject(19313, 134.85001, 1941.53406, 21.71000,   0.00000, 0.00000, 180.00000);
-	// Мишени
-	CreateDynamicObject(19315, 250.77870, 2068.24194, 21.57660,   0.00000, 0.00000, 180.00000);
-	CreateDynamicObject(19315, 253.85001, 2072.42725, 20.28720,   0.00000, 0.00000, 180.00000);
-	CreateDynamicObject(19315, 262.70380, 2068.51904, 20.64404,   0.00000, 0.00000, 0.00000);
-	CreateDynamicObject(19315, 249.74660, 2068.36279, 17.11980,   0.00000, 0.00000, 0.00000);
-	CreateDynamicObject(19315, 259.59869, 2066.96582, 17.77970,   0.00000, 0.00000, 0.00000);
-	CreateDynamicObject(19315, 269.96164, 2068.13623, 22.56484,   0.00000, 0.00000, 180.00000);
-	CreateDynamicObject(19315, 257.19031, 2066.94263, 20.51266,   0.00000, 0.00000, 0.00000);
+	obj_AUTOSCHOOL = CreateDynamicObject(968, -2057.275634, -94.831848, 34.890388, 	0.000000, 90.000000, 270.000000);
 	// Пикапы Аммунаций
 	Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469);
 	Ammu_Nation[1] = CreateDynamicPickup(1318,23,285.4752,-41.7966,1001.5156);
@@ -496,6 +489,12 @@ public OnGameModeInit()
 	CreateDynamic3DTextLabel("Уборщик улиц",0x1E90FFFF, 1622.3585, -1552.2335, 13.6824, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	CreateDynamic3DTextLabel("Уборщик улиц",0x1E90FFFF, -2070.7686, 8.4370, 35.3203, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	CreateDynamic3DTextLabel("Сдача ПДД",0x1E90FFFF, -2034.9918,-119.1462,35.2370, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
+	// Объекты
+	autoschool_obj = CreateDynamicObject(19483, -2020.911132, -120.107528, 36.110103, 0.000000, 0.000000, 131.500000, -1, -1, -1, 300.00, 300.00);
+	SetDynamicObjectMaterialText(autoschool_obj, 0, "1.-\n2.-\n3.-\n4.-\n5.-\n6.-\n7.-", 140, "Ariel", 59, 0, 0xFFFFFFFF, 0x00000000, 0);
+	// Лифт
+	ResetElevatorQueue();
+	Elevator_Initialize();
 	return 1;
 }
 
@@ -522,6 +521,8 @@ public OnGameModeExit()
 	for(new i; i < 3; i++){
 		TextDrawDestroy(Text:ChoseSkin[i]);
 	}
+	//Уничтожает лифт
+	Elevator_Destroy();
 	// Отключение MySQL
 	mysql_close();
 	return 1;
@@ -538,6 +539,34 @@ public OnRconLoginAttempt(ip[], password[], success)
 			Message_ToAdmins(0xB9C9BFFF, "[Защита]: Взлом RCON - %s[%d] | %s", Name(i),i,ip_dest);
 		    Kick(i);
 		}
+	}
+	return 1;
+}
+public OnObjectMoved(objectid)
+{
+    new Float:x, Float:y, Float:z;
+	for(new i; i < sizeof(Obj_FloorDoors); i ++)
+	{
+		if(objectid == Obj_FloorDoors[i][0])
+		{
+		    GetObjectPos(Obj_FloorDoors[i][0], x, y, z);
+            if (y < Y_DOOR_L_OPENED - 0.5)
+		    {
+				Elevator_MoveToFloor(ElevatorQueue[0]);
+				RemoveFirstQueueFloor();
+			}
+		}
+	}
+	if(objectid == Obj_Elevator)
+	{
+	    KillTimer(ElevatorBoostTimer);
+	    FloorRequestedBy[ElevatorFloor] = INVALID_PLAYER_ID;
+	    Elevator_OpenDoors();
+	    Floor_OpenDoors(ElevatorFloor);
+	    GetObjectPos(Obj_Elevator, x, y, z);
+	    Label_Elevator = Create3DTextLabel("{CCCCCC}Нажмите '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' чтобы использовать лифт.", 0xCCCCCCAA, X_ELEVATOR_POS + 1.6, Y_ELEVATOR_POS - 1.85, z - 0.4, 4.0, 0, 1);
+	    ElevatorState  = ELEVATOR_STATE_WAITING;
+	    SetTimer("Elevator_TurnToIdle", ELEVATOR_WAIT_TIME, 0);
 	}
 	return 1;
 }

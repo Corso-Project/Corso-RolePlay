@@ -20,6 +20,8 @@
 #include <Pawn.CMD>
 #include <gangzone>
 #include <geolocation>
+#include <gl_common>
+#include <rustext>
 
 #include "..\source\vars.inc"
 

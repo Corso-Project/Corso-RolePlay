@@ -14,10 +14,11 @@
 	* И другие возможности доступные из [YSI 4.0](https://github.com/Misiur/YSI-Includes)
 	* Модуль [Streamer](https://github.com/samp-incognito/samp-streamer-plugin) для увеличения количества объектов, иконок, пикапов и т.д.
 	* Анти-Чит Nexus ([Nex-AC](https://github.com/NexiusTailer/Nex-AC))
+	* Русификатор [rustext](https://github.com/ziggi/rustext)
 
 # Благодарности:
 |  |  |
 | ------ | ------ |
 | [eXeGOODER](https://github.com/eXeGOODER) | Помощь с кодом |
 | [ZiGGi](https://github.com/ziggi) | Помощь с кодом |
-| [ShimaNeko](https://github.com/ShimaNeko) | Помощьс кодом,Gang Capture System |
+| [ShimaNeko](https://github.com/ShimaNeko) | Помощьс кодом,Создание системы захвата територий для банд |

@@ -839,3 +839,11 @@ CMD:givelic(playerid,params[]){
 	Права на грузовые автомобили + прицеп {FFCC66}[DE]","Закрыть","");
 	return true;
 }
+CMD:text(playerid,params[]){
+	new text[127],
+		string[127];
+	if(sscanf(params,"s[127]",text)) return SendClientMessage(playerid,-1,"Используйте /text [text]");
+	format(string,sizeof(string),"%s",text);
+	SetDynamicObjectMaterialText(autoschool_obj, 0, string, 140, "Ariel", 59, 0, 0xFFFFFFFF, 0x00000000, 0);
+	return true;
+}
