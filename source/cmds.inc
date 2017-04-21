@@ -77,6 +77,7 @@ CMD:fill(playerid, params[])
 
 CMD:o(playerid, params[])
 {
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if (isnull(params))
 		return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /o <текст>");
 
@@ -125,6 +126,7 @@ CMD:o(playerid, params[])
 
 CMD:b(playerid, params[])
 {
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if (isnull(params))
 		return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /b <текст>");
 	if ((gettime() - P[playerid][_p_chat_time]) < 3)
@@ -165,6 +167,7 @@ CMD:b(playerid, params[])
 
 CMD:s(playerid, params[])
 {
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /s <текст>");
 	if((gettime() - P[playerid][_p_chat_time]) < 3) return 1;
 	if(containsAnyIP(params)) return 1;
@@ -196,6 +199,7 @@ CMD:s(playerid, params[])
 	return 1;
 }
 CMD:w(playerid,params[]){
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /w <текст>");
 	if((gettime() - P[playerid][_p_chat_time]) < 3) return 1;
 	if(containsAnyIP(params)) return 1;
@@ -227,6 +231,7 @@ CMD:w(playerid,params[]){
 }
 CMD:me(playerid, params[])
 {
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /me <действие>");
 	if(containsAnyIP(params)) return 1;
 
@@ -237,6 +242,7 @@ CMD:me(playerid, params[])
 
 CMD:try(playerid, params[])
 {
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /try <действие>");
 	if(containsAnyIP(params)) return 1;
 
@@ -545,6 +551,7 @@ CMD:cleaner(playerid,params[]){
 	return true;
 }
 CMD:gnews(playerid,params[]){
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(P[playerid][p_job_team] == 0 || P[playerid][p_job_team] >= 10 && P[playerid][p_job_team] <= 14 || P[playerid][p_job_team] > 18)
 		return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вам не доступна эта функция");
 	if(P[playerid][p_rang] < 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете использовать эту команду.");
@@ -566,6 +573,7 @@ CMD:slap(playerid,params[])
 	return true;
 }
 CMD:r(playerid,params[]){
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	new text[66];
 	if(sscanf(params,"s[66]",text)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /r [Текст]");
 	if(P[playerid][p_job_team] == 0 || P[playerid][p_job_team] >= 10 && P[playerid][p_job_team] <= 14 || P[playerid][p_job_team] > 18)
@@ -696,6 +704,7 @@ CMD:spawn(playerid,params[]){
 	return true;
 }
 CMD:f(playerid,params[]){
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	new text[66];
 	if(sscanf(params,"s[66]",text)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /f [Текст]");
 	if(P[playerid][p_job_team] == 0 || P[playerid][p_job_team] > 18) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не состоите в организаций.");
@@ -799,6 +808,7 @@ CMD:time(playerid,params[]){
 		case 5: mtext = "May"; 			case 11: mtext = "November";
 		case 6: mtext = "June"; 		case 12: mtext = "December";
 	}
+	if(P[playerid][p_mute] >=1) va_SendClientMessage(playerid,-1,"До снятие мута осталось %i минут",P[playerid][p_mute]);
 	format(time,sizeof(time),"~h~~b~%d:%02d ~n~~~h~g~%02d-%s-%d",hour,minute,day,mtext,year);
 	GameTextForPlayer(playerid,time,5000,1);
 	switch(P[playerid][p_sex]) {
@@ -823,27 +833,37 @@ CMD:handsup(playerid,params[]){
 	SetPlayerSpecialAction(playerid,SPECIAL_ACTION_HANDSUP);
 	return true;
 }
-CMD:test(playerid,params[]){
-	new lawstring[256];
-	format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
-	ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
-	return true;
-}
 CMD:givelic(playerid,params[]){
 	new user;
 	if(P[playerid][p_job_team] != 19) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не инструктор.");
 	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /givelic [ID игрока]");
 	if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
-	ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_LIST,"Выдать","Права на легковые автомобили, небольшие грузовики {FFCC66}[B]\n\
+	new Float:pos_x,Float:pos_y,Float:pos_z;
+	GetPlayerPos(playerid,pos_x,pos_y,pos_z);
+	if(!IsPlayerInRangeOfPoint(user,10.0,pos_x,pos_y,pos_z)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Этот человек находится слишком далеко от вас.");
+	ShowPlayerDialog(playerid,d_law_sell_lic,DIALOG_STYLE_LIST,"Выдать","Права на легковые автомобили, небольшие грузовики {FFCC66}[B]\n\
 	Права на мотоциклы {FFCC66}[A]\n\
 	Права на грузовые автомобили + прицеп {FFCC66}[DE]","Закрыть","");
+	SetPVarInt(playerid, "give_lic", user);
 	return true;
 }
-CMD:text(playerid,params[]){
-	new text[127],
-		string[127];
-	if(sscanf(params,"s[127]",text)) return SendClientMessage(playerid,-1,"Используйте /text [text]");
-	format(string,sizeof(string),"%s",text);
-	SetDynamicObjectMaterialText(autoschool_obj, 0, string, 140, "Ariel", 59, 0, 0xFFFFFFFF, 0x00000000, 0);
+CMD:mute(playerid,params[]){
+	if(P[playerid][p_access] < 1) return true;
+	new user,time,reason[70];
+	if(sscanf(params,"uis[70]",user,time,reason)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /mute [ID игрока] [Количество минут] [Причина]");
+	if(!IsPlayerConnected(user) || playerid == user || P[user][p_access] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
+	if(P[user][p_mute] > 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого игрока уже есть мут");
+	if(time < 1 || time > 60) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Время мута от 1 до 60 минут");
+	P[user][p_mute] = time;
+	va_SendClientMessageToAll(0xB22222FF, "Администратор %s выдал бан чата игроку %s на %i минут.Причина: %s", IC_Name(playerid),IC_Name(user),time,reason);
+	return true;
+}
+CMD:unmute(playerid,params[]){
+	if(P[playerid][p_access] < 1) return true;
+	new user;
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /unmute [ID игрока]");
+	if(P[user][p_mute] == 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого игрока нету мута");
+	if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
+	P[user][p_mute] = 0;
 	return true;
 }

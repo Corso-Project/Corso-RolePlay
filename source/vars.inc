@@ -78,6 +78,7 @@ enum E_PLAYER_DATA {
 	p_last_ip[46],
 	p_reg_ip[46],
 	Float: p_cash,
+	p_mute,
 	p_sex,
 	p_skin,
 	p_job_team,
@@ -176,15 +177,13 @@ enum
 	d_job_whitewing,
 	// law's dialogs
 	d_law_test,
+	d_law_sell_lic,
 	// elevator's dialogs
 	d_elevator_chose_floor
 }
 enum E_EXAM_ANSWER {
 	e_exam_question[88],
     bool:e_exam_is_answer
-}
-enum E_ELEVATOR_FLOOR{
-	e_elevator_floor[20]
 }
 enum
 {

@@ -73,25 +73,25 @@ stock strtolower(source[])
 // Лифт
 stock Elevator_Initialize()
 {
-	Obj_Elevator 			= CreateObject(18755, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD, 0.000000, 0.000000, 80.000000);
-	Obj_ElevatorDoors[0] 	= CreateObject(18757, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD, 0.000000, 0.000000, 80.000000);
-	Obj_ElevatorDoors[1] 	= CreateObject(18756, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD, 0.000000, 0.000000, 80.000000);
+	Obj_Elevator 			= CreateDynamicObject(18755, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD, 0.000000, 0.000000, 80.000000);
+	Obj_ElevatorDoors[0] 	= CreateDynamicObject(18757, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD, 0.000000, 0.000000, 80.000000);
+	Obj_ElevatorDoors[1] 	= CreateDynamicObject(18756, X_ELEVATOR_POS, Y_ELEVATOR_POS, GROUND_Z_COORD, 0.000000, 0.000000, 80.000000);
 
-	Label_Elevator = Create3DTextLabel("{CCCCCC}Нажмите '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' чтобы использовать лифт", 0xCCCCCCAA, X_ELEVATOR_POS + 1.6, Y_ELEVATOR_POS - 1.85, GROUND_Z_COORD - 0.4, 4.0, 0, 1);
+	Label_Elevator = CreateDynamic3DTextLabel("{CCCCCC}Нажмите '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' чтобы использовать лифт", 0xCCCCCCAA, X_ELEVATOR_POS + 1.6, Y_ELEVATOR_POS - 1.85, GROUND_Z_COORD - 0.4, 4.0,INVALID_PLAYER_ID,INVALID_PLAYER_ID,1);
 
 	new string[128], Float:z;
 
 	for (new i; i < sizeof(Obj_FloorDoors); i ++)
 	{
 	    // Create elevator floor door objects
-	    Obj_FloorDoors[i][0] 	= CreateObject(18757, X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(i) + 0.05, 0.000000, 0.000000, 80.000000);
-		Obj_FloorDoors[i][1] 	= CreateObject(18756, X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(i) + 0.05, 0.000000, 0.000000, 80.000000);
+	    Obj_FloorDoors[i][0] 	= CreateDynamicObject(18757, X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(i) + 0.05, 0.000000, 0.000000, 80.000000);
+		Obj_FloorDoors[i][1] 	= CreateDynamicObject(18756, X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(i) + 0.05, 0.000000, 0.000000, 80.000000);
 
 		format(string, sizeof(string), "{CCCCCC}[%s]\n{CCCCCC}Нажмите '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' для вызова лифта", FloorNames[i]);
 
 		z = GetDoorsZCoordForFloor(i);
 
-		Label_Floors[i] = Create3DTextLabel(string, 0xCCCCCCAA, X_ELEVATOR_POS + 2, Y_ELEVATOR_POS -3, z - 0.2, 10.5, 0, 1);
+		Label_Floors[i] = CreateDynamic3DTextLabel(string, 0xCCCCCCAA, X_ELEVATOR_POS + 2, Y_ELEVATOR_POS -3, z - 0.2, 10.5,INVALID_PLAYER_ID,INVALID_PLAYER_ID,1);
 	}
 	Floor_OpenDoors(0);
 	Elevator_OpenDoors();
@@ -100,16 +100,16 @@ stock Elevator_Initialize()
 
 stock Elevator_Destroy()
 {
-	DestroyObject(Obj_Elevator);
-	DestroyObject(Obj_ElevatorDoors[0]);
-	DestroyObject(Obj_ElevatorDoors[1]);
-	Delete3DTextLabel(Label_Elevator);
+	DestroyDynamicObject(Obj_Elevator);
+	DestroyDynamicObject(Obj_ElevatorDoors[0]);
+	DestroyDynamicObject(Obj_ElevatorDoors[1]);
+	DestroyDynamic3DTextLabel(Label_Elevator);
 
 	for(new i; i < sizeof(Obj_FloorDoors); i ++)
 	{
-	    DestroyObject(Obj_FloorDoors[i][0]);
-		DestroyObject(Obj_FloorDoors[i][1]);
-		Delete3DTextLabel(Label_Floors[i]);
+	    DestroyDynamicObject(Obj_FloorDoors[i][0]);
+		DestroyDynamicObject(Obj_FloorDoors[i][1]);
+		DestroyDynamic3DTextLabel(Label_Floors[i]);
 	}
 
 	return 1;
@@ -119,9 +119,9 @@ stock Elevator_OpenDoors()
 {
 	new Float:x, Float:y, Float:z;
 
-	GetObjectPos(Obj_ElevatorDoors[0], x, y, z);
-	MoveObject(Obj_ElevatorDoors[0], X_DOOR_L_OPENED, Y_DOOR_L_OPENED, z, DOORS_SPEED);
-	MoveObject(Obj_ElevatorDoors[1], X_DOOR_R_OPENED, Y_DOOR_R_OPENED, z, DOORS_SPEED);
+	GetDynamicObjectPos(Obj_ElevatorDoors[0], x, y, z);
+	MoveDynamicObject(Obj_ElevatorDoors[0], X_DOOR_L_OPENED, Y_DOOR_L_OPENED, z, DOORS_SPEED);
+	MoveDynamicObject(Obj_ElevatorDoors[1], X_DOOR_R_OPENED, Y_DOOR_R_OPENED, z, DOORS_SPEED);
 
 	return 1;
 }
@@ -133,30 +133,28 @@ stock Elevator_CloseDoors()
 
     new Float:x, Float:y, Float:z;
 
-	GetObjectPos(Obj_ElevatorDoors[0], x, y, z);
-	MoveObject(Obj_ElevatorDoors[0], X_ELEVATOR_POS, Y_ELEVATOR_POS, z, DOORS_SPEED);
-	MoveObject(Obj_ElevatorDoors[1], X_ELEVATOR_POS, Y_ELEVATOR_POS, z, DOORS_SPEED);
+	GetDynamicObjectPos(Obj_ElevatorDoors[0], x, y, z);
+	MoveDynamicObject(Obj_ElevatorDoors[0], X_ELEVATOR_POS, Y_ELEVATOR_POS, z, DOORS_SPEED);
+	MoveDynamicObject(Obj_ElevatorDoors[1], X_ELEVATOR_POS, Y_ELEVATOR_POS, z, DOORS_SPEED);
 
 	return 1;
 }
 
 stock Floor_OpenDoors(floorid)
 {
-    MoveObject(Obj_FloorDoors[floorid][0], X_FDOOR_L_OPENED, Y_FDOOR_L_OPENED, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
-	MoveObject(Obj_FloorDoors[floorid][1], X_FDOOR_R_OPENED, Y_FDOOR_R_OPENED, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
+    MoveDynamicObject(Obj_FloorDoors[floorid][0], X_FDOOR_L_OPENED, Y_FDOOR_L_OPENED, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
+	MoveDynamicObject(Obj_FloorDoors[floorid][1], X_FDOOR_R_OPENED, Y_FDOOR_R_OPENED, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
 
 	PlaySoundForPlayersInRange(6401, 50.0, X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid) + 5.0);
-
 	return 1;
 }
 
 stock Floor_CloseDoors(floorid)
 {
-    MoveObject(Obj_FloorDoors[floorid][0], X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
-	MoveObject(Obj_FloorDoors[floorid][1], X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
+    MoveDynamicObject(Obj_FloorDoors[floorid][0], X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
+	MoveDynamicObject(Obj_FloorDoors[floorid][1], X_ELEVATOR_POS, Y_ELEVATOR_POS - 0.245, GetDoorsZCoordForFloor(floorid) + 0.05, DOORS_SPEED);
 
 	PlaySoundForPlayersInRange(6401, 50.0, X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid) + 5.0);
-
 	return 1;
 }
 
@@ -165,10 +163,10 @@ stock Elevator_MoveToFloor(floorid)
 	ElevatorState = ELEVATOR_STATE_MOVING;
 	ElevatorFloor = floorid;
 
-	MoveObject(Obj_Elevator, X_ELEVATOR_POS, Y_ELEVATOR_POS, GetElevatorZCoordForFloor(floorid), 0.25);
-    MoveObject(Obj_ElevatorDoors[0], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), 0.25);
-    MoveObject(Obj_ElevatorDoors[1], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), 0.25);
-    Delete3DTextLabel(Label_Elevator);
+	MoveDynamicObject(Obj_Elevator, X_ELEVATOR_POS, Y_ELEVATOR_POS, GetElevatorZCoordForFloor(floorid), 0.25);
+    MoveDynamicObject(Obj_ElevatorDoors[0], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), 0.25);
+    MoveDynamicObject(Obj_ElevatorDoors[1], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), 0.25);
+    DestroyDynamic3DTextLabel(Label_Elevator);
 
 	ElevatorBoostTimer = SetTimerEx("Elevator_Boost", 2000, 0, "i", floorid);
 	return 1;
@@ -176,13 +174,13 @@ stock Elevator_MoveToFloor(floorid)
 forward Elevator_Boost(floorid);
 public Elevator_Boost(floorid)
 {
-	StopObject(Obj_Elevator);
-	StopObject(Obj_ElevatorDoors[0]);
-	StopObject(Obj_ElevatorDoors[1]);
+	StopDynamicObject(Obj_Elevator);
+	StopDynamicObject(Obj_ElevatorDoors[0]);
+	StopDynamicObject(Obj_ElevatorDoors[1]);
 
-	MoveObject(Obj_Elevator, X_ELEVATOR_POS, Y_ELEVATOR_POS, GetElevatorZCoordForFloor(floorid), ELEVATOR_SPEED);
-    MoveObject(Obj_ElevatorDoors[0], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), ELEVATOR_SPEED);
-    MoveObject(Obj_ElevatorDoors[1], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), ELEVATOR_SPEED);
+	MoveDynamicObject(Obj_Elevator, X_ELEVATOR_POS, Y_ELEVATOR_POS, GetElevatorZCoordForFloor(floorid), ELEVATOR_SPEED);
+    MoveDynamicObject(Obj_ElevatorDoors[0], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), ELEVATOR_SPEED);
+    MoveDynamicObject(Obj_ElevatorDoors[1], X_ELEVATOR_POS, Y_ELEVATOR_POS, GetDoorsZCoordForFloor(floorid), ELEVATOR_SPEED);
 
 	return 1;
 }

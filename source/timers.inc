@@ -142,6 +142,7 @@ task OnSecUpdate[1000](){
 
 timer OnMinUpdate[60000](){
 	if(CaptureTime) CaptureTime--;
+	return true;
 }
 
 task OnUpdateTime[10*1000]()
@@ -159,6 +160,16 @@ task OnUpdateTime[10*1000]()
 	        }
 	    }
 	}
+}
+ptask OnMinuteTimer[60000](playerid){
+	if(P[playerid][p_mute] >= 1) P[playerid][p_mute]--;
+	if(P[playerid][p_mute] == 0){
+		P[playerid][p_mute] = -1;
+		SendClientMessage(playerid,0xFFCC66FF,"[Уведомление]: {FFFFFF}Срок мута истёк. Все возможности были восстановлены, пожалуйста, не нарушайте правила сервера больше.");
+		stop OnMinuteTimer(playerid);
+	}
+	printf("OnMinuteTimer work");
+	return true;
 }
 ptask SpectateUpdatePlayer[1000](playerid){
 	new Float:Healt, Float:Armour, string[260];

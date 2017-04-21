@@ -24,6 +24,7 @@ public OnPlayerConnect(playerid)
 	orm_addvar_string(ormid, P[playerid][p_last_ip], 46, "Last_IP");
 	orm_addvar_string(ormid, P[playerid][p_reg_ip], 46, "Reg_IP");
 	orm_addvar_float(ormid, P[playerid][p_cash], "Cash");
+	orm_addvar_int(ormid, P[playerid][p_mute], "Mute");
 	orm_addvar_int(ormid, P[playerid][p_sex], "Sex");
 	orm_addvar_int(ormid, P[playerid][p_skin], "Skin");
 	orm_addvar_int(ormid, P[playerid][p_job_team], "Job_Team");
@@ -223,6 +224,11 @@ public OnPlayerSpawn(playerid)
 				SetPlayerFacingAngle(playerid, 269.2349);
 				SetPlayerColor(playerid, 0x1C5A8DFF);
 	    	}
+			case ORG_AUTOSCHOOL:
+			{
+				SetPlayerPos(playerid,-2035.0981,-113.9995,35.2370);
+				SetPlayerFacingAngle(playerid, 253.8189);
+			}
 			case ORG_GROVE:{
 				SetPlayerPos(playerid, 2450.4082,-1688.8137,1013.5078);
 				SetPlayerFacingAngle(playerid, 183.1466);
@@ -323,6 +329,7 @@ public OnPlayerText(playerid, text[])
 	if(!P[playerid][_p_in_game]) return 0;
 	if((gettime() - P[playerid][_p_chat_time]) < 3) return 0;
 	if(containsAnyIP(text)) return 0;
+	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете говорить, так как у вас мут.");
 	if(strlen(P[playerid][_p_chat_msg]) == strlen(text)) {
 		if(strcmp(P[playerid][_p_chat_msg], text, true) == 0) return 0;
 	}
@@ -1011,7 +1018,7 @@ public OnPlayerEnterCheckpoint(playerid)
 public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 {
 	if(PickupGetTime[playerid] > gettime()) return true;
-	PickupGetTime[playerid] = gettime() + 1;
+	PickupGetTime[playerid] = gettime() + 2;
 	if(pickupid == Ammu_Nation[0])
 	{
 		SetCameraBehindPlayer(playerid);
@@ -1222,6 +1229,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == AutoSchool_Exam[0]){
+		if(P[playerid][p_lic_car] == 1) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас уже есть водительские права.");
 		new lawstring[256];
 		format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
 		ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");

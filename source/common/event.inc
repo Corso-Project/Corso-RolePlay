@@ -442,7 +442,7 @@ public OnGameModeInit()
 	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312);
 	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078);
 	// ПИкап Сдачи Экзамена в АвтоШколе
-	AutoSchool_Exam[0] = CreateDynamicPickup(19133,32,-2034.9918,-119.1462,35.2370);
+	AutoSchool_Exam[0] = CreateDynamicPickup(19133,2,-2034.9918,-119.1462,35.2370);
 	// FBI NPC
 	FBI_Actors[0] = CreateActor(286,293.1147,182.5184,1007.1719,133.6613);
 	FBI_Actors[1] = CreateActor(163,231.9374,159.9906,1003.0234,219.8474);
@@ -542,14 +542,14 @@ public OnRconLoginAttempt(ip[], password[], success)
 	}
 	return 1;
 }
-public OnObjectMoved(objectid)
+public OnDynamicObjectMoved(objectid)
 {
     new Float:x, Float:y, Float:z;
 	for(new i; i < sizeof(Obj_FloorDoors); i ++)
 	{
 		if(objectid == Obj_FloorDoors[i][0])
 		{
-		    GetObjectPos(Obj_FloorDoors[i][0], x, y, z);
+		    GetDynamicObjectPos(Obj_FloorDoors[i][0], x, y, z);
             if (y < Y_DOOR_L_OPENED - 0.5)
 		    {
 				Elevator_MoveToFloor(ElevatorQueue[0]);
@@ -563,8 +563,8 @@ public OnObjectMoved(objectid)
 	    FloorRequestedBy[ElevatorFloor] = INVALID_PLAYER_ID;
 	    Elevator_OpenDoors();
 	    Floor_OpenDoors(ElevatorFloor);
-	    GetObjectPos(Obj_Elevator, x, y, z);
-	    Label_Elevator = Create3DTextLabel("{CCCCCC}Нажмите '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' чтобы использовать лифт.", 0xCCCCCCAA, X_ELEVATOR_POS + 1.6, Y_ELEVATOR_POS - 1.85, z - 0.4, 4.0, 0, 1);
+	    GetDynamicObjectPos(Obj_Elevator, x, y, z);
+	    Label_Elevator = CreateDynamic3DTextLabel("{CCCCCC}Нажмите '{FFFFFF}~k~~CONVERSATION_YES~{CCCCCC}' чтобы использовать лифт.", 0xCCCCCCAA, X_ELEVATOR_POS + 1.6, Y_ELEVATOR_POS - 1.85, z - 0.4, 4.0,INVALID_PLAYER_ID,INVALID_PLAYER_ID,1);
 	    ElevatorState  = ELEVATOR_STATE_WAITING;
 	    SetTimer("Elevator_TurnToIdle", ELEVATOR_WAIT_TIME, 0);
 	}
