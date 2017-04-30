@@ -40,7 +40,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				va_SendClientMessage(i, 0xADFF2FFF, "Подключился %s - %s [%d]", Get_AccessName(playerid),Name(playerid),playerid);
 	        }
 	    }
-        if(P[playerid][p_mute] >= 1) OnMinuteTimer(playerid);
+        if(P[playerid][p_mute] >= 60){
+    		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Мут истекает через %i минут.",floatround((P[playerid][p_mute] / 60) - (floatround(P[playerid][p_mute] / 3600) * 60)));
+    	} else if(P[playerid][p_mute] > 0 && P[playerid][p_mute] < 60){
+    		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Мут истекает через %i секунд.",P[playerid][p_mute]);
+    	}
 	}
 	// Создание учётной записи
 	case d_account_register: {

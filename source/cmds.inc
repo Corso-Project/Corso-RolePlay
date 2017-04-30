@@ -77,7 +77,7 @@ CMD:fill(playerid, params[])
 
 CMD:o(playerid, params[])
 {
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if (isnull(params))
 		return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /o <текст>");
 
@@ -126,7 +126,7 @@ CMD:o(playerid, params[])
 
 CMD:b(playerid, params[])
 {
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if (isnull(params))
 		return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /b <текст>");
 	if ((gettime() - P[playerid][_p_chat_time]) < 3)
@@ -167,7 +167,7 @@ CMD:b(playerid, params[])
 
 CMD:s(playerid, params[])
 {
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /s <текст>");
 	if((gettime() - P[playerid][_p_chat_time]) < 3) return 1;
 	if(containsAnyIP(params)) return 1;
@@ -199,7 +199,7 @@ CMD:s(playerid, params[])
 	return 1;
 }
 CMD:w(playerid,params[]){
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /w <текст>");
 	if((gettime() - P[playerid][_p_chat_time]) < 3) return 1;
 	if(containsAnyIP(params)) return 1;
@@ -231,7 +231,7 @@ CMD:w(playerid,params[]){
 }
 CMD:me(playerid, params[])
 {
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /me <действие>");
 	if(containsAnyIP(params)) return 1;
 
@@ -242,7 +242,7 @@ CMD:me(playerid, params[])
 
 CMD:try(playerid, params[])
 {
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(isnull(params)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /try <действие>");
 	if(containsAnyIP(params)) return 1;
 
@@ -551,7 +551,7 @@ CMD:cleaner(playerid,params[]){
 	return true;
 }
 CMD:gnews(playerid,params[]){
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	if(P[playerid][p_job_team] == 0 || P[playerid][p_job_team] >= 10 && P[playerid][p_job_team] <= 14 || P[playerid][p_job_team] > 18)
 		return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вам не доступна эта функция");
 	if(P[playerid][p_rang] < 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете использовать эту команду.");
@@ -573,7 +573,7 @@ CMD:slap(playerid,params[])
 	return true;
 }
 CMD:r(playerid,params[]){
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	new text[66];
 	if(sscanf(params,"s[66]",text)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /r [Текст]");
 	if(P[playerid][p_job_team] == 0 || P[playerid][p_job_team] >= 10 && P[playerid][p_job_team] <= 14 || P[playerid][p_job_team] > 18)
@@ -704,7 +704,7 @@ CMD:spawn(playerid,params[]){
 	return true;
 }
 CMD:f(playerid,params[]){
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
+	if(P[playerid][p_mute] >= 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете воспользоваться данной командой, так как у вас мут.");
 	new text[66];
 	if(sscanf(params,"s[66]",text)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /f [Текст]");
 	if(P[playerid][p_job_team] == 0 || P[playerid][p_job_team] > 18) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не состоите в организаций.");
@@ -808,8 +808,12 @@ CMD:time(playerid,params[]){
 		case 5: mtext = "May"; 			case 11: mtext = "November";
 		case 6: mtext = "June"; 		case 12: mtext = "December";
 	}
-	if(P[playerid][p_mute] >=1) va_SendClientMessage(playerid,-1,"До снятие мута осталось %i минут",P[playerid][p_mute]);
-	format(time,sizeof(time),"~h~~b~%d:%02d ~n~~~h~g~%02d-%s-%d",hour,minute,day,mtext,year);
+	if(P[playerid][p_mute] >= 60){
+		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Мут истекает через %i минут.",floatround((P[playerid][p_mute] / 60) - (floatround(P[playerid][p_mute] / 3600) * 60)));
+	} else if(P[playerid][p_mute] > 0 && P[playerid][p_mute] < 60){
+		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Мут истекает через %i секунд.",P[playerid][p_mute]);
+	}
+	format(time,sizeof(time),"~h~~b~%d:%0d~n~~h~~g~%02d-%s-%d",hour,minute,day,mtext,year);
 	GameTextForPlayer(playerid,time,5000,1);
 	switch(P[playerid][p_sex]) {
 		case SEX_FEMALE: SetPlayerChatBubble(playerid, "Взглянула на часы", 0xDDA0DDFF, 35.0, 5000);
@@ -854,8 +858,8 @@ CMD:mute(playerid,params[]){
 	if(!IsPlayerConnected(user) || playerid == user || P[user][p_access] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
 	if(P[user][p_mute] > 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого игрока уже есть мут");
 	if(time < 1 || time > 60) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Время мута от 1 до 60 минут");
-	P[user][p_mute] = time;
-	va_SendClientMessageToAll(0xB22222FF, "Администратор %s выдал бан чата игроку %s на %i минут.Причина: %s", IC_Name(playerid),IC_Name(user),time,reason);
+	P[user][p_mute] = time*60;
+	va_SendClientMessageToAll(0xFF8888FF, "Администратор %s выдал бан чата игроку %s на %i минут.Причина: %s", IC_Name(playerid),IC_Name(user),time,reason);
 	return true;
 }
 CMD:unmute(playerid,params[]){
@@ -863,7 +867,7 @@ CMD:unmute(playerid,params[]){
 	new user;
 	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /unmute [ID игрока]");
 	if(P[user][p_mute] == 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого игрока нету мута");
-	if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
+	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
 	P[user][p_mute] = 0;
 	return true;
 }

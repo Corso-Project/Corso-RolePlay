@@ -327,9 +327,9 @@ public OnPlayerDeath(playerid, killerid, reason)
 public OnPlayerText(playerid, text[])
 {
 	if(!P[playerid][_p_in_game]) return 0;
+	if(P[playerid][p_mute] >= 0) return 0;
 	if((gettime() - P[playerid][_p_chat_time]) < 3) return 0;
 	if(containsAnyIP(text)) return 0;
-	if(P[playerid][p_mute] >= 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете говорить, так как у вас мут.");
 	if(strlen(P[playerid][_p_chat_msg]) == strlen(text)) {
 		if(strcmp(P[playerid][_p_chat_msg], text, true) == 0) return 0;
 	}

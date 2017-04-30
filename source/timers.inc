@@ -161,14 +161,18 @@ task OnUpdateTime[10*1000]()
 	    }
 	}
 }
-ptask OnMinuteTimer[60000](playerid){
-	if(P[playerid][p_mute] >= 1) P[playerid][p_mute]--;
-	if(P[playerid][p_mute] == 0){
-		P[playerid][p_mute] = -1;
-		SendClientMessage(playerid,0xFFCC66FF,"[Уведомление]: {FFFFFF}Срок мута истёк. Все возможности были восстановлены, пожалуйста, не нарушайте правила сервера больше.");
-		stop OnMinuteTimer(playerid);
+task OnSecTimer[1000]()
+{
+	foreach(new i : Player){
+		if(P[i][p_mute] >= 0){
+			if(!P[i][_p_in_game]) return 0;
+			P[i][p_mute]--;
+			if(P[i][p_mute] == 0){
+				P[i][p_mute] = -1;
+				SendClientMessage(i,0xFFCC66FF,"[Уведомление]: {FFFFFF}Срок мута истёк. Все возможности были восстановлены, пожалуйста, не нарушайте правила сервера больше.");
+			}
+		}
 	}
-	printf("OnMinuteTimer work");
 	return true;
 }
 ptask SpectateUpdatePlayer[1000](playerid){

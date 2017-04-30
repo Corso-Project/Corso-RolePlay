@@ -397,7 +397,7 @@ stock Armour_Sync(playerid)
 	    P[playerid][_p_cheater]++;
 	}
 	return 1;
-}
+}/*
 forward OnCheatDetected(playerid, ip_address[], type, code);
 public OnCheatDetected(playerid, ip_address[], type, code)
 {
@@ -449,7 +449,7 @@ public OnCheatDetected(playerid, ip_address[], type, code)
 		SetTimerEx("ac_KickTimer", (pPing > 500 ? 500 : pPing), false, "i", playerid); // ик за 40 и 41 код, ac_KickTimer есть в античите и успешно сработает
 	}
 	return 1;
-}
+}*/
 stock Speedo_Sync(playerid)
 {
     new engine,lights,alarm,doors,bonnet,boot,objective;
