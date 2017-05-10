@@ -176,6 +176,61 @@ public OnPlayerConnect(playerid)
 	PlayerTextDrawSetProportional(playerid, ChoseSkin[7], 1);
 	PlayerTextDrawSetSelectable(playerid, ChoseSkin[7], true);
 	//
+	Press_ALT[0] = CreatePlayerTextDraw(playerid, 6.235276, 173.083343, "box");
+	PlayerTextDrawLetterSize(playerid, Press_ALT[0], 0.000000, 7.741176);
+	PlayerTextDrawTextSize(playerid, Press_ALT[0], 120.000000, 0.000000);
+	PlayerTextDrawAlignment(playerid, Press_ALT[0], 1);
+	PlayerTextDrawColor(playerid, Press_ALT[0], -1);
+	PlayerTextDrawUseBox(playerid, Press_ALT[0], 1);
+	PlayerTextDrawBoxColor(playerid, Press_ALT[0], -1321124438);
+	PlayerTextDrawSetShadow(playerid, Press_ALT[0], 0);
+	PlayerTextDrawSetOutline(playerid, Press_ALT[0], 0);
+	PlayerTextDrawBackgroundColor(playerid, Press_ALT[0], 255);
+	PlayerTextDrawFont(playerid, Press_ALT[0], 1);
+	PlayerTextDrawSetProportional(playerid, Press_ALT[0], 0);
+	PlayerTextDrawSetShadow(playerid, Press_ALT[0], 0);
+
+	Press_ALT[1] = CreatePlayerTextDraw(playerid, 7.647071, 174.249984, "box");
+	PlayerTextDrawLetterSize(playerid, Press_ALT[1], 0.000000, 7.411758);
+	PlayerTextDrawTextSize(playerid, Press_ALT[1], 118.300003, 0.000000);
+	PlayerTextDrawAlignment(playerid, Press_ALT[1], 1);
+	PlayerTextDrawColor(playerid, Press_ALT[1], -1);
+	PlayerTextDrawUseBox(playerid, Press_ALT[1], 1);
+	PlayerTextDrawBoxColor(playerid, Press_ALT[1], 187);
+	PlayerTextDrawBackgroundColor(playerid, Press_ALT[1], 187);
+	PlayerTextDrawFont(playerid, Press_ALT[1], 1);
+	PlayerTextDrawSetProportional(playerid, Press_ALT[1], 1);
+
+	Press_ALT[2] = CreatePlayerTextDraw(playerid, 65.999992, 173.083297, "Press");
+	PlayerTextDrawLetterSize(playerid, Press_ALT[2], 0.400000, 1.600000);
+	PlayerTextDrawAlignment(playerid, Press_ALT[2], 1);
+	PlayerTextDrawColor(playerid, Press_ALT[2], -1);
+	PlayerTextDrawBackgroundColor(playerid, Press_ALT[2], 255);
+	PlayerTextDrawFont(playerid, Press_ALT[2], 1);
+	PlayerTextDrawSetProportional(playerid, Press_ALT[2], 1);
+
+	Press_ALT[3] = CreatePlayerTextDraw(playerid, 59.882350, 204.000015, "ALT");
+	PlayerTextDrawLetterSize(playerid, Press_ALT[3], 0.691293, 2.807502);
+	PlayerTextDrawAlignment(playerid, Press_ALT[3], 1);
+	PlayerTextDrawColor(playerid, Press_ALT[3], -1);
+	PlayerTextDrawBackgroundColor(playerid, Press_ALT[3], 255);
+	PlayerTextDrawFont(playerid, Press_ALT[3], 1);
+	PlayerTextDrawSetProportional(playerid, Press_ALT[3], 1);
+
+	Press_ALT[4] = CreatePlayerTextDraw(playerid, -14.058824, 159.666641, "");
+	PlayerTextDrawLetterSize(playerid, Press_ALT[4], 0.000000, 0.000000);
+	PlayerTextDrawTextSize(playerid, Press_ALT[4], 80.000000, 74.000000);
+	PlayerTextDrawAlignment(playerid, Press_ALT[4], 1);
+	PlayerTextDrawColor(playerid, Press_ALT[4], -1);
+	PlayerTextDrawSetShadow(playerid, Press_ALT[4], 0);
+	PlayerTextDrawSetOutline(playerid, Press_ALT[4], 0);
+	PlayerTextDrawBackgroundColor(playerid, Press_ALT[4], 0);
+	PlayerTextDrawFont(playerid, Press_ALT[4], 5);
+	PlayerTextDrawSetProportional(playerid, Press_ALT[4], 0);
+	PlayerTextDrawSetShadow(playerid, Press_ALT[4], 0);
+	PlayerTextDrawSetPreviewModel(playerid, Press_ALT[4], 19273);
+	PlayerTextDrawSetPreviewRot(playerid, Press_ALT[4], 0.000000, 0.000000, 0.000000, 1.000000);
+	//
 	TextDrawShowForPlayer(playerid, Corso);
 
 	SetPVarInt(playerid, "firstspawn", 1);
@@ -333,7 +388,7 @@ public OnPlayerText(playerid, text[])
 	if(strlen(P[playerid][_p_chat_msg]) == strlen(text)) {
 		if(strcmp(P[playerid][_p_chat_msg], text, true) == 0) return 0;
 	}
-	strtolower(text);
+	//strtolower(text);
 	format(P[playerid][_p_chat_msg], 128, text);
 	SetPlayerChatBubble(playerid, text, 0xFFFFFFFF, 35.0, 5000);
 	ApplyAnimation(playerid,"PED","IDLE_chat",4.1,0,1,1,1,1,1);
@@ -380,10 +435,14 @@ public OnPlayerCommandPerformed(playerid, cmd[], params[], result, flags){
 public OnPlayerStateChange(playerid, newstate, oldstate)
 {
 	if(newstate == PLAYER_STATE_DRIVER) {
-        PlayerTextDrawShow(playerid, P[playerid][_p_speedo]);
-	    new vehicleid = GetPlayerVehicleID(playerid);
-	    new engine,lights,alarm,doors,bonnet,boot,objective;
-	    GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+		new vehicleid = GetPlayerVehicleID(playerid);
+		new engine,lights,alarm,doors,bonnet,boot,objective;
+		GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+		PlayerTextDrawShow(playerid, P[playerid][_p_speedo]);
+		if(GetVehicleModel(vehicleid) == 481){
+			SetVehicleParamsEx(vehicleid, 1,lights,alarm,doors,bonnet,boot,objective);
+			PlayerTextDrawHide(playerid, P[playerid][_p_speedo]);
+		}
 	    if(doors == 1) RemovePlayerFromVehicle(playerid);
 	    if(V[vehicleid][_v_stream_id] != 0) PlayAudioStreamForPlayer(playerid, V[vehicleid][_v_stream_url]);
 	    for(new i; i < sizeof(V_TAXI); i++) {
@@ -569,12 +628,12 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		    	ShowPlayerDialog(playerid, d_vehicle_panel, DIALOG_STYLE_LIST, "Управление автомобилем",source,"Выбор","Отмена");
 			}
 	    }
-		if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
+		else if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
 			new player_lic = GetPVarInt(playerid,"Show_PlayerLic")-1;
 			Show_PlayerLic(playerid,player_lic);
 			DeletePVar(playerid, "Show_PlayerLic");
 		}
-		if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT){
+		else if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT){
 			new Float:pos[3];
 			GetPlayerPos(playerid, pos[0], pos[1], pos[2]);
 
@@ -625,7 +684,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		    va_SendClientMessage(player_lic, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть ваш список лицензий", IC_Name(playerid));
 			DeletePVar(playerid, "Show_PlayerLic");
 		}
-		if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
+		else if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
 			if(GetPVarInt(playerid, "id_repair") == 1){
 				new enginer = GetPVarInt(playerid,"id_repair");
@@ -640,86 +699,107 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	// Открытие ворот и/или шлагбаумов
 	if(newkeys & KEY_CROUCH)
 	{
-		if(IsPlayerInRangeOfPoint(playerid, 15.0, -2436.89941, 495.46875, 29.8)) {
-		    if(P[playerid][p_job_team] == ORG_FBI && obj_state_FBI == false) {
-		        obj_state_FBI = true;
-				MoveDynamicObject(obj_FBI, -2436.89941, 495.46875, 29.8, MOVE_BARRIER_SPEED, 0.00, 0.00, 90.0);
-				defer OnGateClosed(obj_FBI);
+		if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
+			if(IsPlayerInRangeOfPoint(playerid, 15.0, -2436.89941, 495.46875, 29.8)) {
+			    if(P[playerid][p_job_team] == ORG_FBI && obj_state_FBI == false) {
+			        obj_state_FBI = true;
+					MoveDynamicObject(obj_FBI, -2436.89941, 495.46875, 29.8, MOVE_BARRIER_SPEED, 0.00, 0.00, 90.0);
+					defer OnGateClosed(obj_FBI);
+			    }
 		    }
-	    }
-	    if(IsPlayerInRangeOfPoint(playerid, 15.0, 1544.68994, -1629.98999, 13.22000)) {
-			if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LSPD && obj_state_LSPD == false) {
-	            obj_state_LSPD = true;
-	            MoveDynamicObject(obj_LSPD, 1544.68994, -1630.81995, 12.90000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
-	            defer OnGateClosed(obj_LSPD);
-	        }
-	    }
-	    if(IsPlayerInRangeOfPoint(playerid, 15.0, -1572.19995, 658.63000, 6.98000)) {
-	        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_SFPD && obj_state_SFPD[0] == false) {
-	            obj_state_SFPD[0] = true;
-	            MoveDynamicObject(obj_SFPD[0], -1572.19995, 658.79999, 6.65000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
-	            defer OnGateClosed(obj_SFPD[0]);
-	        }
-	    }
-	    if(IsPlayerInRangeOfPoint(playerid, 15.0, -1701.43005, 687.79498, 24.78000)) {
-	        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_SFPD && obj_state_SFPD[1] == false) {
-	            obj_state_SFPD[1] = true;
-	            MoveDynamicObject(obj_SFPD[1], -1701.43005, 687.63000, 24.45000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 270.00000);
-	            defer OnGateClosed(obj_SFPD[1]);
-	        }
-	    }
-	    if(IsPlayerInRangeOfPoint(playerid, 15.0, 2238.18994, 2450.21997, 10.71000)) {
-	        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LVPD && obj_state_LVPD == false) {
-	            obj_state_LVPD = true;
-	            MoveDynamicObject(obj_LVPD, 2238.18994, 2450.37988, 10.37000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
-	            defer OnGateClosed(obj_LVPD);
-	        }
-	    }
-	    if(IsPlayerInRangeOfPoint(playerid, 15.0, 286.00000, 1822.00000, 20.03000)) {
-	        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_MILITARY && obj_state_MILITARY[0] == false) {
-	            obj_state_MILITARY[0] = true;
-	            MoveDynamicObject(obj_MILITARY[0], 286.00000, 1833.00000, 20.03000, MOVE_GATE_SPEED, 0.00000, 0.00000, 90.00000);
-	            defer OnGateClosed(obj_MILITARY[0]);
-	        }
-	    }
-	    if(IsPlayerInRangeOfPoint(playerid, 15.0, 134.85001, 1941.53406, 21.71000)) {
-	        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_MILITARY && obj_state_MILITARY[1] == false) {
-	            obj_state_MILITARY[1] = true;
-	            MoveDynamicObject(obj_MILITARY[1], 122.00000, 1941.53406, 21.71000, MOVE_GATE_SPEED, 0.00000, 0.00000, 180.00000);
-	            defer OnGateClosed(obj_MILITARY[1]);
-	        }
-	    }
-		if(IsPlayerInRangeOfPoint(playerid, 15.0, -2057.275634, -94.831848, 34.890388)){
-			if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL == false){
-				obj_state_AUTOSCHOOL = true;
-				MoveDynamicObject(obj_AUTOSCHOOL,-2057.275634, -94.831848+0.05, 34.890388, 0.03 ,0.000000, 0.000000, 270.000000);
-				defer OnGateClosed(obj_AUTOSCHOOL);
+		    if(IsPlayerInRangeOfPoint(playerid, 15.0, 1544.68994, -1629.98999, 13.22000)) {
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LSPD && obj_state_LSPD == false) {
+		            obj_state_LSPD = true;
+		            MoveDynamicObject(obj_LSPD, 1544.68994, -1630.81995, 12.90000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
+		            defer OnGateClosed(obj_LSPD);
+		        }
+		    }
+		    if(IsPlayerInRangeOfPoint(playerid, 15.0, -1572.19995, 658.63000, 6.98000)) {
+		        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_SFPD && obj_state_SFPD[0] == false) {
+		            obj_state_SFPD[0] = true;
+		            MoveDynamicObject(obj_SFPD[0], -1572.19995, 658.79999, 6.65000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
+		            defer OnGateClosed(obj_SFPD[0]);
+		        }
+		    }
+		    if(IsPlayerInRangeOfPoint(playerid, 15.0, -1701.43005, 687.79498, 24.78000)) {
+		        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_SFPD && obj_state_SFPD[1] == false) {
+		            obj_state_SFPD[1] = true;
+		            MoveDynamicObject(obj_SFPD[1], -1701.43005, 687.63000, 24.45000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 270.00000);
+		            defer OnGateClosed(obj_SFPD[1]);
+		        }
+		    }
+		    if(IsPlayerInRangeOfPoint(playerid, 15.0, 2238.18994, 2450.21997, 10.71000)) {
+		        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LVPD && obj_state_LVPD == false) {
+		            obj_state_LVPD = true;
+		            MoveDynamicObject(obj_LVPD, 2238.18994, 2450.37988, 10.37000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
+		            defer OnGateClosed(obj_LVPD);
+		        }
+		    }
+		    if(IsPlayerInRangeOfPoint(playerid, 15.0, 286.00000, 1822.00000, 20.03000)) {
+		        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_MILITARY && obj_state_MILITARY[0] == false) {
+		            obj_state_MILITARY[0] = true;
+		            MoveDynamicObject(obj_MILITARY[0], 286.00000, 1833.00000, 20.03000, MOVE_GATE_SPEED, 0.00000, 0.00000, 90.00000);
+		            defer OnGateClosed(obj_MILITARY[0]);
+		        }
+		    }
+		    if(IsPlayerInRangeOfPoint(playerid, 15.0, 134.85001, 1941.53406, 21.71000)) {
+		        if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_MILITARY && obj_state_MILITARY[1] == false) {
+		            obj_state_MILITARY[1] = true;
+		            MoveDynamicObject(obj_MILITARY[1], 122.00000, 1941.53406, 21.71000, MOVE_GATE_SPEED, 0.00000, 0.00000, 180.00000);
+		            defer OnGateClosed(obj_MILITARY[1]);
+		        }
+		    }
+			if(IsPlayerInRangeOfPoint(playerid, 7.5, -2056.885009, -93.754776, 34.157676)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[0] == false){
+					obj_state_AUTOSCHOOL[0] = true;
+					MoveDynamicObject(obj_AUTOSCHOOL[0],-2057.275634, -94.831848+0.05, 34.890388, 0.03 ,0.000000, 0.000000, 270.000000);
+					defer OnGateClosed(obj_AUTOSCHOOL[0]);
+				}
+			}
+			if(IsPlayerInRangeOfPoint(playerid,7.5,-2040.962646, -102.313003, 35.849075)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[1] == false){
+					obj_state_AUTOSCHOOL[1] = true;
+					MoveDynamicObject(obj_AUTOSCHOOL[1],-2040.962646, -102.313003, 32.419116, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
+					defer OnGateClosed(obj_AUTOSCHOOL[1]);
+				}
+			}
+			if(IsPlayerInRangeOfPoint(playerid,7.5,-2052.734619, -102.313003, 35.849075)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[2] == false){
+					obj_state_AUTOSCHOOL[2] = true;
+					MoveDynamicObject(obj_AUTOSCHOOL[2],-2052.732910, -102.313003, 32.409118, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
+					defer OnGateClosed(obj_AUTOSCHOOL[2]);
+				}
 			}
 		}
 	}
 	if(newkeys & KEY_ACTION)
 	{
-		new engine,lights,alarm,doors,bonnet,boot,objective;
 		new vehicleid = GetPlayerVehicleID(playerid);
-		GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-		switch(engine)
-		{
-			// двигатель
-			case -1,0:
+		if(GetVehicleModel(vehicleid) == 481){
+			return 0;
+		}
+		else{
+			new engine,lights,alarm,doors,bonnet,boot,objective;
+			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+			switch(engine)
 			{
-				if(Vehicle_IsNotForPlayer(vehicleid, playerid)) return 1;
-				if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0)
+				// двигатель
+				case -1,0:
 				{
-					return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
+					if(Vehicle_IsNotForPlayer(vehicleid, playerid)) return 1;
+					if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0)
+					{
+						return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
+					}
+					if(Vehicle_WithoutFuel(GetVehicleModel(vehicleid)) == 0)
+					{
+						if(!IsPlayerInAnyVehicle(playerid)) return true;
+						if(V[vehicleid][v_fuel] <= 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}В автомобиле закончилось топливо!");
+					}
+					SetVehicleParamsEx(vehicleid, 1,lights,alarm,doors,bonnet,boot,objective);
 				}
-				if(Vehicle_WithoutFuel(GetVehicleModel(vehicleid)) == 0)
-				{
-				    if(!IsPlayerInAnyVehicle(playerid)) return true;
-					if(V[vehicleid][v_fuel] <= 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}В автомобиле закончилось топливо!");
-				}
-				SetVehicleParamsEx(vehicleid, 1,lights,alarm,doors,bonnet,boot,objective);
+				case 1: SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 			}
-			case 1: SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 		}
 	}
 	if(newkeys & KEY_FIRE)
@@ -742,6 +822,60 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			gSpectateID[playerid] = INVALID_PLAYER_ID;
 			gSpectateType[playerid] = 0;
 			stop SpectateUpdatePlayer(playerid);
+		}
+	}
+	if(newkeys & KEY_WALK)
+	{
+		if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT){
+			if(IsPlayerInRangeOfPoint(playerid, 1.0, 1543.482788, -1631.928588, 13.461294)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LSPD && obj_state_LSPD == false) {
+		            obj_state_LSPD = true;
+		            MoveDynamicObject(obj_LSPD, 1544.68994, -1630.81995, 12.90000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
+		            defer OnGateClosed(obj_LSPD);
+		        }
+			}
+			if(IsPlayerInRangeOfPoint(playerid, 1.0, -1701.057495, 689.615234, 24.940631)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_SFPD && obj_state_SFPD[1] == false) {
+				   obj_state_SFPD[1] = true;
+				   MoveDynamicObject(obj_SFPD[1], -1701.43005, 687.63000, 24.45000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 270.00000);
+				   defer OnGateClosed(obj_SFPD[1]);
+			  	}
+			}
+			if(IsPlayerInRangeOfPoint(playerid, 1.0, -1572.707153, 656.855529, 7.547507)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_SFPD && obj_state_SFPD[0] == false) {
+		            obj_state_SFPD[0] = true;
+		            MoveDynamicObject(obj_SFPD[0], -1572.19995, 658.79999, 6.65000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
+		            defer OnGateClosed(obj_SFPD[0]);
+		        }
+			}
+			if(IsPlayerInRangeOfPoint(playerid, 1.0, 2237.830078, 2449.383300, 11.049514)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LVPD && obj_state_LVPD == false) {
+		            obj_state_LVPD = true;
+		            MoveDynamicObject(obj_LVPD, 2238.18994, 2450.37988, 10.37000, MOVE_BARRIER_SPEED, 0.00000, 0.00000, 90.00000);
+		            defer OnGateClosed(obj_LVPD);
+		        }
+			}
+			if(IsPlayerInRangeOfPoint(playerid, 1.5, -2056.885009, -93.754776, 34.157676)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[0] == false){
+					obj_state_AUTOSCHOOL[0] = true;
+					MoveDynamicObject(obj_AUTOSCHOOL[0],-2057.275634, -94.831848+0.05, 34.890388, 0.03 ,0.000000, 0.000000, 270.000000);
+					defer OnGateClosed(obj_AUTOSCHOOL[0]);
+				}
+			}
+			if(IsPlayerInRangeOfPoint(playerid, 1.0, -2045.722778, -103.206237, 35.607597) || IsPlayerInRangeOfPoint(playerid, 1.0, -2045.722778, -102.226257, 35.607597)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[1] == false){
+					obj_state_AUTOSCHOOL[1] = true;
+					MoveDynamicObject(obj_AUTOSCHOOL[1],-2040.962646, -102.313003, 32.419116, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
+					defer OnGateClosed(obj_AUTOSCHOOL[1]);
+				}
+			}
+			if(IsPlayerInRangeOfPoint(playerid, 1.0, -2047.912719, -103.196243, 35.607597) || IsPlayerInRangeOfPoint(playerid, 1.0, -2047.912719, -102.216247, 35.607597)){
+				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[2] == false){
+					obj_state_AUTOSCHOOL[2] = true;
+					MoveDynamicObject(obj_AUTOSCHOOL[2],-2052.732910, -102.313003, 32.409118, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
+					defer OnGateClosed(obj_AUTOSCHOOL[2]);
+				}
+			}
 		}
 	}
 	return 0;
@@ -1315,6 +1449,36 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
    		    SetPlayerInterior(x,newinteriorid);
 		}
 		x++;
+	}
+	return true;
+}
+public OnPlayerEnterDynamicArea(playerid, areaid){
+	if(areaid == auto_school_press_alt[0] || areaid == auto_school_press_alt[1] || areaid == auto_school_press_alt[2] || areaid == auto_school_press_alt[3] || areaid == auto_school_press_alt[4]){
+		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL){
+			for(new i; i < 5; i++)
+		   		PlayerTextDrawShow(playerid, Press_ALT[i]);
+		}
+	}
+	if(areaid == police_press_alt[0] || areaid == police_press_alt[1] || areaid == police_press_alt[2] || areaid == police_press_alt[3]){
+		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LSPD || P[playerid][p_job_team] == ORG_SFPD || P[playerid][p_job_team] == ORG_LVPD){
+			for(new i; i < 5; i++)
+		   		PlayerTextDrawShow(playerid, Press_ALT[i]);
+		}
+	}
+	return true;
+}
+public OnPlayerLeaveDynamicArea(playerid, areaid){
+	if(areaid == auto_school_press_alt[0] || areaid == auto_school_press_alt[1] || areaid == auto_school_press_alt[2] || areaid == auto_school_press_alt[3] || areaid == auto_school_press_alt[4]){
+		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL){
+		for(new i; i < 5; i++)
+			PlayerTextDrawHide(playerid, Press_ALT[i]);
+		}
+	}
+	if(areaid == police_press_alt[0] || areaid == police_press_alt[1] || areaid == police_press_alt[2] || areaid == police_press_alt[3]){
+		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LSPD || P[playerid][p_job_team] == ORG_SFPD || P[playerid][p_job_team] == ORG_LVPD){
+			for(new i; i < 5; i++)
+		   		PlayerTextDrawHide(playerid, Press_ALT[i]);
+		}
 	}
 	return true;
 }

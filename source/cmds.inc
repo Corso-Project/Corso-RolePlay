@@ -284,7 +284,7 @@ alias:mn("menu","mm");
 CMD:makeleader(playerid, params[])
 {
   	new string[115],
-    user,org;
+    	user,org;
 	if(P[playerid][p_access] < 6) return 1;
 	if(sscanf(params, "ui", user,org)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /makeleader [ID игрока] [ID Фракции]");
 	if(org > 22) return 1;
@@ -388,6 +388,7 @@ CMD:lic(playerid, params[])
 		Show_PlayerLic(playerid,playerid);
 		SetPlayerChatBubble(playerid, "Просматривает свои лицензий", 0xDDA0DDFF, 35.0, 5000);
 	}
+	printf("User: %s | pvar: %s",Name(user),GetPVarInt(user,"Show_PlayerLic"));
     return 1;
 }
 alias:lic("licenses","showlicense","showlic");
@@ -700,7 +701,9 @@ CMD:teleport(playerid,params[]){ //concept from GTO
 alias:teleport("tp");
 CMD:spawn(playerid,params[]){
 	if(P[playerid][p_access] < 1) return true;
-	SpawnPlayer(playerid);
+	new user;
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /spawn [ID игрока]");
+	SpawnPlayer(user);
 	return true;
 }
 CMD:f(playerid,params[]){
@@ -732,14 +735,14 @@ CMD:find(playerid,params[]){
 	str = "{FFFFFF}Уровень - Ранг - Имя игрока\n\n";
 	strcat(string,str);
 	foreach(new i : Player){
-		if(P[playerid][p_job_team] == P[i][p_job_team]) continue;
+		if(P[playerid][p_job_team] != P[i][p_job_team]) continue;
+		if(P[i][p_rang] < 1 || P[i][p_rang] < 1) continue;
 		format(str, sizeof(str), "%d - %s - %s",P[i][p_level],Get_RangName(i),IC_Name(i));
 		strcat(string,str);
 	}
 	ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Игроков онлайн:",string,"Закрыть","");
 	return true;
 }
-
 CMD:capture(playerid, params[]){
 	if(P[playerid][p_job_team] < 10 || P[playerid][p_job_team] > 14) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете начать захват территорий.");
 	if(CaptureTime) return va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Следующий захват территоий будет доступен через %d минут", CaptureTime);
@@ -869,5 +872,20 @@ CMD:unmute(playerid,params[]){
 	if(P[user][p_mute] == 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого игрока нету мута");
 	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
 	P[user][p_mute] = 0;
+	return true;
+}
+CMD:weap(playerid,params[]){ //concept from GTO
+	if(P[playerid][p_access] < 1) return true;
+	new user,
+		weaponid,amount;
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /weap [ID игрока]");
+	va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Оружие игрока: %s [ID: %d]",Name(user),user);
+	for (new slot = 0; slot < 13; slot++) {
+		GetPlayerWeaponData(playerid, slot, weaponid, amount);
+		if(weaponid == 0) {
+			continue;
+		}
+		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Слот: %d | ID оружия: %d | Кол. патронов: %d",slot, weaponid, amount);
+	}
 	return true;
 }

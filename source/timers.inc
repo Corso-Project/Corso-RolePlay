@@ -86,9 +86,17 @@ timer OnGateClosed[7500](objectid)
 		obj_state_MILITARY[1] = false;
 		MoveDynamicObject(obj_MILITARY[1], 134.85001, 1941.53406, 21.71000, MOVE_GATE_SPEED, 0.00000, 0.00000, 180.00000);
 	}
-	if(objectid == obj_AUTOSCHOOL){
-		obj_state_AUTOSCHOOL = false;
-		MoveDynamicObject(obj_AUTOSCHOOL, -2057.275634, -94.831848-0.05, 34.890388, 0.03,  0.000000, 90.000000, 270.000000);
+	if(objectid == obj_AUTOSCHOOL[0]){
+		obj_state_AUTOSCHOOL[0] = false;
+		MoveDynamicObject(obj_AUTOSCHOOL[0], -2057.275634, -94.831848-0.05, 34.890388, 0.03,  0.000000, 90.000000, 270.000000);
+	}
+	if(objectid == obj_AUTOSCHOOL[1]){
+		obj_state_AUTOSCHOOL[1] = false;
+		MoveDynamicObject(obj_AUTOSCHOOL[1], -2040.962646, -102.313003, 35.849075,MOVE_GATE_SPEED,0.000000, 0.000000, 180.00000);
+	}
+	if(objectid == obj_AUTOSCHOOL[2]){
+		obj_state_AUTOSCHOOL[2] = false;
+		MoveDynamicObject(obj_AUTOSCHOOL[2], -2052.734619, -102.313003, 35.849075,MOVE_GATE_SPEED,0.000000, 0.000000, 180.00000);
 	}
 }
 
@@ -149,23 +157,25 @@ task OnUpdateTime[10*1000]()
 {
 	switch(g_minute) {
 	    case 0..58: g_minute++;
-	    case 59: switch(g_hour) {
-	        case 0..22: {
-	            g_hour++;
-		        g_minute = 0;
-	        }
-	        case 23: {
-	            g_hour = 0;
-	            g_minute = 0;
-	        }
-	    }
+	    case 59:{
+			switch(g_hour) {
+		        case 0..22: {
+		            g_hour++;
+			        g_minute = 0;
+		        }
+		        case 23: {
+		            g_hour = 0;
+		            g_minute = 0;
+		        }
+			}
+		}
 	}
 }
 task OnSecTimer[1000]()
 {
 	foreach(new i : Player){
+		if(!P[i][_p_in_game]) return 0;
 		if(P[i][p_mute] >= 0){
-			if(!P[i][_p_in_game]) return 0;
 			P[i][p_mute]--;
 			if(P[i][p_mute] == 0){
 				P[i][p_mute] = -1;

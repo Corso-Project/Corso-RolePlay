@@ -73,6 +73,8 @@ public OnGameModeInit()
 	CreateDynamicMapIcon(2185.8176,-1814.6786,13.5469,58,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(2756.2825,-1182.4691,69.3998,60,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(2787.0759,-1926.1780,13.5469,61,0xFFFFFFFF,0,0);
+	//ALl
+	CreateDynamicMapIcon(284.9584,-1614.4915,33.0323,31,0xFFFFFFFF,0,0);// LS beach Hotel
 	//==========================================================================
 	// ѕравительство Ўтата
 	V_GOVERNMENT[0] = Vehicle_Add(533, 1245.3002, -2043.3801, 59.5569, 270.6839,1,1);
@@ -397,7 +399,9 @@ public OnGameModeInit()
 	obj_LVPD = CreateDynamicObject(968, 2238.18994, 2450.21997, 10.71000,   0.00000, 90.00000, 90.00000);
 	obj_MILITARY[0] = CreateDynamicObject(19313, 286.00000, 1822.00000, 20.03000,   0.00000, 0.00000, 90.00000);
 	obj_MILITARY[1] = CreateDynamicObject(19313, 134.85001, 1941.53406, 21.71000,   0.00000, 0.00000, 180.00000);
-	obj_AUTOSCHOOL = CreateDynamicObject(968, -2057.275634, -94.831848, 34.890388, 	0.000000, 90.000000, 270.000000);
+	obj_AUTOSCHOOL[0] = CreateDynamicObject(968, -2057.275634, -94.831848, 34.890388, 	0.000000, 90.000000, 270.000000);
+	obj_AUTOSCHOOL[1] = CreateDynamicObject(2933, -2040.962646, -102.313003, 35.849075, 0.000000, 0.000000, 180.000000);
+	obj_AUTOSCHOOL[2] = CreateDynamicObject(2933, -2052.734619, -102.313003, 35.849075, 0.000000, 0.000000, 180.000000);
 	// ѕикапы јммунаций
 	Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469);
 	Ammu_Nation[1] = CreateDynamicPickup(1318,23,285.4752,-41.7966,1001.5156);
@@ -441,7 +445,7 @@ public OnGameModeInit()
 	// ѕикапы Chinese
 	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312);
 	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078);
-	// ѕ»кап —дачи Ёкзамена в јвтоЎколе
+	// ѕикап —дачи Ёкзамена в јвтоЎколе
 	AutoSchool_Exam[0] = CreateDynamicPickup(19133,2,-2034.9918,-119.1462,35.2370);
 	// FBI NPC
 	FBI_Actors[0] = CreateActor(286,293.1147,182.5184,1007.1719,133.6613);
@@ -452,6 +456,16 @@ public OnGameModeInit()
 		ApplyActorAnimation(FBI_Actors[i],"DEALER","Dealer_idle",4.1,1,0,0,0,0);
 		SetActorInvulnerable(FBI_Actors[i], 1);
 	}
+	// ƒинамические зоны
+	auto_school_press_alt[0] = CreateDynamicSphere(-2056.885009, -93.754776, 34.157676,1.5);
+	auto_school_press_alt[1] = CreateDynamicSphere(-2045.722778, -102.226257, 35.607597,1.0);
+	auto_school_press_alt[2] = CreateDynamicSphere(-2047.912719, -102.216247, 35.607597,1.0);
+	auto_school_press_alt[3] = CreateDynamicSphere(-2045.722778, -103.206237, 35.607597,1.0);
+	auto_school_press_alt[4] = CreateDynamicSphere(-2047.912719, -103.196243, 35.607597,1.0);
+	police_press_alt[0] = CreateDynamicSphere(2237.830078, 2449.383300, 11.049513,1.0);
+	police_press_alt[1] = CreateDynamicSphere(-1572.707153, 656.855529, 7.637507,1.0);
+	police_press_alt[2] = CreateDynamicSphere(-1701.057495, 689.615234, 25.270635,1.0);
+	police_press_alt[3] = CreateDynamicSphere(1543.482788, -1631.928588, 13.461294,1.0);
 	// TextDraw
 	Corso = TextDrawCreate(577.000000, 7.000000, "CORSO");
 	TextDrawAlignment(Corso, 2);

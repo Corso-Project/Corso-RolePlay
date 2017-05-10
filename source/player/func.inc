@@ -643,3 +643,18 @@ stock TeleportPlayerToPos(playerid, Float:x, Float:y, Float:z, interiorid, world
 	SetPlayerInterior(playerid, interiorid);
 	SetPlayerVirtualWorld(playerid, worldid);
 }
+stock Get_PlayerFPS(playerid)
+{
+	SetPVarInt(playerid, "DrunkL", GetPlayerDrunkLevel(playerid));
+	if(GetPVarInt(playerid, "DrunkL") < 100) SetPlayerDrunkLevel(playerid, 2000);
+	else
+	{
+		if(GetPVarInt(playerid, "LDrunkL") != GetPVarInt(playerid, "DrunkL"))
+		{
+			SetPVarInt(playerid, "FPS", (GetPVarInt(playerid, "LDrunkL") - GetPVarInt(playerid, "DrunkL")));
+			SetPVarInt(playerid, "LDrunkL", GetPVarInt(playerid, "DrunkL"));
+			if((GetPVarInt(playerid, "FPS") > 0) && (GetPVarInt(playerid, "FPS") < 256)) return GetPVarInt(playerid, "FPS") - 1;
+		}
+	}
+	return 0;
+}

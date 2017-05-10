@@ -213,7 +213,6 @@ new P[MAX_PLAYERS][E_PLAYER_DATA];
 new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
 new GZ[104][E_GANG_ZONES_DATA];
-new PlayerText: ChoseSkin[8];
 
 new V_GOVERNMENT[7],
 	V_FBI[7],
@@ -253,14 +252,14 @@ new obj_FBI,
 	obj_SFPD[2],
 	obj_LVPD,
 	obj_MILITARY[2],
-	obj_AUTOSCHOOL;
+	obj_AUTOSCHOOL[3];
 
 new bool: obj_state_FBI,
 	bool: obj_state_LSPD,
 	bool: obj_state_SFPD[2],
 	bool: obj_state_LVPD,
 	bool: obj_state_MILITARY[2],
-	bool: obj_state_AUTOSCHOOL;
+	bool: obj_state_AUTOSCHOOL[3];
 
 new g_hour,
 	g_minute;
@@ -283,15 +282,15 @@ new g_Chat_OOC,
 new PickupGetTime[MAX_PLAYERS];
 new Ammu_Nation[8];
 new Casino[2];
-new LSPD[2];
+new FBI[4],
+	LSPD[2];
 new CityHall[2];
 new Whitewing[2];
-new FBI[4];
-new Grove[2];
-new Ballas[2];
-new Aztecas[2];
-new Vagos[2];
-new Rifa[2];
+new Grove[2],
+	Ballas[2],
+	Aztecas[2],
+	Vagos[2],
+	Rifa[2];
 new Chinese[2];
 new AutoSchool_Exam[1];
 // CheckPoint
@@ -303,22 +302,28 @@ new Text:Capture[2];
 new gSpectateID[MAX_PLAYERS];
 new gSpectateType[MAX_PLAYERS];
 // Работы
-new Whitewing_[1] = 100;
-new Whitewing_GPS[MAX_PLAYERS];
-new Whitewinc_CP[22];
+new Whitewing_[1] = 100,
+	Whitewing_GPS[MAX_PLAYERS],
+	Whitewinc_CP[22];
 // NPC's
 new FBI_Actors[3];
 // Capture
 new bool:waractive = false;
-new gangs[2] = 0;
-new CaptureTime=0;
-new zone = 0;
-new gangskills[2] = 0;
-new GangZoneSeconds;
-new GangZoneMinuts;
+new gangs[2] = 0,
+	CaptureTime=0,
+	zone = 0,
+	gangskills[2] = 0;
+new GangZoneSeconds,
+	GangZoneMinuts;
 // Для специальных объектов
 new autoschool_obj;
-// All
+//TD
+new PlayerText: ChoseSkin[8],
+	PlayerText: Press_ALT[5];
+//Динамические зоны
+new auto_school_press_alt[5],
+	police_press_alt[4];
+// Скины
 new male_skins[][] = {
 {156,	1,2,3,4,5,6,7,8,14,15,16,18,19,20,21,22,23,24,25,26,27,28,29,30,32,33,34,35,36,37,38,42,43,44,45,46,47,48,49,50,51,52,58,59,60,62,66,67,68,72,73,78,79,80,81,82,83,84,86,94,95,96,97,98,99,100,101,119,128,132,133,134,135,136,137,142,143,144,146,149,153,154,155,156,158,159,160,161,162,167,168,170,171,176,177,180,181,182,183,184,185,186,188,189,200,202,203,204,206,208,209,210,212,213,217,220,221,222,223,229,230,234,235,236,239,240,241,242,247,248,249,250,252,253,254,255,258,259,260,261,262,264,268,272,273,289,290,291,292,293,294,295,296,297,299},
 {7,		17,57,71,147,187,227,228},
