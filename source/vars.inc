@@ -88,6 +88,8 @@ enum E_PLAYER_DATA {
 	p_health,
 	p_armour,
 	p_vehicle,
+	p_patrons,
+	p_materials,
 	p_weapon_1,
 	p_weapon_2,
 	p_weapon_3,
@@ -138,6 +140,15 @@ enum E_GANG_ZONES_DATA{
 	Float: gz_max_pos_y,
 	gz_team
 }
+enum E_GANG_STORAGE{
+	ORM: _g_ormid,
+	// mysql synced
+	g_uid,
+	g_status,
+	Float: g_cash,
+	g_patrons,
+	g_materials
+}
 enum
 {
 	d_null,
@@ -179,7 +190,14 @@ enum
 	d_law_test,
 	d_law_sell_lic,
 	// elevator's dialogs
-	d_elevator_chose_floor
+	d_elevator_chose_floor,
+	// gang's dialogs
+	d_gang_storage,
+	d_gang_put_cash,
+	d_gang_put_patrons,
+	d_gang_put_materials,
+	d_gang_take,
+	d_gang_put
 }
 enum E_EXAM_ANSWER {
 	e_exam_question[88],
@@ -213,6 +231,7 @@ new P[MAX_PLAYERS][E_PLAYER_DATA];
 new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
 new GZ[104][E_GANG_ZONES_DATA];
+new GS[8][E_GANG_STORAGE];
 
 new V_GOVERNMENT[7],
 	V_FBI[7],
@@ -294,7 +313,8 @@ new Grove[2],
 new Chinese[2];
 new AutoSchool_Exam[1];
 // CheckPoint
-new Buy_Weapon;
+new Buy_Weapon,
+	Gang_Storage;
 // Text-Draws
 new Text:Corso;
 new Text:Capture[2];

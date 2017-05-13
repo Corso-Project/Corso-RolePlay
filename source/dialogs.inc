@@ -636,10 +636,177 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     case d_law_sell_lic:{
         if(!response) return DeletePVar(playerid,"give_lic");
+        new user = GetPVarInt(playerid,"give_lic");
         switch(listitem){
-            case 0: SendClientMessage(playerid,-1,"Легковые авто");
-            case 1: SendClientMessage(playerid,-1,"Мотоциклы");
-            case 2: SendClientMessage(playerid,-1,"Грузовик");
+            case 0:{
+                if(P[user][p_lic_car] == 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого человека уже есть лицензия на вождение лёгково Т.С.");
+                if(P[user][p_cash] < 1000) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У данного человека нету денег для покупки лицензий.");
+                va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s купить водительские права.",IC_Name(user));
+                va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s предлагает вам купить водительские права за {FF8888}1000${FFFFFF}.",IC_Name(playerid));
+                va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить покупку нажмите {007F0E}Y{FFFFFF}, {FF0000}N{FFFFFF} для отказа.");
+                SetPVarInt(user,"Buy_License_B",1);
+            }
+            case 1:{
+                if(P[user][p_lic_moto] == 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого человека уже есть права на вождение мотоцикла.");
+                if(P[user][p_cash] < 2000) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У даннного человека нету денег для покупки лицензий.");
+                va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s купить права на вождение мотоцикла.",IC_Name(user));
+                va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s предлагает вам купить права на вождение мотоцикла за {FF8888}2000${FFFFFF}.",IC_Name(playerid));
+                va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить покупку нажмите {007F0E}Y{FFFFFF}, {FF0000}N{FFFFFF} для отказа.");
+                SetPVarInt(user,"Buy_License_A",1);
+            }
+            case 2:{
+                if(P[user][p_lic_freight] == 1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У этого человека уже есть права на вождение грузовика.");
+                if(P[user][p_cash] < 5000) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У даннного человека нету денег для покупки лицензий.");
+                va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s купить права на вождение грузовика.",IC_Name(user));
+                va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s предлагает вам купить права на вождение грузовика за {FF8888}5000${FFFFFF}.",IC_Name(playerid));
+                va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить покупку нажмите {007F0E}Y{FFFFFF}, {FF0000}N{FFFFFF} для отказа.");
+                SetPVarInt(user,"Buy_License_DE",1);
+            }
+        }
+    }
+    case d_gang_storage: if(response){
+        new name[22+19+1];
+        format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+        new x = P[playerid][p_job_team]-10;
+        switch(listitem){
+            case 0:{
+                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к общаку закрыт.");
+                ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                    "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+                SetPVarInt(playerid, "gang_take_cash", 1);
+            }
+            case 1:{
+                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к общаку закрыт.");
+                ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+                SetPVarInt(playerid, "gang_take_patrons", 1);
+            }
+            case 2:{
+                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к общаку закрыт.");
+                ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество материалов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество материалов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+                SetPVarInt(playerid, "gang_take_materials", 1);
+            }
+            case 3:{
+                ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
+                SetPVarInt(playerid, "gang_put_cash", 1);
+            }
+            case 4:{
+                ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество патронов, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше того количество что у вас есть.", "Добавить", "Назад");
+                SetPVarInt(playerid, "gang_put_patrons", 1);
+            }
+            case 5:{
+                ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество материалов, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше того количество что у вас есть.", "Добавить", "Назад");
+                SetPVarInt(playerid, "gang_put_materials", 1);
+            }
+        }
+    }
+    case d_gang_take:{
+        new x = P[playerid][p_job_team]-10;
+        new name[22+19+1];
+        format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+        new take = strval(inputtext);
+        new gang_take_cash = GetPVarInt(playerid, "gang_take_cash");
+        new gang_take_patrons = GetPVarInt(playerid, "gang_take_patrons");
+        new gang_take_materials = GetPVarInt(playerid, "gang_take_materials");
+        if(!response){
+            if(gang_take_cash == 1) DeletePVar(playerid, "gang_take_cash");
+            if(gang_take_patrons == 1) DeletePVar(playerid, "gang_take_patrons");
+            if(gang_take_materials == 1) DeletePVar(playerid, "gang_take_materials");
+            return 0;
+        }
+        if(gang_take_cash == 1){
+            new Float:take_cash = floatstr(inputtext);
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            if(take_cash < 1) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            if(take_cash > GS[x][g_cash]) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n{FF0000}  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s взял со склада %.2f$",Get_RangName(playerid), IC_Name(playerid), take_cash);
+            GS[x][g_cash] -= take_cash;
+            Cash_Give(playerid, take_cash);
+            orm_update(GS[x][_g_ormid]);
+            DeletePVar(playerid, "gang_take_cash");
+        }
+        else if(gang_take_patrons == 1){
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            if(take < 1) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            if(take > GS[x][g_patrons]) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n{FF0000}  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s взял со склада %i патронов",Get_RangName(playerid), IC_Name(playerid), take);
+            GS[x][g_patrons] -= take;
+            P[playerid][p_patrons] += take;
+            orm_update(GS[x][_g_ormid]);
+            DeletePVar(playerid, "gang_take_patrons");
+        }
+        else if(gang_take_materials == 1){
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество материалов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество материалов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            if(take < 1) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество материалов, которые вы бы хотели взять из общяка:\nУсловие\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Количество материалов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            if(take > GS[x][g_materials]) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество материалов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n{FF0000}  -Количество материалов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
+            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s взял со склада %i материалов",Get_RangName(playerid), IC_Name(playerid), take);
+            GS[x][g_materials] -= take;
+            P[playerid][p_materials] += take;
+            orm_update(GS[x][_g_ormid]);
+            DeletePVar(playerid, "gang_take_materials");
+        }
+    }
+    case d_gang_put:{
+        new x = P[playerid][p_job_team]-10;
+        new name[22+19+1];
+        format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+        new put = strval(inputtext);
+        new gang_put_cash = GetPVarInt(playerid, "gang_put_cash");
+        new gang_put_patrons = GetPVarInt(playerid, "gang_put_patrons");
+        new gang_put_materials = GetPVarInt(playerid, "gang_put_materials");
+        if(!response){
+            if(gang_put_cash == 1) DeletePVar(playerid, "gang_put_cash");
+            if(gang_put_patrons == 1) DeletePVar(playerid, "gang_put_patrons");
+            if(gang_put_materials == 1) DeletePVar(playerid, "gang_put_materials");
+            return 0;
+        }
+        if(gang_put_cash == 1){
+            new Float:put_cash = floatstr(inputtext);
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
+            if(put_cash < 1) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
+            if(put_cash > P[playerid][p_cash]) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n{FF0000}  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
+            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s положил в общак %.2f$.",Get_RangName(playerid), IC_Name(playerid), put_cash);
+            GS[x][g_cash] += put_cash;
+            Cash_Give(playerid, -put_cash);
+            orm_update(GS[x][_g_ormid]);
+            DeletePVar(playerid, "gang_put_cash");
+        }
+        if(gang_put_patrons == 1){
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество патронов, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше того количество что у вас есть.", "Добавить", "Назад");
+            if(put < 1) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество патронов, которые вы бы хотели положить в общяк:\nУсловиие:\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Не больше того количество что у вас есть.", "Добавить", "Назад");
+            if(put > P[playerid][p_patrons]) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество патронов, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n{FF0000}  -Не больше того количество что у вас есть.", "Добавить", "Назад");
+            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s положил в общак %d патронов.",Get_RangName(playerid), IC_Name(playerid), put);
+            GS[x][g_patrons] += put;
+            P[playerid][p_patrons] -= put;
+            orm_update(GS[x][_g_ormid]);
+            DeletePVar(playerid, "gang_put_patrons");
+        }
+        if(gang_put_materials == 1){
+            if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество материалов, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше того количество что у вас есть.", "Добавить", "Назад");
+            if(put < 1) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество материалов, которые вы бы хотели положить в общяк:\nУсловиие:\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Не больше того количество что у вас Добавить.", "Взять", "Назад");
+            if(put > P[playerid][p_materials]) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
+                "{FFFFFF}Введите количество материалов, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n{FF0000}  -Не больше того количество что у вас есть.", "Добавить", "Назад");
+            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s положил в общак %d материалов.",Get_RangName(playerid), IC_Name(playerid), put);
+            GS[x][g_materials] += put;
+            P[playerid][p_materials] -= put;
+            orm_update(GS[x][_g_ormid]);
+            DeletePVar(playerid, "gang_put_materials");
         }
     }
     }

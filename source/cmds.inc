@@ -288,7 +288,7 @@ CMD:makeleader(playerid, params[])
 	if(P[playerid][p_access] < 6) return 1;
 	if(sscanf(params, "ui", user,org)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /makeleader [ID игрока] [ID Фракции]");
 	if(org > 22) return 1;
-	if(P[playerid][p_job_team] == org) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот игрок уже лидер этой организаций.");
+	if(P[user][p_job_team] == org) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот игрок уже лидер этой организаций.");
 	if(org == 0){
 		va_SendClientMessage(user,COLOR_YELLOW,"Вы были сняты %s[%d] с поста лидера \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
 		va_SendClientMessage(playerid,COLOR_ORANGE,"Вы сняли лидера %s[%d] организации \"%s\" ",Name(user), user, Get_TeamName(user));
@@ -380,7 +380,7 @@ CMD:lic(playerid, params[])
 	if(playerid != user){
 		va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s показать лицензии.",IC_Name(user));
 		va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s хочет показать Вам лицензии.",IC_Name(playerid));
-		va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить нажмите {007F0E}Y{FFFFFF} для просмотра, {FF0000}N{FFFFFF} для отказа.",IC_Name(playerid));
+		va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить нажмите {007F0E}Y{FFFFFF} для просмотра, {FF0000}N{FFFFFF} для отказа.");
 
 		SetPVarInt(user,"Show_PlayerLic",playerid+1);
 	}
@@ -388,7 +388,6 @@ CMD:lic(playerid, params[])
 		Show_PlayerLic(playerid,playerid);
 		SetPlayerChatBubble(playerid, "Просматривает свои лицензий", 0xDDA0DDFF, 35.0, 5000);
 	}
-	printf("User: %s | pvar: %s",Name(user),GetPVarInt(user,"Show_PlayerLic"));
     return 1;
 }
 alias:lic("licenses","showlicense","showlic");
@@ -842,9 +841,10 @@ CMD:handsup(playerid,params[]){
 }
 CMD:givelic(playerid,params[]){
 	new user;
-	if(P[playerid][p_job_team] != 19) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не инструктор.");
+	if(P[playerid][p_job_team] != 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не инструктор.");
 	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /givelic [ID игрока]");
-	if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
+	//if(!IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
+	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы ввели неверный ID игрока");
 	new Float:pos_x,Float:pos_y,Float:pos_z;
 	GetPlayerPos(playerid,pos_x,pos_y,pos_z);
 	if(!IsPlayerInRangeOfPoint(user,10.0,pos_x,pos_y,pos_z)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Этот человек находится слишком далеко от вас.");
@@ -886,6 +886,19 @@ CMD:weap(playerid,params[]){ //concept from GTO
 			continue;
 		}
 		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Слот: %d | ID оружия: %d | Кол. патронов: %d",slot, weaponid, amount);
+	}
+	return true;
+}
+CMD:close(playerid,params[]){
+	if(P[playerid][p_rang] < 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не уполномочены выполнить это действие.");
+	new x = P[playerid][p_job_team]-10;
+	if(GS[x][g_status] == 0){
+		GS[x][g_status] = 1;
+		Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] Склад открыт.");
+	}
+	else{
+		GS[x][g_status] = 0;
+		Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] Склад закрыт.");
 	}
 	return true;
 }

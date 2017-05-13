@@ -106,6 +106,20 @@ stock Get_RangName(playerid)
 				case 10: dests = "Главный врач";
 			}
 		}
+		case ORG_AUTOSCHOOL:{
+			switch(P[playerid][p_rang]){
+				case 1: dests = "Стажер";
+				case 2: dests = "Консультант";
+				case 3: dests = "Экзаменатор";
+				case 4: dests = "Младший Инструктор";
+				case 5: dests = "Инструктор";
+				case 6: dests = "Координатор";
+				case 7: dests = "Младший Менеджер";
+				case 8: dests = "Менеджер";
+				case 9: dests = "Зам. Директора";
+				case 10: dests = "Директор";
+			}
+		}
 		case ORG_GROVE:{
 			switch(P[playerid][p_rang]){
 				case 1: dests = "Newman";
@@ -628,7 +642,7 @@ stock Get_GangOnline(gangid){
 	return false;
 }
 stock Get_GangName(gangid){
-	new dests[19];
+	new dests[18+1];
 	switch(gangid){
 		case ORG_GROVE: dests = "Grove Street";
 		case ORG_BALLAS: dests = "Ballas Gangs";

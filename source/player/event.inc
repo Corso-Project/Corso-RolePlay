@@ -34,6 +34,8 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_health], "Health");
 	orm_addvar_int(ormid, P[playerid][p_armour], "Armour");
 	orm_addvar_int(ormid, P[playerid][p_vehicle], "Vehicle");
+	orm_addvar_int(ormid, P[playerid][p_patrons], "Patrons");
+	orm_addvar_int(ormid, P[playerid][p_materials], "Materials");
 	orm_addvar_int(ormid, P[playerid][p_weapon_1], "Weapon_1");
 	orm_addvar_int(ormid, P[playerid][p_weapon_2], "Weapon_2");
 	orm_addvar_int(ormid, P[playerid][p_weapon_3], "Weapon_3");
@@ -629,9 +631,36 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			}
 	    }
 		else if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
-			new player_lic = GetPVarInt(playerid,"Show_PlayerLic")-1;
-			Show_PlayerLic(playerid,player_lic);
+			new licer = GetPVarInt(playerid,"Show_PlayerLic")-1;
+			Show_PlayerLic(playerid,licer);
 			DeletePVar(playerid, "Show_PlayerLic");
+		}
+		else if(GetPVarInt(playerid, "Buy_License_B") == 1){
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили водительские права.");
+			new licer = GetPVarInt(playerid,"Buy_License_B");
+			va_SendClientMessage(licer, 0xFFCC66FF,"[Уведомление]: {FFFFFF}%s купил у вас водительские права.",IC_Name(playerid));
+			Cash_Give(playerid, -1000);
+			Cash_Give(licer, 100);
+			P[playerid][p_lic_car] = 1;
+			DeletePVar(playerid, "Buy_License_B");
+		}
+		else if(GetPVarInt(playerid, "Buy_License_A") == 1){
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили права на вождение мотоцикла.");
+			new licer = GetPVarInt(playerid,"Buy_License_A");
+			va_SendClientMessage(licer, 0xFFCC66FF,"[Уведомление]: {FFFFFF}%s купил у вас права на вождение мотоцикла.",IC_Name(playerid));
+			Cash_Give(playerid, -2000);
+			Cash_Give(licer, 200);
+			P[playerid][p_lic_moto] = 1;
+			DeletePVar(playerid, "Buy_License_A");
+		}
+		else if(GetPVarInt(playerid, "Buy_License_DE") == 1){
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили права на вождение грузовика.");
+			new licer = GetPVarInt(playerid,"Buy_License_DE");
+			va_SendClientMessage(licer, 0xFFCC66FF,"[Уведомление]: {FFFFFF}%s купил у вас права на вождение грузовика.",IC_Name(playerid));
+			Cash_Give(playerid, -5000);
+			Cash_Give(licer, 500);
+			P[playerid][p_lic_freight] = 1;
+			DeletePVar(playerid, "Buy_License_DE");
 		}
 		else if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT){
 			new Float:pos[3];
@@ -680,9 +709,22 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
 	if(newkeys & KEY_NO){
 		if(GetPVarInt(playerid, "Show_PlayerLic") == 1) {
-			new player_lic = GetPVarInt(playerid,"Show_PlayerLic")-1;
-		    va_SendClientMessage(player_lic, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть ваш список лицензий", IC_Name(playerid));
+			new licer = GetPVarInt(playerid,"Show_PlayerLic")-1;
+		    va_SendClientMessage(licer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть ваш список лицензий.", IC_Name(playerid));
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от просмотра лицензий у %s",IC_Name(licer));
 			DeletePVar(playerid, "Show_PlayerLic");
+		}
+		else if(GetPVarInt(playerid, "Buy_License_B") == 1) {
+			new licer = GetPVarInt(playerid,"Buy_License_B")-1;
+		    va_SendClientMessage(licer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался от покупки водительских прав.", IC_Name(playerid));
+			SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от покупки водительских прав.");
+			DeletePVar(playerid, "Buy_License_B");
+		}
+		else if(GetPVarInt(playerid, "Buy_License_A") == 1) {
+			new licer = GetPVarInt(playerid,"Buy_License_A")-1;
+		    va_SendClientMessage(licer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался от покупки прав на вождение мотоцикла.", IC_Name(playerid));
+			SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от покупки прав на вождение мотоцикла.");
+			DeletePVar(playerid, "Buy_License_A");
 		}
 		else if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
@@ -1142,12 +1184,21 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 			}
 		}
 	}
+	if(checkpointid == Gang_Storage){
+		new x = P[playerid][p_job_team]-10;
+		new string[162+1],
+			name[22+19+1];
+		format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+		format(string,sizeof(string),
+		"Взять деньги {FF8888}(%.2f $)\n\
+		Взять патроны {FF8888}(%d)\n\
+		Взять материалы {FF8888}(%d)\n\
+		Положить деньги\n\
+		Положить патроны\n\
+		Положить материалы",GS[x][g_cash],GS[x][g_patrons],GS[x][g_materials]);
+		ShowPlayerDialog(playerid, d_gang_storage, DIALOG_STYLE_LIST, name, string, "Выбрать", "Закрыть");
+	}
 	return true;
-}
-public OnPlayerEnterCheckpoint(playerid)
-{
-    DisablePlayerCheckpoint(playerid);
-    return 1;
 }
 public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 {
@@ -1288,8 +1339,8 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == Grove[1]){
-		SetPlayerPos(playerid, 2495.3022,-1688.5438,13.8722);
-		SetPlayerFacingAngle(playerid, 0);
+		SetPlayerPos(playerid, 2512.6711,-1689.3822,13.5508);
+		SetPlayerFacingAngle(playerid, 43.5251);
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerInterior(playerid, 0);
 		SetCameraBehindPlayer(playerid);
@@ -1494,8 +1545,10 @@ public Show_PlayerStats(playerid,targetid){
 	Работа/Организация:\t\t\t\t%s\n\
 	Должность:\t\t\t\t\t%s\n\
 	Пол:\t\t\t\t\t\t%s\n\
-	Денег:\t\t\t\t\t\t$%.2f\n",
-		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash]);
+	Денег:\t\t\t\t\t\t$%.2f\n\
+	Патронов:\t\t\t\t\t%d\n\
+	Материалов:\t\t\t\t\t%d",
+		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash],P[playerid][p_patrons],P[playerid][p_materials]);
 	ShowPlayerDialog(targetid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
 	return true;
 }

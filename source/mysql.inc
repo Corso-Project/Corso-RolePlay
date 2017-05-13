@@ -83,3 +83,22 @@ public OnMySQL_SelectGangZones()
 	}
 	printf("Загруженно Ганг Зон:%i      [Длительность загрузки: %d ms]",TotalGangZones,cache_get_query_exec_time(MILLISECONDS));
 }
+forward OnMySQL_SelectGangStorage();
+public OnMySQL_SelectGangStorage()
+{
+	new TotalGangStorage;
+	for(new x=0; x < sizeof(GS); x++){
+		GS[x][_g_ormid] = orm_create("gang_storage");
+
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_uid], "UID");
+		orm_setkey(GS[x][_g_ormid], "UID");
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_status],"Status");
+		orm_addvar_float(GS[x][_g_ormid], GS[x][g_cash], "Money");
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_patrons],"Patrons");
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_materials],"Materials");
+
+		orm_apply_cache(GS[x][_g_ormid], x);
+		TotalGangStorage++;
+	}
+	printf("Загруженно Общаков:%i         [Длительность загрузки: %d ms]",TotalGangStorage,cache_get_query_exec_time(MILLISECONDS));
+}
