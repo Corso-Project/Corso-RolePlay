@@ -665,23 +665,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         }
     }
     case d_gang_storage: if(response){
-        new name[22+19+1];
-        format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+        new name[8+22+1];
+        format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
         new x = P[playerid][p_job_team]-10;
         switch(listitem){
             case 0:{
-                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к общаку закрыт.");
+                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
                 ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                     "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
                 SetPVarInt(playerid, "gang_take_cash", 1);
             }
             case 1:{
-                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к общаку закрыт.");
+                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
                 ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
                 SetPVarInt(playerid, "gang_take_patrons", 1);
             }
             case 2:{
-                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к общаку закрыт.");
+                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
                 ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество материалов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество материалов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
                 SetPVarInt(playerid, "gang_take_materials", 1);
             }
@@ -701,8 +701,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     case d_gang_take:{
         new x = P[playerid][p_job_team]-10;
-        new name[22+19+1];
-        format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+        new name[8+22+1];
+        format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
         new take = strval(inputtext);
         new gang_take_cash = GetPVarInt(playerid, "gang_take_cash");
         new gang_take_patrons = GetPVarInt(playerid, "gang_take_patrons");
@@ -756,8 +756,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     case d_gang_put:{
         new x = P[playerid][p_job_team]-10;
-        new name[22+19+1];
-        format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+        new name[8+22+1];
+        format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
         new put = strval(inputtext);
         new gang_put_cash = GetPVarInt(playerid, "gang_put_cash");
         new gang_put_patrons = GetPVarInt(playerid, "gang_put_patrons");

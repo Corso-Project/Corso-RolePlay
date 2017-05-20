@@ -308,7 +308,7 @@ public OnPlayerSpawn(playerid)
 				SetPlayerColor(playerid, 0x33CCFFAA);
 			}
 			case ORG_VAGOS:{
-				SetPlayerPos(playerid, 332.5013,1120.7383,1083.8903);
+				SetPlayerPos(playerid, 333.2571,1125.1559,1083.8828);
 				SetPlayerVirtualWorld(playerid, 2);
 				SetPlayerFacingAngle(playerid, 75.3197);
 				SetPlayerInterior(playerid, 5);
@@ -324,7 +324,21 @@ public OnPlayerSpawn(playerid)
 			case ORG_CHINESE:{
 				SetPlayerPos(playerid,1266.6045,-787.2869,1084.0149);
 				SetPlayerFacingAngle(playerid, 144.7664);
-				SetPlayerVirtualWorld(playerid, 0);
+				SetPlayerVirtualWorld(playerid, 1);
+				SetPlayerInterior(playerid, 5);
+				SetCameraBehindPlayer(playerid);
+			}
+			case ORG_RUSSIAN:{
+				SetPlayerPos(playerid,1266.6045,-787.2869,1084.0149);
+				SetPlayerFacingAngle(playerid, 144.7664);
+				SetPlayerVirtualWorld(playerid, 2);
+				SetPlayerInterior(playerid, 5);
+				SetCameraBehindPlayer(playerid);
+			}
+			case ORG_ITALIAN:{
+				SetPlayerPos(playerid,1266.6045,-787.2869,1084.0149);
+				SetPlayerFacingAngle(playerid, 144.7664);
+				SetPlayerVirtualWorld(playerid, 3);
 				SetPlayerInterior(playerid, 5);
 				SetCameraBehindPlayer(playerid);
 			}
@@ -1184,11 +1198,14 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 			}
 		}
 	}
-	if(checkpointid == Gang_Storage){
+	if(checkpointid == Gang_Storage[0] || checkpointid == Gang_Storage[1] || checkpointid == Gang_Storage[2] || checkpointid == Gang_Storage[3] || checkpointid == Gang_Storage[4] || Mafia_Storage[0] || Mafia_Storage[1] || Mafia_Storage[2]){
+		if((checkpointid == Gang_Storage[0] && P[playerid][p_job_team] != 10) || (checkpointid == Gang_Storage[1] && P[playerid][p_job_team] != 11) || (checkpointid == Gang_Storage[2] && P[playerid][p_job_team] != 12) || (checkpointid == Gang_Storage[3] && P[playerid][p_job_team] != 13) || (checkpointid == Gang_Storage[4] && P[playerid][p_job_team] != 14) ||
+			(checkpointid == Mafia_Storage[0] && P[playerid][p_job_team] != 15) || (checkpointid == Mafia_Storage[1] && P[playerid][p_job_team] != 16) || (checkpointid == Mafia_Storage[2] && P[playerid][p_job_team] != 17))
+				return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У вас нет доступа к этому складу.");
 		new x = P[playerid][p_job_team]-10;
 		new string[162+1],
-			name[22+19+1];
-		format(name,sizeof(name),"Общак банды {FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
+			name[8+22+1];
+		format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
 		format(string,sizeof(string),
 		"Взять деньги {FF8888}(%.2f $)\n\
 		Взять патроны {FF8888}(%d)\n\
@@ -1404,12 +1421,14 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	else if(pickupid == Chinese[0]){
 		SetPlayerPos(playerid, 1299.0084,-794.9550,1084.0078);
 		SetPlayerFacingAngle(playerid, 359.8387);
+		SetPlayerVirtualWorld(playerid, 1);
 		SetPlayerInterior(playerid,5);
 		SetCameraBehindPlayer(playerid);
 	}
 	else if(pickupid == Chinese[1]){
 		SetPlayerPos(playerid, 2597.6270,1898.6757,11.0312);
 		SetPlayerFacingAngle(playerid, 178.7144);
+		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerInterior(playerid,0);
 		SetCameraBehindPlayer(playerid);
 	}
@@ -1418,6 +1437,38 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		new lawstring[256];
 		format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
 		ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+	}
+	else if(pickupid == Russian[0])
+	{
+		SetPlayerPos(playerid, 1299.6984,-792.1796,1084.0078);
+		SetPlayerFacingAngle(playerid, 348.2180);
+		SetPlayerVirtualWorld(playerid, 2);
+		SetPlayerInterior(playerid, 5);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Russian[1])
+	{
+		SetPlayerPos(playerid, 941.6406,1733.1003,8.8516);
+		SetPlayerFacingAngle(playerid, 271.6147);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerInterior(playerid, 0);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Italian[0])
+	{
+		SetPlayerPos(playerid, 1299.6984,-792.1796,1084.0078);
+		SetPlayerFacingAngle(playerid, 348.2180);
+		SetPlayerVirtualWorld(playerid, 3);
+		SetPlayerInterior(playerid, 5);
+		SetCameraBehindPlayer(playerid);
+	}
+	else if(pickupid == Italian[1])
+	{
+		SetPlayerPos(playerid, 1462.3103,2773.2043,10.8203);
+		SetPlayerFacingAngle(playerid, 267.9370);
+		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerInterior(playerid, 0);
+		SetCameraBehindPlayer(playerid);
 	}
     return 1;
 }
@@ -1486,7 +1537,6 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 					PlayerTextDrawHide(playerid, ChoseSkin[i]);
 					CancelSelectTextDraw(playerid);
 				}
-				printf("debug");
 			}
 		}
 	}

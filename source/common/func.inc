@@ -258,7 +258,7 @@ stock DidPlayerRequestElevator(playerid)
 
 stock ShowElevatorDialog(playerid)
 {
-	new string[512];
+	new string[168+1];
 	for(new i; i < sizeof(ElevatorQueue); i ++)
 	{
 	    if(FloorRequestedBy[i] != INVALID_PLAYER_ID)

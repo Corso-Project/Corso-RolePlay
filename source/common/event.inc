@@ -445,7 +445,13 @@ public OnGameModeInit()
 	Rifa[1] = CreateDynamicPickup(1318,23,-68.8279,1351.3553,1080.2109);
 	// ѕикапы Chinese
 	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312);
-	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078);
+	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078,1,5);
+	// ѕикапы Russian Mafia
+	Russian[0] = CreateDynamicPickup(1318, 23, 937.0819,1733.2162,8.8516);
+	Russian[1] = CreateDynamicPickup(1318, 23, 1298.9171,-797.0092,1084.0078,2,5);
+	// ѕикапы Italian Mafia
+	Italian[0] = CreateDynamicPickup(1318, 23, 1456.1318,2773.3865,10.8203);
+	Italian[1] = CreateDynamicPickup(1318, 23, 1298.9171,-797.0092,1084.0078,3,5);
 	// ѕикап —дачи Ёкзамена в јвтоЎколе
 	AutoSchool_Exam[0] = CreateDynamicPickup(19133,2,-2034.9918,-119.1462,35.2370);
 	// FBI NPC
@@ -468,7 +474,14 @@ public OnGameModeInit()
 	police_press_alt[2] = CreateDynamicSphere(-1701.057495, 689.615234, 25.270635,1.0);
 	police_press_alt[3] = CreateDynamicSphere(1543.482788, -1631.928588, 13.461294,1.0);
 	// CheckPoint's
-	Gang_Storage = CreateDynamicCP(2455.4211,-1705.7133,1013.5078,1.0);
+	Gang_Storage[0] = CreateDynamicCP(2455.5740,-1706.3229,1013.5078, 2.5, 2, 2);
+    Gang_Storage[1] = CreateDynamicCP(-42.5511,1412.5063,1084.4297, 2.5, 2, 8);
+	Gang_Storage[2] = CreateDynamicCP(223.0524,1249.5559,1082.1406, 2.5, 2, 2);
+    Gang_Storage[3] = CreateDynamicCP(333.0990,1118.9160,1083.8903, 2.5, 2, 5);
+    Gang_Storage[4] = CreateDynamicCP(-71.8009,1366.5933,1080.2185, 2.5, 2, 6);
+	Mafia_Storage[0] = CreateDynamicCP(1265.9851,-782.2506,1084.0078, 2.5, 1, 5);
+	Mafia_Storage[1] = CreateDynamicCP(1265.9851,-782.2506,1084.0078, 2.5, 2, 5);
+	Mafia_Storage[2] = CreateDynamicCP(1265.9851,-782.2506,1084.0078, 2.5, 3, 5);
 	// TextDraw
 	Corso = TextDrawCreate(577.000000, 7.000000, "CORSO");
 	TextDrawAlignment(Corso, 2);

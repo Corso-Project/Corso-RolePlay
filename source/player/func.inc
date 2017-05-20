@@ -642,13 +642,16 @@ stock Get_GangOnline(gangid){
 	return false;
 }
 stock Get_GangName(gangid){
-	new dests[18+1];
+	new dests[22+1];
 	switch(gangid){
 		case ORG_GROVE: dests = "Grove Street";
 		case ORG_BALLAS: dests = "Ballas Gangs";
 		case ORG_AZTECAS: dests = "Varios Los Aztecas";
 		case ORG_VAGOS: dests = "Los Santos Vagos";
 		case ORG_RIFA: dests = "The Rifa";
+		case ORG_CHINESE: dests = "Семья 'Триада'";
+		case ORG_RUSSIAN: dests = "Семья 'Воры в законе'";
+		case ORG_ITALIAN: dests = "Семья 'Ла Коза Ностра'";
 	}
 	return dests;
 }

@@ -692,7 +692,7 @@ CMD:teleport(playerid,params[]){ //concept from GTO
 		Message_ToAdmins(0xAFAFAFFF, "Администратор %s[%d] телепортировал к себе %s[%d]",Name(playerid),playerid,Name(targetid),targetid);
 	}
 	else if(strcmp(subcmd, "coord", true) == 0) {
-		if(sscanf(subparams, "p<,>fffI(0)I(0)", t_pos_x, t_pos_y, t_pos_z, t_interior, t_world)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}/t[ele]p[ort] coord <x> <y> <z> <интерьер> <мир>");
+		if(sscanf(subparams, "p<,>fffI(0)I(0)", t_pos_x, t_pos_y, t_pos_z, t_interior, t_world)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}/t{FFCC66}[ele]{FFFFFF}p{FFCC66}[ort]{FFFFFF} coord <x> <y> <z> <интерьер> <мир>");
 		TeleportPlayerToPos(playerid, t_pos_x, t_pos_y, t_pos_z, t_interior, t_world);
 	}
 	return true;
@@ -889,16 +889,21 @@ CMD:weap(playerid,params[]){ //concept from GTO
 	}
 	return true;
 }
-CMD:close(playerid,params[]){
-	if(P[playerid][p_rang] < 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не уполномочены выполнить это действие.");
+CMD:close(playerid,params[])
+{
 	new x = P[playerid][p_job_team]-10;
-	if(GS[x][g_status] == 0){
-		GS[x][g_status] = 1;
-		Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] Склад открыт.");
+	if(P[playerid][p_job_team] < 10 || P[playerid][p_job_team] > 17) return true;
+	if(P[playerid][p_rang] < 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не уполномочены что-бы использоваться данной возможностью.");
+
+	GS[x][g_status] = (GS[x][g_status]) ? (false) : (true);
+
+	switch(P[playerid][p_sex]) {
+		case SEX_FEMALE: Message_ToComuneTeam(P[playerid][p_job_team], 0xFFCC66FF,"[Уведомление]: {FFFFFF}%s %s %s доступ к складу.",Get_RangName(playerid),Name(playerid),(!GS[x][g_status]) ? ("закрыла") : ("открыла"));
+		case SEX_MALE: Message_ToComuneTeam(P[playerid][p_job_team], 0xFFCC66FF,"[Уведомление]: {FFFFFF}%s %s %s доступ к складу.",Get_RangName(playerid),Name(playerid),(!GS[x][g_status]) ? ("закрыл") : ("открыл"));
 	}
-	else{
-		GS[x][g_status] = 0;
-		Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] Склад закрыт.");
-	}
+	foreach(new i : Player)
+		if(P[playerid][p_job_team] == P[i][p_job_team])
+			PlayerPlaySound(i, 1085, 0.0, 0.0, 0.0);
+	orm_update(GS[x][_g_ormid]);
 	return true;
 }

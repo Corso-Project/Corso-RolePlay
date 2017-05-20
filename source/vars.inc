@@ -193,9 +193,6 @@ enum
 	d_elevator_chose_floor,
 	// gang's dialogs
 	d_gang_storage,
-	d_gang_put_cash,
-	d_gang_put_patrons,
-	d_gang_put_materials,
 	d_gang_take,
 	d_gang_put
 }
@@ -310,11 +307,14 @@ new Grove[2],
 	Aztecas[2],
 	Vagos[2],
 	Rifa[2];
-new Chinese[2];
+new Chinese[2],
+	Russian[2],
+	Italian[2];
 new AutoSchool_Exam[1];
 // CheckPoint
 new Buy_Weapon,
-	Gang_Storage;
+	Gang_Storage[5],
+	Mafia_Storage[3];
 // Text-Draws
 new Text:Corso;
 new Text:Capture[2];
