@@ -1474,20 +1474,19 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 }
 public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
-	new team = P[playerid][p_job_team];
 	new s_current = P[playerid][_p_skin_shop];
     if(playertextid == ChoseSkin[5])
     {
 		switch(P[playerid][p_sex]) {
 			case SEX_MALE: {
-		 		if(s_current == 1) s_current = male_skins[team][1];
- 	 			else s_current--;
-				SetPlayerSkin(playerid,male_skins[team][s_current]);
+		 		s_current--;
+				if(s_current == -1) s_current = 9;
+				SetPlayerSkin(playerid,male_skins[s_current]);
 			}
 			case SEX_FEMALE: {
-				if(s_current == 1) s_current = female_skins[team][0];
-				else s_current--;
-				SetPlayerSkin(playerid,female_skins[team][s_current]);
+				s_current--;
+				if(s_current == -1) s_current = 4;
+				SetPlayerSkin(playerid,female_skins[s_current]);
 			}
 		}
 		P[playerid][_p_skin_shop] = s_current;
@@ -1497,15 +1496,15 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 		switch(P[playerid][p_sex]) {
 			case SEX_MALE:
 			{
-				if(s_current == male_skins[team][0]) s_current = 1;
-	            else s_current++;
-				SetPlayerSkin(playerid,male_skins[team][s_current]);
+				s_current++;
+				if(s_current == 10) s_current = 0;
+ 				SetPlayerSkin(playerid,male_skins[s_current]);
 			}
 			case SEX_FEMALE:
 			{
-				if(s_current == female_skins[team][0]) s_current = 1;
-				else s_current++;
-				SetPlayerSkin(playerid,female_skins[team][s_current]);
+				s_current++;
+				if(s_current == 5) s_current = 0;
+				SetPlayerSkin(playerid,female_skins[s_current]);
 			}
 		}
 		P[playerid][_p_skin_shop] = s_current;
@@ -1518,12 +1517,12 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 				switch(P[playerid][p_sex]) {
 					case SEX_MALE:
 					{
-						P[playerid][p_skin] = male_skins[team][s_current];
+						P[playerid][p_skin] = male_skins[s_current];
 						SetPlayerSkin(playerid,P[playerid][p_skin]);
 					}
 					case SEX_FEMALE:
 					{
-						P[playerid][p_skin] = female_skins[team][s_current];
+						P[playerid][p_skin] = female_skins[s_current];
 						SetPlayerSkin(playerid,P[playerid][p_skin]);
 					}
 				}

@@ -244,9 +244,9 @@ stock SkinShop_Show(playerid, team)
     switch(P[playerid][p_sex])
     {
         case SEX_FEMALE:
-            SetSpawnInfo(playerid, team, female_skins[team][2], 199.5363,-127.6896,1003.5152,175.2766, 0,0,0,0,0,0);
+            SetSpawnInfo(playerid, team, female_skins[0], 199.5363,-127.6896,1003.5152,175.2766, 0,0,0,0,0,0);
         case SEX_MALE:
-            SetSpawnInfo(playerid, team, male_skins[team][2], 199.5363,-127.6896,1003.5152,175.2766, 0,0,0,0,0,0);
+            SetSpawnInfo(playerid, team, male_skins[0], 199.5363,-127.6896,1003.5152,175.2766, 0,0,0,0,0,0);
     }
 	SetPlayerInterior(playerid,3);
 	SetPlayerVirtualWorld(playerid,playerid+1);

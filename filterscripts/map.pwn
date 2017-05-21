@@ -357,6 +357,9 @@ public OnFilterScriptInit()
 	CreateDynamicObject(2886, -1572.707153, 656.855529, 7.637507, 0.000000, 0.000000, 180.000000, -1, -1, -1, 300.00, 300.00);
 	CreateDynamicObject(2886, -1701.057495, 689.615234, 25.270635, 0.000000, 0.000000, 0.000000, -1, -1, -1, 300.00, 300.00);
 	CreateDynamicObject(2886, 1543.482788, -1631.928588, 13.461294, 0.000000, 0.000000, 90.000000, -1, -1, -1, 300.00, 300.00);
+	//20.05.2017
+	CreateDynamicObject(19876, 666.711, -565.133, 17.3359, 0, 0, 0);
+    CreateDynamicObject(19877, 666.492, -571.18, 17.3125, 0, 0, 0);
 	print("map.pwn [loaded]");
 	return 1;
 }
@@ -381,5 +384,9 @@ public OnPlayerConnect(playerid)
 	// ห่๔๒
 	RemoveBuildingForPlayer(playerid, 1226, 265.481, -1581.1, 32.9311, 5.0);
     RemoveBuildingForPlayer(playerid, 6518, 280.297, -1606.2, 72.3984, 250.0);
+	// Gassoo
+	RemoveBuildingForPlayer(playerid, 12853, 666.711, -565.133, 17.3359, 250.0);
+    RemoveBuildingForPlayer(playerid, 12854, 666.492, -571.18, 17.3125, 250.0);
+    RemoveBuildingForPlayer(playerid, 13245, 666.711, -565.133, 17.3359, 250.0);
 	return 1;
 }

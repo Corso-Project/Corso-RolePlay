@@ -1,5 +1,7 @@
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
+    while(strfind(inputtext, "%s",true) !=-1) strdel(inputtext,strfind(inputtext, "%s",true),strfind(inputtext, "%s",true)+2);
+	while(strfind(inputtext, "%",true) !=-1) strdel(inputtext,strfind(inputtext, "%",true),strfind(inputtext, "%",true)+2);
     switch(dialogid) {
 	// ¬ход в учЄтную запись
 	case d_account_login: {
