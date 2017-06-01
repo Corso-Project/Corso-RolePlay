@@ -425,9 +425,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     min_id = x;
                 }
             }
-            SetPlayerCheckpoint(playerid, PS[min_id][ps_pos_x], PS[min_id][ps_pos_y], PS[min_id][ps_pos_z], 5.0);
+            p_gps = CreateDynamicCP(PS[min_id][ps_pos_x], PS[min_id][ps_pos_y], PS[min_id][ps_pos_z],5.0,-1,-1,playerid,99999.0);
             PlayerPlaySound(playerid,1130,0.0,0.0,0.0);
-            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Ближайшая заправка была отмечена на радаре.");
+            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Ближайший АЗС была отмечен на радаре.");
         }
         case 1: ShowPlayerDialog(playerid, d_gps_public_places, DIALOG_STYLE_LIST,"Общественные места",
             "1. Автошкола\n\
@@ -473,46 +473,38 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     // Спутниковая Система Навигации: Общественные места
     case d_gps_public_places: if(response) switch(listitem){
-        case 0: SetPlayerCheckpoint(playerid, -2031.4530, -97.4284, 35.1641, 4.0);
-        case 1: SetPlayerCheckpoint(playerid, 1811.6638, -1889.9030, 12.9699, 4.0);
-        case 2: SetPlayerCheckpoint(playerid, 558.0014, -1257.0792, 16.9318, 4.0);
-        case 3: SetPlayerCheckpoint(playerid, -1988.1427, 288.5436, 34.0706, 4.0);
-        case 4: SetPlayerCheckpoint(playerid, 1658.5923, 2177.1665, 10.3988, 4.0);
-        case 5: SetPlayerCheckpoint(playerid, -2717.8606, 195.2175, 4.3418, 4.0);
+        case 0: p_gps = CreateDynamicCP(-2031.4530, -97.4284, 35.1641, 5.0,-1,-1,playerid,99999.0);
+        case 1: p_gps = CreateDynamicCP(1811.6638, -1889.9030, 12.9699, 5.0,-1,-1,playerid,99999.0);
+        case 2: p_gps = CreateDynamicCP(558.0014, -1257.0792, 16.9318, 5.0,-1,-1,playerid,99999.0);
+        case 3: p_gps = CreateDynamicCP(-1988.1427, 288.5436, 34.0706, 5.0,-1,-1,playerid,99999.0);
+        case 4: p_gps = CreateDynamicCP(1658.5923, 2177.1665, 10.3988, 5.0,-1,-1,playerid,99999.0);
+        case 5: p_gps = CreateDynamicCP(-2717.8606, 195.2175, 4.3418, 5.0,-1,-1,playerid,99999.0);
     }
     // Спутниковая Система Навигации: Работы
     case d_gps_jobs: if(response) switch(listitem){
-        case 0: SetPlayerCheckpoint(playerid, 1622.3394,-1552.2294,13.2362, 4.0);
+        case 0: p_gps = CreateDynamicCP(1622.3394,-1552.2294,13.2362, 5.0,-1,-1,playerid,99999.0);
     }
     // Спутниковая Система Навигации: Государственные организации
     case d_gps_state_organizations: if(response) switch(listitem){
-        case 0: SetPlayerCheckpoint(playerid, 1137.3706,-2037.2341,68.5749, 4.0);
-        case 1: SetPlayerCheckpoint(playerid, 1292.8685,-1650.4521,12.9523, 4.0);
-        case 2: SetPlayerCheckpoint(playerid, 1537.1475,-1675.8947,12.9438, 4.0);
-        case 3: SetPlayerCheckpoint(playerid, -1605.4011,724.7184,11.3619, 4.0);
-        case 4: SetPlayerCheckpoint(playerid, 2289.8364,2417.6626,10.2683, 4.0);
-        case 6: SetPlayerCheckpoint(playerid, -1531.5959,492.3214,6.9068, 4.0);
-        case 11: SetPlayerCheckpoint(playerid, -2432.2952,490.2813,29.6579, 4.0);
+        case 0: p_gps = CreateDynamicCP(1137.3706,-2037.2341,68.5749, 5.0,-1,-1,playerid,99999.0);
+        case 1: p_gps = CreateDynamicCP(1292.8685,-1650.4521,12.9523, 5.0,-1,-1,playerid,99999.0);
+        case 2: p_gps = CreateDynamicCP(1537.1475,-1675.8947,12.9438, 5.0,-1,-1,playerid,99999.0);
+        case 3: p_gps = CreateDynamicCP(-1605.4011,724.7184,11.3619, 5.0,-1,-1,playerid,99999.0);
+        case 4: p_gps = CreateDynamicCP(2289.8364,2417.6626,10.2683, 5.0,-1,-1,playerid,99999.0);
+        case 6: p_gps = CreateDynamicCP(-1531.5959,492.3214,6.9068, 5.0,-1,-1,playerid,99999.0);
+        case 11: p_gps = CreateDynamicCP(-2432.2952,490.2813,29.6579, 5.0,-1,-1,playerid,99999.0);
     }
     // Спутниковая Система Навигации: Развлечения
     case d_gps_pleasure: if(response) switch(listitem){
-        case 0: SetPlayerCheckpoint(playerid, 2038.0607,1007.9816,10.2363,4.0);
+        case 0: p_gps = CreateDynamicCP(2038.0607,1007.9816,10.2363,5.0,-1,-1,playerid,99999.0);
     }
     // Спутниковая Система Навигации: Банки
     case d_gps_banks: if(response) switch(listitem){
-        case 0: SetPlayerCheckpoint(playerid, 1540.4420,-1276.2134,17.1346, 4.0);
-        case 1: SetPlayerCheckpoint(playerid, -2650.0825,376.0515,6.1563, 4.0);
-        case 2: SetPlayerCheckpoint(playerid, 2359.4534,2377.9929,10.5474, 4.0);
+        case 0: p_gps = CreateDynamicCP(1540.4420,-1276.2134,17.1346, 5.0,-1,-1,playerid,99999.0);
+        case 1: p_gps = CreateDynamicCP(-2650.0825,376.0515,6.1563, 5.0,-1,-1,playerid,99999.0);
+        case 2: p_gps = CreateDynamicCP(2359.4534,2377.9929,10.5474, 5.0,-1,-1,playerid,99999.0);
     }
-    // Работа: Уборщик улиц
-    case d_job_whitewing: if(response) switch(listitem){
-        case 0:{
-            if(Whitewing_[0] <= 0) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Эта улица не нуждается в отчистке");
-            SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Отправляйтесь на очистку улицы");
-            Whitewing_GPS[playerid] = SweeperWay_1;
-            Whitewinc_CP[0] = CreateDynamicCP(1655.8282,-1579.3132,13.1099,7.0);
-        }
-    }
+    // АШ
     case d_law_test:{
         if(!response){
             SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы прекратили теоретическую сдачу ПДД.");
@@ -809,6 +801,91 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             P[playerid][p_materials] -= put;
             orm_update(GS[x][_g_ormid]);
             DeletePVar(playerid, "gang_put_materials");
+        }
+    }
+    case d_ps_business_show_edit:if(response){
+        new x = P[playerid][p_business_ps]-1,
+        	ps_name_[30+7],
+            str_status[43+1],
+            info[65+44];
+        format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
+
+        str_status = (PS[x][ps_status] == 0) ? "{00FF00}Открыть {FFFFFF}заправочную станцию" : "{FF0000}Закрыть {FFFFFF}заправочную станцию";
+
+        format(info,sizeof(info),"%s\nУстановить цену за 1л топливо\nВзять деньги из бюджета АЗС\nПродать АЗС по гос. цене",str_status);
+        ShowPlayerDialog(playerid, d_ps_business_edit, DIALOG_STYLE_LIST, ps_name_, info, "Открыть", "Закрыть");
+    }
+    case d_ps_business_edit:if(response){
+        new x = P[playerid][p_business_ps]-1,
+            ps_name_[30+7];
+        format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
+        switch(listitem){
+            case 0: switch(PS[x][ps_status]){
+                case 0:PS[x][ps_status] = 1;
+                case 1:PS[x][ps_status] = 0;
+            }
+            case 1:{
+                SetPVarInt(playerid, "d_ps_business_set", 1);
+                ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,
+                    "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до 150.00$.", "Взять", "Назад");
+            }
+            case 2:{
+                SetPVarInt(playerid, "d_ps_business_take", 1);
+                new info[122];
+                format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до %.2f",PS[x][ps_profit]);
+                ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,info, "Взять", "Назад");
+            }
+            case 3:{
+                SetPVarInt(playerid, "d_ps_state_bussiness", 1);
+                new sell_business_ps[221+1];
+                format(sell_business_ps, sizeof(sell_business_ps), "{FFFFFF}Государственная цена: {FF8888}%.2f$\n\
+                    {FFFFFF}Цена за которую Вы продаете бизнес гос-ву: {FF8888}%.2f$\n\n\
+                    {FFCC66}Вы потеряете 20 процентов от государственной цены.\n\
+                    Вы уверены что хотите продать свой бизнес?",PS[x][ps_price],PS[x][ps_price]/100*80);
+                ShowPlayerDialog(playerid,d_ps_business_set_take,DIALOG_STYLE_MSGBOX,"Продажа АЗС",sell_business_ps,"Да","Нет");
+            }
+        }
+    }
+    case d_ps_business_set_take: if(response){
+        if(!response){
+            if(GetPVarInt(playerid, "d_ps_business_set") == 1)
+                DeletePVar(playerid, "d_ps_business_set");
+            if(GetPVarInt(playerid, "d_ps_business_take") == 1)
+                DeletePVar(playerid, "d_ps_business_take");
+            if(GetPVarInt(playerid, "d_ps_state_bussiness"))
+                DeletePVar(playerid, "d_ps_state_bussiness");
+            return 0;
+        }
+        new Float:price = strval(inputtext),
+            x = P[playerid][p_business_ps]-1,
+            ps_name_[30+7];
+        format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
+        if(GetPVarInt(playerid, "d_ps_business_set") == 1){
+            if(price <= 0 || price >= 150.0)
+                return ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,"{FFFFFF}Введите стоимость одного литра топливо:\nУсловие:\n{FF0000}  -От 0.00$ до 150.00$.", "Взять", "Назад");
+            PS[x][ps_fuel_price] = price;
+            va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Цена за 1литр бензина %.2f$.",price);
+            PS_Update3DInfo(x);
+        }
+        else if(GetPVarInt(playerid, "d_ps_business_take") == 1){
+            new info[124];
+            format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до %.2f$.",PS[x][ps_profit]);
+            if(price <= 0 || price >= PS[x][ps_profit])
+                return ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,info, "Взять", "Назад");
+            PS[x][ps_profit] = PS[x][ps_profit]-price;
+            Cash_Give(playerid, PS[x][ps_profit]-price);
+            va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы взяли из кассы АЗС %.2f$.",price);
+        }
+        else if(GetPVarInt(playerid, "d_ps_state_bussiness") == 1){
+            va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы продали АЗС {FFCC66}%s{FFFFFF} по Гос. цене за %.2f$",PS[x][ps_name],PS[x][ps_price]/100*80);
+            Cash_Give(playerid, PS[x][ps_price]/100*80);
+            new owner[24+1];
+            format(owner,sizeof(owner),"The State");
+            PS[x][ps_owner] = owner;
+            P[playerid][p_business_ps] = 0;
+            orm_update(PS[x][_ps_ormid]);
+            orm_update(P[playerid][_p_ormid]);
+            PS_Update3DInfo(x);
         }
     }
     }

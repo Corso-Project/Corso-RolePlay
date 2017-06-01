@@ -54,7 +54,8 @@ CMD:fill(playerid, params[])
 
 		new Float: volume, Float: amount;
 		new vehicleid = GetPlayerVehicleID(playerid);
-
+		if(PS[i][ps_status] == 0)
+			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не моежете в данный момент заправить своё ТС. на этом АЗС");
 		if (sscanf(params, "f", volume))
 			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /fill <объём>");
 		if(PS[i][ps_volume] <= 0)
@@ -70,6 +71,7 @@ CMD:fill(playerid, params[])
 		V[vehicleid][v_fuel] = floatadd(V[vehicleid][v_fuel], volume);
 		PS[i][ps_volume] -= volume;
 		PS[i][ps_profit] += amount;
+		PS_Update3DInfo(i);
 		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Автомобиль был запралвен на %.0f литра, цена: $%.2f.",volume,amount);
     }
 	return 1;
@@ -430,14 +432,20 @@ CMD:a(playerid,params[]){
 CMD:buyfilling(playerid,params[]){
 	for(new x; x < sizeof(PS); x++) {
 		if(!IsPlayerInRangeOfPoint(playerid, 2.5, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z])) continue;
+		if(P[playerid][p_business_ps] != 0)
+			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас уже есть АЗС.");
 		if(P[playerid][p_cash] < PS[x][ps_price])
-			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для покупки этого АЗС");
-		if(PS[x][ps_owner] == -1)
-			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Бизнес не продается.");
-		PS[x][ps_owner] = P[playerid][p_uid];
+			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас недостаточно денежных средств для покупки этого АЗС.");
+		if(strcmp(PS[x][ps_owner], "The State"))
+			return va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У {FFFFAD}%s{FFFFFF} уже есть владелец.",PS[x][ps_name]);
+		new owner[24+1];
+		format(owner,sizeof(owner),"%s",Name(playerid));
+		PS[x][ps_owner] = owner;
+		P[playerid][p_business_ps] = PS[x][ps_uid];
 		orm_update(PS[x][_ps_ormid]);
-		va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Поздравляю, Вы купили АЗС {FFFFAD}%s",PS[x][ps_name]);
+		va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Поздравляю, Вы купили АЗС {FFFFAD}%s{FFFFFF} за %.2f$.",PS[x][ps_name],PS[x][ps_price]);
 		Cash_Give(playerid, -PS[x][ps_price]);
+		PS_Update3DInfo(x);
 	}
 	return true;
 }
@@ -449,6 +457,13 @@ CMD:spec(playerid,params[]){
 
 	SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Что бы выйти из режима слежки нажмите - {4682B4}SPACE");
 
+	new Float:pos[3];
+	GetPlayerPos(playerid,pos[0],pos[1],pos[2]);
+	SetPVarFloat(playerid,"float_pos_x",pos[0]);
+	SetPVarFloat(playerid,"float_pos_y",pos[1]);
+	SetPVarFloat(playerid,"float_pos_z",pos[2]);
+	SetPVarInt(playerid,"int_interior",GetPlayerInterior(playerid));
+	SetPVarInt(playerid,"int_virtualworld",GetPlayerVirtualWorld(playerid));
 	if(GetPlayerState(params[0]) == PLAYER_STATE_ONFOOT){
 		TogglePlayerSpectating(playerid, 1);
 		PlayerSpectatePlayer(playerid, params[0]);
@@ -493,7 +508,7 @@ CMD:ahelp(playerid,params[]){
 }
 alias:ahelp("ah");
 CMD:gps(playerid,params[]){
-	DisablePlayerCheckpoint(playerid);
+	DestroyDynamicCP(p_gps);
 	ShowPlayerDialog(playerid, d_player_gps, DIALOG_STYLE_LIST, "Спутниковая Система Навигации",
 	"- Найти ближайшую АЗС\n\
 	 1. Общественные места\n\
@@ -531,23 +546,6 @@ CMD:pay(playerid,params[]){
 	va_SendClientMessage(user,-1,"%s передал Вам $%.2f",Name(playerid),money);
 	Cash_Give(playerid, -money);
 	Cash_Give(user, money);
-	return true;
-}
-CMD:cleaner(playerid,params[]){
-	switch(P[playerid][p_job_team])
-	{
-		case JOB_WHITEWING:
-		{
-			if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вы должны находится в служебном транспорте.");
-			for(new i; i < sizeof(V_WHITEWING); i++){
-				new stri[115];
-				new string[80];
-				format(string,sizeof(string),"{FF8000}Мэрия\t[LS]\t{FFFFFF}— Уровень загрязнения {ff0000}%d %%",Whitewing_[0]); strcat(stri,string);
-				ShowPlayerDialog(playerid,d_job_whitewing,DIALOG_STYLE_LIST, "{FF8000}Выберите точку",stri,"Выбрать","Отмена");
-			}
-		}
-		default: return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вам не доступна эта функция.");
-	}
 	return true;
 }
 CMD:gnews(playerid,params[]){
@@ -662,7 +660,7 @@ CMD:teleport(playerid,params[]){ //concept from GTO
 	}
 	new targetid = INVALID_PLAYER_ID;
 
-	if (sscanf(subparams, "u", targetid)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден");
+	if(sscanf(subparams, "u", targetid)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден");
 	new Float:p_pos_x,            Float:t_pos_x,
 		Float:p_pos_y,            Float:t_pos_y,
 		Float:p_pos_z,            Float:t_pos_z,
@@ -891,8 +889,8 @@ CMD:weap(playerid,params[]){ //concept from GTO
 }
 CMD:close(playerid,params[])
 {
-	new x = P[playerid][p_job_team]-10;
 	if(P[playerid][p_job_team] < 10 || P[playerid][p_job_team] > 17) return true;
+	new x = P[playerid][p_job_team]-10;
 	if(P[playerid][p_rang] < 9) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не уполномочены что-бы использоваться данной возможностью.");
 
 	GS[x][g_status] = (GS[x][g_status]) ? (false) : (true);
@@ -905,5 +903,44 @@ CMD:close(playerid,params[])
 		if(P[playerid][p_job_team] == P[i][p_job_team])
 			PlayerPlaySound(i, 1085, 0.0, 0.0, 0.0);
 	orm_update(GS[x][_g_ormid]);
+	return true;
+}
+CMD:sellfilling(playerid,params[]){
+	if(P[playerid][p_business_ps] == 0)
+		return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У вас нет АЗС.");
+	new subcmd[7], subparams[64];
+	if(sscanf(params,"s[7]s[16]",subcmd,subparams)){
+		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /sellfilling state - продать АЗС по гос. цене.");
+		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /sellfilling to [ID игрока] [Цена]");
+		return true;
+	}
+	new user = INVALID_PLAYER_ID,
+		Float: price,
+		x = P[playerid][p_business_ps];
+		
+	if(sscanf(subparams,"uf",user,price)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /sellfilling to [ID игрока] [Цена]");
+	if(user == INVALID_PLAYER_ID || user == -1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден.");
+	new Float:state_price = PS[x][ps_price]/100*80;
+	if(price < state_price) return va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Цена не должна быть меньше %.2f$.",state_price);
+	va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s купить АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(user),PS[x-1][ps_name],price);
+	va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s предлгает вам купить АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[x-1][ps_name],price);
+	va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить покупку нажмите {007F0E}Y{FFFFFF}, {FF0000}N{FFFFFF} для отказа.");
+	SetPVarInt(user,"Buy_PetrolStation",playerid);
+	SetPVarInt(user, "PetrolStation_ID", x);
+	SetPVarFloat(user, "Price_PetrolStation", price);
+	return true;
+}
+CMD:filling(playerid,params[]){
+	if(P[playerid][p_business_ps] == 0)
+		return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У вас нет АЗС.");
+	new x = P[playerid][p_business_ps]-1,
+		ps_name_[30+7], info[87+1];
+	format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
+	format(info,sizeof(info),
+		"{FFFFFF}Номер заправки: %i\n\
+		Цена: %.2f$\n\
+		Бюджет заправки: %.2f$\n\
+		Цена топливо: %.2f$\n",PS[x][ps_uid],PS[x][ps_price],PS[x][ps_profit],PS[x][ps_fuel_price]);
+	ShowPlayerDialog(playerid, d_ps_business_show_edit, DIALOG_STYLE_MSGBOX, ps_name_, info, "Изменить","Закрыть");
 	return true;
 }

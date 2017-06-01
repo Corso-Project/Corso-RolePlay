@@ -35,6 +35,7 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_armour], "Armour");
 	orm_addvar_int(ormid, P[playerid][p_vehicle], "Vehicle");
 	orm_addvar_int(ormid, P[playerid][p_patrons], "Patrons");
+	orm_addvar_int(ormid, P[playerid][p_business_ps], "Business_PS");
 	orm_addvar_int(ormid, P[playerid][p_materials], "Materials");
 	orm_addvar_int(ormid, P[playerid][p_weapon_1], "Weapon_1");
 	orm_addvar_int(ormid, P[playerid][p_weapon_2], "Weapon_2");
@@ -49,7 +50,6 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_lic_boat], "Lic_Boat");
 	orm_addvar_int(ormid, P[playerid][p_lic_helicopter], "Lic_Helicopter");
 	orm_addvar_int(ormid, P[playerid][p_lic_aircraft], "Lic_Aircraft");
-	orm_addvar_int(ormid, P[playerid][p_lic_business], "Lic_Business");
 	orm_addvar_int(ormid, P[playerid][p_lic_weapon], "Lic_Weapon");
 
 	orm_setkey(ormid, "Name");
@@ -554,20 +554,6 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             ShowPlayerDialog(playerid, d_vehicle_rent_car_premium, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
             break;
 	    }
-		for(new i; i < sizeof(V_WHITEWING); i++){
-			if(vehicleid != V_WHITEWING[i]) continue;
-			if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
-                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
-                break;
-            }
-			if(P[playerid][p_job_team] == 21){
-				new stri[115];
-				new string[80];
-				format(string,sizeof(string),"{FF8000}Мэрия\t[LS]\t{FFFFFF}— Уровень загрязнения {ff0000}%d %%",Whitewing_[0]); strcat(stri,string);
-				ShowPlayerDialog(playerid,d_job_whitewing,DIALOG_STYLE_LIST, "{FF8000}Выберите точку",stri,"Выбрать","Отмена");
-				break;
-			}
-		}
 	}
 	if(oldstate == PLAYER_STATE_DRIVER) {
 	    PlayerTextDrawHide(playerid, P[playerid][_p_speedo]);
@@ -648,6 +634,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			new licer = GetPVarInt(playerid,"Show_PlayerLic")-1;
 			Show_PlayerLic(playerid,licer);
 			DeletePVar(playerid, "Show_PlayerLic");
+			DeletePVar(licer, "Show_PlayerLic");
 		}
 		else if(GetPVarInt(playerid, "Buy_License_B") == 1){
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили водительские права.");
@@ -657,6 +644,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			Cash_Give(licer, 100);
 			P[playerid][p_lic_car] = 1;
 			DeletePVar(playerid, "Buy_License_B");
+			DeletePVar(licer, "Buy_License_B");
 		}
 		else if(GetPVarInt(playerid, "Buy_License_A") == 1){
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили права на вождение мотоцикла.");
@@ -666,6 +654,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			Cash_Give(licer, 200);
 			P[playerid][p_lic_moto] = 1;
 			DeletePVar(playerid, "Buy_License_A");
+			DeletePVar(licer, "Buy_License_A");
 		}
 		else if(GetPVarInt(playerid, "Buy_License_DE") == 1){
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили права на вождение грузовика.");
@@ -675,6 +664,29 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			Cash_Give(licer, 500);
 			P[playerid][p_lic_freight] = 1;
 			DeletePVar(playerid, "Buy_License_DE");
+			DeletePVar(licer, "Buy_License_DE");
+		}
+		else if(GetPVarInt(playerid, "Buy_PetrolStation") != -1){
+			new seller = GetPVarInt(playerid,"Buy_PetrolStation");
+			new Float:price = GetPVarFloat(playerid,"Price_PetrolStation");
+			new y = GetPVarInt(playerid, "PetrolStation_ID");
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили у %s АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(seller),PS[y-1][ps_name],price);
+			va_SendClientMessage(seller, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s купил у вас АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[y-1][ps_name],price);
+			new owner[24+1];
+			format(owner,sizeof(owner),"%s",Name(playerid));
+			P[playerid][p_business_ps] = GetPVarInt(playerid, "PetrolStation_ID");
+			P[seller][p_business_ps] = 0;
+			PS[P[playerid][p_business_ps]][ps_owner] = owner;
+			Cash_Give(seller, price);
+			Cash_Give(playerid, -price);
+			PS_Update3DInfo(P[playerid][p_business_ps]-1);
+			SetPVarInt(playerid, "Buy_PetrolStation",-1);
+			DeletePVar(playerid, "Price_PetrolStation");
+			DeletePVar(seller, "Buy_PetrolStation");
+			DeletePVar(seller, "Price_PetrolStation");
+			orm_update(P[playerid][_p_ormid]);
+			orm_update(P[seller][_p_ormid]);
+			orm_update(PS[y][_ps_ormid]);
 		}
 		else if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT){
 			new Float:pos[3];
@@ -727,18 +739,32 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		    va_SendClientMessage(licer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть ваш список лицензий.", IC_Name(playerid));
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от просмотра лицензий у %s",IC_Name(licer));
 			DeletePVar(playerid, "Show_PlayerLic");
+			DeletePVar(licer, "Show_PlayerLic");
 		}
 		else if(GetPVarInt(playerid, "Buy_License_B") == 1) {
 			new licer = GetPVarInt(playerid,"Buy_License_B")-1;
 		    va_SendClientMessage(licer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался от покупки водительских прав.", IC_Name(playerid));
 			SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от покупки водительских прав.");
 			DeletePVar(playerid, "Buy_License_B");
+			DeletePVar(licer, "Buy_License_B");
 		}
 		else if(GetPVarInt(playerid, "Buy_License_A") == 1) {
 			new licer = GetPVarInt(playerid,"Buy_License_A")-1;
 		    va_SendClientMessage(licer, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался от покупки прав на вождение мотоцикла.", IC_Name(playerid));
 			SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от покупки прав на вождение мотоцикла.");
 			DeletePVar(playerid, "Buy_License_A");
+			DeletePVar(licer, "Buy_License_A");
+		}
+		else if(GetPVarInt(playerid, "Buy_PetrolStation") != -1){
+			new seller = GetPVarInt(playerid,"Buy_PetrolStation");
+			new Float:price = GetPVarFloat(playerid,"Price_PetrolStation");
+			new x = P[seller][p_business_ps];
+			printf("N %d %d %.2f | %s",GetPVarInt(playerid, "Buy_PetrolStation"),GetPVarInt(playerid, "PetrolStation_ID"),GetPVarFloat(playerid, "Price_PetrolStation"),PS[x-1][ps_name]);
+			printf("N %d",seller);
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказил в покупке %s АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(seller),PS[x-1][ps_name],price);
+			va_SendClientMessage(seller, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался покупать у вас АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[x-1][ps_name],price);
+			SetPVarInt(playerid, "Buy_PetrolStation",-1);
+			DeletePVar(playerid, "Price_PetrolStation");
 		}
 		else if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
 		{
@@ -877,7 +903,9 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			TogglePlayerSpectating(playerid, 0);
 			gSpectateID[playerid] = INVALID_PLAYER_ID;
 			gSpectateType[playerid] = 0;
-			stop SpectateUpdatePlayer(playerid);
+			SetPlayerPos(playerid, GetPVarFloat(playerid,"float_pos_x"),GetPVarFloat(playerid,"float_pos_y"),GetPVarFloat(playerid,"float_pos_z"));
+		    SetPlayerInterior(playerid, GetPVarInt(playerid,"int_interior"));
+		    SetPlayerVirtualWorld(playerid, GetPVarInt(playerid,"int_virtualworld"));
 		}
 	}
 	if(newkeys & KEY_WALK)
@@ -1062,143 +1090,7 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 			AK47\t$3500\t120\n\
 			M4\t$4500\t150","Выбор","Выйти");
 	}
-	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER){
-		if(P[playerid][p_job_team] == JOB_WHITEWING){
-			switch(Whitewing_GPS[playerid]){
-				case SweeperWay_1:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[0], 0);
-					Whitewing_GPS[playerid] = SweeperWay_2;
-					Whitewinc_CP[1] = CreateDynamicCP(1549.8121,-1589.7787,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_2:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[1], 0);
-					Whitewing_GPS[playerid] = SweeperWay_3;
-					Whitewinc_CP[2] = CreateDynamicCP(1442.3909,-1589.5940,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_3:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[2], 0);
-					Whitewing_GPS[playerid] = SweeperWay_4;
-					Whitewinc_CP[3] = CreateDynamicCP(1456.8506,-1454.6924,13.0931, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_4:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[3], 0);
-					Whitewing_GPS[playerid] = SweeperWay_5;
-					Whitewinc_CP[4] = CreateDynamicCP(1429.4366,-1437.2874,13.1096, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_5:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[4], 0);
-					Whitewing_GPS[playerid] = SweeperWay_6;
-					Whitewinc_CP[5] = CreateDynamicCP(1423.3903,-1399.9067,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_6:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[5], 0);
-					Whitewing_GPS[playerid] = SweeperWay_7;
-					Whitewinc_CP[6] = CreateDynamicCP(1371.6364,-1392.4711,13.2011, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_7:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[6], 0);
-					Whitewing_GPS[playerid] = SweeperWay_8;
-					Whitewinc_CP[7] = CreateDynamicCP(1339.0471,-1454.1600,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_8:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[7], 0);
-					Whitewing_GPS[playerid] = SweeperWay_9;
-					Whitewinc_CP[8] = CreateDynamicCP(1297.4784,-1562.0004,13.1138, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_9:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[8], 0);
-					Whitewing_GPS[playerid] = SweeperWay_10;
-					Whitewinc_CP[9] = CreateDynamicCP(1297.5422,-1725.7258,13.1100, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_10:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[9], 0);
-					Whitewing_GPS[playerid] = SweeperWay_11;
-					Whitewinc_CP[10] = CreateDynamicCP(1297.3958,-1839.1953,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_11:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[10], 0);
-					Whitewing_GPS[playerid] = SweeperWay_12;
-					Whitewinc_CP[11] = CreateDynamicCP(1332.1058,-1856.2460,13.1137, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_12:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[11], 0);
-					Whitewing_GPS[playerid] = SweeperWay_13;
-					Whitewinc_CP[12] = CreateDynamicCP(1381.1700,-1874.4652,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_13:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[12], 0);
-					Whitewing_GPS[playerid] = SweeperWay_14;
-					Whitewinc_CP[13] = CreateDynamicCP(1391.2841,-1833.3177,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_14:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[13], 0);
-					Whitewing_GPS[playerid] = SweeperWay_15;
-					Whitewinc_CP[14] = CreateDynamicCP(1391.4252,-1745.4158,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_15:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[14], 0);
-					Whitewing_GPS[playerid] = SweeperWay_16;
-					Whitewinc_CP[15] = CreateDynamicCP(1466.3789,-1734.5674,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_16:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[15], 0);
-					Whitewing_GPS[playerid] = SweeperWay_17;
-					Whitewinc_CP[16] = CreateDynamicCP(1580.8950,-1734.7208,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_17:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[16], 0);
-					Whitewing_GPS[playerid] = SweeperWay_18;
-					Whitewinc_CP[17] = CreateDynamicCP(1675.4750,-1734.5599,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_18:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[17], 0);
-					Whitewing_GPS[playerid] = SweeperWay_19;
-					Whitewinc_CP[18] = CreateDynamicCP(1692.1000,-1660.1686,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_19:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[18], 0);
-					Whitewing_GPS[playerid] = SweeperWay_20;
-					Whitewinc_CP[19] = CreateDynamicCP(1691.8464,-1606.7140,13.1099, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_20:{
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[19], 0);
-					Whitewing_GPS[playerid] = SweeperWay_21;
-					Whitewinc_CP[20] = CreateDynamicCP(1664.9994,-1590.4434,13.1182, 7.0);
-					Whitewing_[0]-=10;
-				}
-				case SweeperWay_21:{
-					DestroyDynamicCP(Whitewinc_CP[20]);
-					Whitewinc_CP[21] = CreateDynamicCP(1646.2280,-1541.6604,13.2842, 7.0);
-					TogglePlayerDynamicCP(playerid, Whitewinc_CP[21], 0);
-					new Float: amount = 245.94;
-					Cash_Give(playerid, amount);
-					Whitewing_[0] = 0;
-					SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Территория Мэрия [LS] очищена");
-					SendClientMessage(playerid,COLOR_GREEN,"Введите /cleaner для продолжений работы.");
-				}
-			}
-		}
-	}
-	if(checkpointid == Gang_Storage[0] || checkpointid == Gang_Storage[1] || checkpointid == Gang_Storage[2] || checkpointid == Gang_Storage[3] || checkpointid == Gang_Storage[4] || Mafia_Storage[0] || Mafia_Storage[1] || Mafia_Storage[2]){
+	if(checkpointid == Gang_Storage[0] || checkpointid == Gang_Storage[1] || checkpointid == Gang_Storage[2] || checkpointid == Gang_Storage[3] || checkpointid == Gang_Storage[4] || checkpointid == Mafia_Storage[0] || checkpointid == Mafia_Storage[1] || checkpointid == Mafia_Storage[2]){
 		if((checkpointid == Gang_Storage[0] && P[playerid][p_job_team] != 10) || (checkpointid == Gang_Storage[1] && P[playerid][p_job_team] != 11) || (checkpointid == Gang_Storage[2] && P[playerid][p_job_team] != 12) || (checkpointid == Gang_Storage[3] && P[playerid][p_job_team] != 13) || (checkpointid == Gang_Storage[4] && P[playerid][p_job_team] != 14) ||
 			(checkpointid == Mafia_Storage[0] && P[playerid][p_job_team] != 15) || (checkpointid == Mafia_Storage[1] && P[playerid][p_job_team] != 16) || (checkpointid == Mafia_Storage[2] && P[playerid][p_job_team] != 17))
 				return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У вас нет доступа к этому складу.");
@@ -1214,6 +1106,10 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 		Положить патроны\n\
 		Положить материалы",GS[x][g_cash],GS[x][g_patrons],GS[x][g_materials]);
 		ShowPlayerDialog(playerid, d_gang_storage, DIALOG_STYLE_LIST, name, string, "Выбрать", "Закрыть");
+	}
+	if(checkpointid == p_gps){
+		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы прибыли на точку назначения.");
+		if(IsValidDynamicCP(p_gps)) DestroyDynamicCP(p_gps);
 	}
 	return true;
 }
@@ -1314,19 +1210,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	else if(pickupid == CityHall[0]){
 		SetPlayerInterior(playerid, 3);
 		SetPlayerPos(playerid,384.808624,173.804992,1008.382812);
-	}
-	else if(pickupid == Whitewing[0] || pickupid == Whitewing[1]){
-		switch(P[playerid][p_job_team])
-		{
-			case JOB_WHITEWING:
-			{
-				ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Работа: Уборщик улиц", "{FFFFFF}Что-бы начать работу просто сядьте в одну из машин.\n\
-					За один рейс вы заработаете $549.64", "Закрыть","");
-			}
-			default: return ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Работа: Уборщик улиц","{FFFFFF}Для начала вам нужно устроится на работу, это можно сделать в мэрий.\n\
-				Для начала работы просто сядьте в одну из служебных машин.\n\
-				За один рейс вы заработаете $549.64","Закрыть","");
-		}
 	}
 	else if(pickupid == FBI[0]){
 		SetPlayerInterior(playerid,3);
@@ -1470,7 +1353,10 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerInterior(playerid, 0);
 		SetCameraBehindPlayer(playerid);
 	}
-    return 1;
+    return true;
+}
+public OnPlayerEnterDynamicRaceCP(playerid, checkpointid){
+	return true;
 }
 public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
@@ -1584,11 +1470,21 @@ public OnPlayerLeaveDynamicArea(playerid, areaid){
 }
 forward Show_PlayerStats(playerid,targetid);
 public Show_PlayerStats(playerid,targetid){
-	new string[256];
-	new sex[8];
+	new string[292];
+
+	new sex[7+1];
 	sex = (P[playerid][p_sex] == 0) ? "Женский" : "Мужской";
 
-	format(string,sizeof string,"{FFFFFF}Имя:\t\t\t\t\t\t{0099FF}%s{FFFFFF}\n\
+	new name[30+1];
+	new x = P[playerid][p_business_ps]-1;
+
+	if(P[playerid][p_business_ps] == 0){
+		format(name,sizeof(name),"Не имеется.");
+	}else{
+		format(name,sizeof(name),"%s",PS[x][ps_name]);
+	}
+
+	format(string,sizeof(string),"{FFFFFF}Имя:\t\t\t\t\t\t{0099FF}%s{FFFFFF}\n\
 	Уровень:\t\t\t\t\t%d\n\
 	Очки опыта:\t\t\t\t\t%d из %d\n\
 	Работа/Организация:\t\t\t\t%s\n\
@@ -1596,20 +1492,20 @@ public Show_PlayerStats(playerid,targetid){
 	Пол:\t\t\t\t\t\t%s\n\
 	Денег:\t\t\t\t\t\t$%.2f\n\
 	Патронов:\t\t\t\t\t%d\n\
-	Материалов:\t\t\t\t\t%d",
-		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash],P[playerid][p_patrons],P[playerid][p_materials]);
+	Материалов:\t\t\t\t\t%d\n\n\
+	АЗС:\t\t\t\t\t\t%s",
+		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash],P[playerid][p_patrons],P[playerid][p_materials],name);
 	ShowPlayerDialog(targetid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
 	return true;
 }
 forward Show_PlayerLic(playerid,targetid);
 public Show_PlayerLic(playerid,targetid){
-	new output[570],lic_car[26],lic_aircraft[26],lic_boat[26],lic_moto[26],lic_weapon[26],lic_business[26],lic_freight[26],lic_helicopter[26];
+	new output[482+1],lic_car[26],lic_aircraft[26],lic_boat[26],lic_moto[26],lic_weapon[26],lic_freight[26],lic_helicopter[26];
 	lic_car = (P[playerid][p_lic_car] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	lic_aircraft = (P[playerid][p_lic_aircraft] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	lic_boat = (P[playerid][p_lic_boat] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	lic_moto = (P[playerid][p_lic_moto] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	lic_weapon = (P[playerid][p_lic_weapon] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
-	lic_business = (P[playerid][p_lic_business] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	lic_freight = (P[playerid][p_lic_freight] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	lic_helicopter = (P[playerid][p_lic_helicopter] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	format(output, sizeof(output),
@@ -1618,10 +1514,9 @@ public Show_PlayerLic(playerid,targetid){
 		Лицензия на водный транспорт:\t\t\t%s\n\
 		Лицензия на вождения спорт байка:\t\t%s\n\
 		Лицензия на оружие:\t\t\t\t\t%s\n\
-		Лицензия на бизнес:\t\t\t\t\t%s\n\
 		Лицензия на грузо-перевозку:\t\t\t%s\n\
 		Лицензия на пилотирования вертолётом:\t\t%s",
-		lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_business,lic_freight,lic_helicopter);
+		lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_freight,lic_helicopter);
 	ShowPlayerDialog(targetid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
 	return 1;
 }

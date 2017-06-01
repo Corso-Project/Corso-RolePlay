@@ -287,3 +287,27 @@ stock Float:GetDoorsZCoordForFloor(floorid)
 {
 	return (GROUND_Z_COORD + FloorZOffsets[floorid]);
 }
+stock PS_Update3DInfo(x){
+	new string[226];
+	if(!strcmp(PS[x][ps_owner], "The State")){
+		format(string, sizeof(string),
+            "Автозаправочная станция:\n{FFFFAD}%s\n\
+            Владелец: {99b4ff}Правительство штата{FFFFAD}\n\
+            Стоимость: $%.2f\n\
+            Цистерна: %.0f из %d литров\n\
+            Цена: $%.2f за 1 литр бензина\n\
+            Заправится: {99b4ff}/fill",
+            PS[x][ps_name],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
+	}else{
+		format(string, sizeof(string),
+			"Автозаправочная станция:\n{FFFFAD}%s\n\
+			Владелец: {99b4ff}%s{FFFFAD}\n\
+			Стоимость: $%.2f\n\
+			Цистерна: %.0f из %d литров\n\
+			Цена: $%.2f за 1 литр бензина\n\
+			Заправится: {99b4ff}/fill",
+			PS[x][ps_name],PS[x][ps_owner],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
+	}
+	UpdateDynamic3DTextLabelText(PS[x][_ps_text3d],0xFFFFFFFF,string);
+	return true;
+}

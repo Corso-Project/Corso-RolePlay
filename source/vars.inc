@@ -49,8 +49,7 @@ enum {
 	ORG_ITALIAN,
 	JOB_TAXI,
 	JOB_ENGINEER,
-	JOB_FREIGHTER,
-	JOB_WHITEWING
+	JOB_FREIGHTER
 }
 
 enum {
@@ -90,6 +89,7 @@ enum E_PLAYER_DATA {
 	p_vehicle,
 	p_patrons,
 	p_materials,
+	p_business_ps,
 	p_weapon_1,
 	p_weapon_2,
 	p_weapon_3,
@@ -103,7 +103,6 @@ enum E_PLAYER_DATA {
 	p_lic_boat,
 	p_lic_helicopter,
 	p_lic_aircraft,
-	p_lic_business,
 	p_lic_weapon
 }
 
@@ -121,7 +120,8 @@ enum E_PETROL_STATIONS_DATA {
 	ps_uid,
 	ps_name[30],
 	Float: ps_volume,
-	ps_owner,
+	ps_owner[24+1],
+	ps_status,
 	Float: ps_price,
 	Float: ps_fuel_price,
 	Float: ps_profit,
@@ -185,7 +185,6 @@ enum
 	d_gps_pleasure,
 	d_gps_nearest_filling,
 	// job dialogs
-	d_job_whitewing,
 	// law's dialogs
 	d_law_test,
 	d_law_sell_lic,
@@ -194,41 +193,21 @@ enum
 	// gang's dialogs
 	d_gang_storage,
 	d_gang_take,
-	d_gang_put
+	d_gang_put,
+	// business dialogs
+	d_ps_business_show_edit,
+	d_ps_business_edit,
+	d_ps_business_set_take
 }
 enum E_EXAM_ANSWER {
 	e_exam_question[88],
     bool:e_exam_is_answer
 }
-enum
-{
-	SweeperWay_1,
-	SweeperWay_2,
-	SweeperWay_3,
-	SweeperWay_4,
-	SweeperWay_5,
-	SweeperWay_6,
-	SweeperWay_7,
-	SweeperWay_8,
-	SweeperWay_9,
-	SweeperWay_10,
-	SweeperWay_11,
-	SweeperWay_12,
-	SweeperWay_13,
-	SweeperWay_14,
-	SweeperWay_15,
-	SweeperWay_16,
-	SweeperWay_17,
-	SweeperWay_18,
-	SweeperWay_19,
-	SweeperWay_20,
-	SweeperWay_21
-}
 new P[MAX_PLAYERS][E_PLAYER_DATA];
 new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
 new GZ[104][E_GANG_ZONES_DATA];
-new GS[8][E_GANG_STORAGE];
+new GS[7][E_GANG_STORAGE];
 
 new V_GOVERNMENT[7],
 	V_FBI[7],
@@ -250,7 +229,6 @@ new V_GOVERNMENT[7],
 	V_TAXI[21],
 	V_ENGINEER[16],
 	V_FREIGHTER[13],
-	V_WHITEWING[7],
 	V_PETROL_TRAILER[13],
 	V_RENT[42],
 	V_RENT_STANDART[18],
@@ -301,7 +279,6 @@ new Casino[2];
 new FBI[4],
 	LSPD[2];
 new CityHall[2];
-new Whitewing[2];
 new Grove[2],
 	Ballas[2],
 	Aztecas[2],
@@ -314,7 +291,8 @@ new AutoSchool_Exam[1];
 // CheckPoint
 new Buy_Weapon,
 	Gang_Storage[5],
-	Mafia_Storage[3];
+	Mafia_Storage[3],
+	p_gps;
 // Text-Draws
 new Text:Corso;
 new Text:Capture[2];
@@ -322,9 +300,6 @@ new Text:Capture[2];
 new gSpectateID[MAX_PLAYERS];
 new gSpectateType[MAX_PLAYERS];
 // Работы
-new Whitewing_[1] = 100,
-	Whitewing_GPS[MAX_PLAYERS],
-	Whitewinc_CP[22];
 // NPC's
 new FBI_Actors[3];
 // Capture
@@ -387,12 +362,11 @@ new Float:cam_start_pos[][] = {
 {423.594848, -2073.024902, 43.753078, 423.594848, -2073.024902, 43.753078},
 {905.401794, -1200.925048, 106.217491, 905.401794, -1200.925048, 106.217491},
 {2042.314697, 1462.658447, 34.089710, 2042.314697, 1462.658447, 34.089710},
-{1720.672119, -1695.043334, 123.531272, 1720.672119, -1695.043334, 123.531272},
-{2869.032470, -1016.669128, 85.820434, 2869.032470, -1016.669128, 85.820434},
-{2924.099853, -1042.005615, 34.369697, 2924.099853, -1042.005615, 34.369697},
 {-1168.268310, 1134.234008, 136.937957, -1168.268310, 1134.234008, 136.937957},
 {-1011.961486, 2105.833984, 149.920181, -1011.961486, 2105.833984, 149.920181},
-{22.611024, -1959.371337, 84.940864, 22.611024, -1959.371337, 84.940864}
+{22.611024, -1959.371337, 84.940864, 22.611024, -1959.371337, 84.940864},
+
+{2158.117431, 1082.130737, 88.801651, 2174.856201, 1066.589477, 88.791961}
 };
 
 new Float:cam_start_look[][] = {
@@ -400,12 +374,11 @@ new Float:cam_start_look[][] = {
 {422.012817, -2068.566406, 42.134643, 422.012817, -2068.566406, 42.134643},
 {910.388732, -1201.068725, 105.885704, 910.388732, -1201.068725, 105.885704},
 {2038.087890, 1460.144287, 33.188415, 2038.087890, 1460.144287, 33.188415},
-{1718.984619, -1690.368896, 122.981605, 1718.984619, -1690.368896, 122.981605},
-{2866.939941, -1020.951416, 84.309280, 2866.939941, -1020.951416, 84.309280},
-{2923.572265, -1037.038574, 34.147113, 2923.572265, -1037.038574, 34.147113},
 {-1172.385009, 1131.439697, 136.442672, -1172.385009, 1131.439697, 136.442672},
 {-1007.483459, 2104.049316, 148.592544, -1007.483459, 2104.049316, 148.592544},
-{26.822828, -1956.851684, 83.985832, 26.822828, -1956.851684, 83.985832}
+{26.822828, -1956.851684, 83.985832, 26.822828, -1956.851684, 83.985832},
+
+{2154.756347, 1079.329711, 86.381553, 2171.865234, 1063.261596, 86.560485}
 };
 forward SetPlayerCameraPos_(playerid);
 public SetPlayerCameraPos_(playerid)

@@ -383,14 +383,6 @@ public OnGameModeInit()
 	V_RENT_PREMIUM[11] = Vehicle_Add(477, 1638.1572, 2197.6831, 10.6041, 182.8852);
 	V_RENT_PREMIUM[12] = Vehicle_Add(587, 1632.4949, 2197.7153, 10.4514, 180.8835);
 	V_RENT_PREMIUM[13] = Vehicle_Add(603, 1626.6339, 2197.5586, 10.5419, 180.2225);
-	// Транспорт уборщика улиц LS
-	V_WHITEWING[0] = Vehicle_Add(574,1619.8025,-1553.5758,13.3112,356.3448,86,86);
-	V_WHITEWING[1] = Vehicle_Add(574,1615.8712,-1553.3247,13.3069,356.3448,86,86);
-	V_WHITEWING[2] = Vehicle_Add(574,1611.4750,-1553.0437,13.3021,356.3448,86,86);
-	V_WHITEWING[3] = Vehicle_Add(574,1606.2161,-1552.7073,13.2964,356.3448,86,86);
-	V_WHITEWING[4] = Vehicle_Add(574,1602.0444,-1552.4407,13.2919,356.3448,86,86);
-	V_WHITEWING[5] = Vehicle_Add(574,1598.1580,-1552.1921,13.2876,356.3448,86,86);
-	V_WHITEWING[6] = Vehicle_Add(574,1593.9841,-1551.9254,13.2831,356.3448,86,86);
 	//==========================================================================
 	// Ворота, шлагбаумы
 	obj_FBI = CreateDynamicObject(16773, 1286.17004, -1652.09998, 16.55000,   0.00000, 0.00000, 90.00000);
@@ -421,8 +413,6 @@ public OnGameModeInit()
 	// Пикапы Мэрий
 	CityHall[0] = CreateDynamicPickup(1318,23,1481.0337,-1772.3137,18.7958);
 	// Пикапы Работ
-	Whitewing[0] = CreateDynamicPickup(1275,23,-2070.7686,8.4370,35.3203);
-	Whitewing[1] = CreateDynamicPickup(1275,23,1622.3585,-1552.2335,13.6824);
 	// Пикапы F.B.I
 	FBI[0] = CreateDynamicPickup(1318,23,-2456.1501,503.9673,30.0781);
 	FBI[1] = CreateDynamicPickup(1318,23,238.7148,138.6364,1003.0234);
@@ -516,8 +506,6 @@ public OnGameModeInit()
 	TextDrawFont(Capture[1], 1);
 	TextDrawSetProportional(Capture[1], 1);
 	// 3D текст
-	CreateDynamic3DTextLabel("Уборщик улиц",0x1E90FFFF, 1622.3585, -1552.2335, 13.6824, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
-	CreateDynamic3DTextLabel("Уборщик улиц",0x1E90FFFF, -2070.7686, 8.4370, 35.3203, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	CreateDynamic3DTextLabel("Сдача ПДД",0x1E90FFFF, -2034.9918,-119.1462,35.2370, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	// Объекты
 	autoschool_obj = CreateDynamicObject(19483, -2020.911132, -120.107528, 36.110103, 0.000000, 0.000000, 131.500000, -1, -1, -1, 300.00, 300.00);

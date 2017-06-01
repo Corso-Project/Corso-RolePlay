@@ -39,7 +39,6 @@ stock Get_TeamName(playerid)
 		case JOB_TAXI: dests = "Таксист";
 		case JOB_ENGINEER: dests = "Инженер";
 		case JOB_FREIGHTER: dests = "Грузоперевозчик";
-		case JOB_WHITEWING: dests = "Уборщик улиц";
 	}
 	return dests;
 }
@@ -47,7 +46,7 @@ stock Get_RangName(playerid)
 {
 	new dests[41+1];
 	switch(P[playerid][p_job_team]){
-		case ORG_UNKNOWN, JOB_TAXI, JOB_ENGINEER, JOB_FREIGHTER, JOB_WHITEWING : dests = "-";
+		case ORG_UNKNOWN, JOB_TAXI, JOB_ENGINEER, JOB_FREIGHTER : dests = "-";
 		case ORG_GOVERNMENT:{
 			switch(P[playerid][p_rang]){
 				case 1: dests = "Водитель";

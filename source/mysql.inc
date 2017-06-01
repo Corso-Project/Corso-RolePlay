@@ -27,7 +27,6 @@ forward OnMySQL_SelectPetrolStations();
 public OnMySQL_SelectPetrolStations()
 {
 	new string[226];
-	new ownername[24];
 	new TotalPetrolStations;
 	for(new x; x < sizeof(PS); x++) {
 	    PS[x][_ps_ormid] = orm_create("petrol_stations");
@@ -36,7 +35,8 @@ public OnMySQL_SelectPetrolStations()
 	    orm_setkey(PS[x][_ps_ormid], "UID");
 	    orm_addvar_string(PS[x][_ps_ormid], PS[x][ps_name], 30, "Name");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_volume], "Volume");
-	    orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_owner],"Owner");
+	    orm_addvar_string(PS[x][_ps_ormid], PS[x][ps_owner], 24, "Owner");
+		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_status], "Status");
 		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_price], "Price");
 		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_fuel_price], "Fuel_Price");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_profit], "Profit");
@@ -46,15 +46,25 @@ public OnMySQL_SelectPetrolStations()
 
 	    orm_apply_cache(PS[x][_ps_ormid], x);
 
-		ownername = (PS[x][ps_owner] == -1) ? "Правительство штата" : "Куплен";
-		format(string, sizeof(string),
-		    "Автозаправочная станция:\n{FFFFAD}%s\n\
-		    Владелец: {99b4ff}%s{FFFFAD}\n\
-		    Стоимость: $%.2f\n\
-		    Цистерна: %.0f из %d литров\n\
-		    Цена: $%.2f за 1 литр бензина\n\
-		    Заправится: {99b4ff}/fill",
-		    PS[x][ps_name],ownername,PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
+		if(!strcmp(PS[x][ps_owner], "The State")){
+			format(string, sizeof(string),
+			    "Автозаправочная станция:\n{FFFFAD}%s\n\
+			    Владелец: {99b4ff}Правительство штата{FFFFAD}\n\
+			    Стоимость: $%.2f\n\
+			    Цистерна: %.0f из %d литров\n\
+			    Цена: $%.2f за 1 литр бензина\n\
+			    Заправится: {99b4ff}/fill",
+			    PS[x][ps_name],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
+		}else{
+			format(string, sizeof(string),
+			    "Автозаправочная станция:\n{FFFFAD}%s\n\
+			    Владелец: {99b4ff}%s{FFFFAD}\n\
+			    Стоимость: $%.2f\n\
+			    Цистерна: %.0f из %d литров\n\
+			    Цена: $%.2f за 1 литр бензина\n\
+			    Заправится: {99b4ff}/fill",
+			    PS[x][ps_name],PS[x][ps_owner],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
+		}
 		PS[x][_ps_text3d] = CreateDynamic3DTextLabel(string, 0xFFFFFFFF, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z]+1,35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 		CreateDynamicMapIcon(PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z],47,0xFFFFFFFF,0,0);
 		TotalPetrolStations++;
@@ -65,7 +75,7 @@ forward OnMySQL_SelectGangZones();
 public OnMySQL_SelectGangZones()
 {
 	new TotalGangZones;
-	for(new x=0; x < sizeof(GZ); x++) {
+	for(new x; x < sizeof(GZ); x++) {
 		GZ[x][_gz_ormid] = orm_create("gangzones");
 
 		orm_addvar_int(GZ[x][_gz_ormid], GZ[x][gz_uid], "UID");
@@ -87,7 +97,7 @@ forward OnMySQL_SelectGangStorage();
 public OnMySQL_SelectGangStorage()
 {
 	new TotalGangStorage;
-	for(new x=0; x < sizeof(GS); x++){
+	for(new x; x < sizeof(GS); x++){
 		GS[x][_g_ormid] = orm_create("gang_storage");
 
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_uid], "UID");
@@ -98,6 +108,7 @@ public OnMySQL_SelectGangStorage()
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_materials],"Materials");
 
 		orm_apply_cache(GS[x][_g_ormid], x);
+
 		TotalGangStorage++;
 	}
 	printf("Загруженно Общаков:%i         [Длительность загрузки: %d ms]",TotalGangStorage,cache_get_query_exec_time(MILLISECONDS));

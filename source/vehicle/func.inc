@@ -85,11 +85,6 @@ stock Vehicle_IsNotForPlayer(vehicleid, playerid)
 		if(P[playerid][p_job_team] != JOB_FREIGHTER) return 1;
 		return 0;
 	}
-	for(new i; i < sizeof(V_WHITEWING); i++){
-		if(vehicleid != V_WHITEWING[i]) continue;
-		if(P[playerid][p_job_team] != JOB_WHITEWING) return 1;
-		return 0;
-	}
 	for(new i; i < sizeof(V_RENT); i++) {
 	    if(vehicleid != V_RENT[i]) continue;
 	    if(V_RENT_OWNER[i] != P[playerid][p_uid]) return 1;
