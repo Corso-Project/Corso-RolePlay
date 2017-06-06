@@ -42,7 +42,7 @@ CMD:lock(playerid, params[])
 	}
     return 1;
 }
-
+//remake
 CMD:fill(playerid, params[])
 {
 	if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
@@ -52,11 +52,11 @@ CMD:fill(playerid, params[])
 		if (IsPlayerInRangeOfPoint(playerid, 5.0, PS[i][ps_pos_x],PS[i][ps_pos_y],PS[i][ps_pos_z]) == 0)
 			continue;
 
-		new Float: volume, Float: amount;
+		new volume, amount;
 		new vehicleid = GetPlayerVehicleID(playerid);
 		if(PS[i][ps_status] == 0)
 			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не моежете в данный момент заправить своё ТС. на этом АЗС");
-		if (sscanf(params, "f", volume))
+		if (sscanf(params, "i", volume))
 			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /fill <объём>");
 		if(PS[i][ps_volume] <= 0)
 			return va_SendClientMessage(playerid,0xB22222FF, "[Справка]: {FFFFFF}В %s недостаточно топливо.",PS[i][ps_name]);
@@ -917,11 +917,12 @@ CMD:sellfilling(playerid,params[]){
 	new user = INVALID_PLAYER_ID,
 		Float: price,
 		x = P[playerid][p_business_ps];
-		
+
 	if(sscanf(subparams,"uf",user,price)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /sellfilling to [ID игрока] [Цена]");
 	if(user == INVALID_PLAYER_ID || user == -1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден.");
-	new Float:state_price = PS[x][ps_price]/100*80;
+	new state_price = PS[x][ps_price]/100*80;
 	if(price < state_price) return va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Цена не должна быть меньше %.2f$.",state_price);
+	if(P[user][p_cash] < price) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У данного человека нету столько денег на руках.");
 	va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s купить АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(user),PS[x-1][ps_name],price);
 	va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s предлгает вам купить АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[x-1][ps_name],price);
 	va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить покупку нажмите {007F0E}Y{FFFFFF}, {FF0000}N{FFFFFF} для отказа.");

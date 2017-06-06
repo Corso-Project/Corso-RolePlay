@@ -37,9 +37,9 @@ public OnMySQL_SelectPetrolStations()
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_volume], "Volume");
 	    orm_addvar_string(PS[x][_ps_ormid], PS[x][ps_owner], 24, "Owner");
 		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_status], "Status");
-		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_price], "Price");
-		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_fuel_price], "Fuel_Price");
-	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_profit], "Profit");
+		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_price], "Price");
+		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_fuel_price], "Fuel_Price");
+	    orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_profit], "Profit");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_x], "Pos_X");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_y], "Pos_Y");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_z], "Pos_Z");
@@ -103,7 +103,7 @@ public OnMySQL_SelectGangStorage()
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_uid], "UID");
 		orm_setkey(GS[x][_g_ormid], "UID");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_status],"Status");
-		orm_addvar_float(GS[x][_g_ormid], GS[x][g_cash], "Money");
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_cash], "Money");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_patrons],"Patrons");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_materials],"Materials");
 

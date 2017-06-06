@@ -176,12 +176,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
+	        new amount = minute*Prices_RentCar_Econom;
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
 	        }
-	        va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
+	        va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%i", minute,amount);
 	        Cash_Give(playerid, -amount);
 	        Budget_GOVERNMENT += amount;
 	        for(new i; i < sizeof(V_RENT); i++) {
@@ -200,12 +200,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
                 return RemovePlayerFromVehicle(playerid);
             }
-            new Float: amount = floatmul(minute, Prices_RentCar_Standart);
+            new amount = minute*Prices_RentCar_Standart;
             if(P[playerid][p_cash] < amount) {
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
                 return RemovePlayerFromVehicle(playerid);
             }
-            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
+            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%i", minute,amount);
             Cash_Give(playerid, -amount);
             Budget_GOVERNMENT += amount;
             for(new i; i < sizeof(V_RENT_STANDART); i++) {
@@ -224,12 +224,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
                 return RemovePlayerFromVehicle(playerid);
             }
-            new Float: amount = floatmul(minute, Prices_RentCar_Premium);
+            new amount = minute*Prices_RentCar_Premium;
             if(P[playerid][p_cash] < amount) {
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
                 return RemovePlayerFromVehicle(playerid);
             }
-            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
+            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%i", minute,amount);
             Cash_Give(playerid, -amount);
             Budget_GOVERNMENT += amount;
             for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
@@ -248,7 +248,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
+	        new amount = minute*Prices_RentCar_Econom;
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -272,7 +272,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
+	        new amount = minute*Prices_RentCar_Econom;
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -297,7 +297,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
+	        new amount = minute*Prices_RentCar_Econom;
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -708,7 +708,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             return 0;
         }
         if(gang_take_cash == 1){
-            new Float:take_cash = floatstr(inputtext);
+            new take_cash = strval(inputtext);
             if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
             if(take_cash < 1) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
@@ -763,7 +763,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             return 0;
         }
         if(gang_put_cash == 1){
-            new Float:put_cash = floatstr(inputtext);
+            new put_cash = strval(inputtext);
             if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
             if(put_cash < 1) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
@@ -856,7 +856,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 DeletePVar(playerid, "d_ps_state_bussiness");
             return 0;
         }
-        new Float:price = strval(inputtext),
+        new price = strval(inputtext),
             x = P[playerid][p_business_ps]-1,
             ps_name_[30+7];
         format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);

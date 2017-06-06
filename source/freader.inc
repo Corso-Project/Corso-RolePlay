@@ -1,6 +1,6 @@
 INI:budget[](name[], value[])
 {
-	INI_Float("Government", Budget_GOVERNMENT);
+	INI_Int("Government", Budget_GOVERNMENT);
 	return 0;
 }
 
@@ -15,15 +15,15 @@ INI:mysql[](name[], value[])
 
 INI:prices[](name[], value[])
 {
-	INI_Float("RentCar_Econom", Prices_RentCar_Econom);
-	INI_Float("RentCar_Standart", Prices_RentCar_Standart);
-	INI_Float("RentCar_Premium", Prices_RentCar_Premium);
+	INI_Int("RentCar_Econom", Prices_RentCar_Econom);
+	INI_Int("RentCar_Standart", Prices_RentCar_Standart);
+	INI_Int("RentCar_Premium", Prices_RentCar_Premium);
 	return 0;
 }
 
 INI:settings[](name[], value[])
 {
 	INI_Int("Chat_OOC", g_Chat_OOC);
-	INI_Float("Payment_Register", g_Payment_Register);
+	INI_Int("Payment_Register", g_Payment_Register);
 	return 0;
 }

@@ -258,10 +258,10 @@ stock SkinShop_Show(playerid, team)
     SelectTextDraw(playerid, 0x3DA2B1FF);
 }
 
-stock Cash_Give(playerid, Float: amount)
+stock Cash_Give(playerid, amount)
 {
-	P[playerid][p_cash] = floatadd(P[playerid][p_cash],amount);
-	GivePlayerMoney(playerid, floatround(amount));
+	P[playerid][p_cash] = P[playerid][p_cash]+amount;
+	GivePlayerMoney(playerid, amount);
 }
 
 stock Name(playerid)

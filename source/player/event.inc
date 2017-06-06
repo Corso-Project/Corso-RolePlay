@@ -23,7 +23,7 @@ public OnPlayerConnect(playerid)
 	orm_addvar_string(ormid, P[playerid][p_unban_date], 16, "Unban_Date");
 	orm_addvar_string(ormid, P[playerid][p_last_ip], 46, "Last_IP");
 	orm_addvar_string(ormid, P[playerid][p_reg_ip], 46, "Reg_IP");
-	orm_addvar_float(ormid, P[playerid][p_cash], "Cash");
+	orm_addvar_int(ormid, P[playerid][p_cash], "Cash");
 	orm_addvar_int(ormid, P[playerid][p_mute], "Mute");
 	orm_addvar_int(ormid, P[playerid][p_sex], "Sex");
 	orm_addvar_int(ormid, P[playerid][p_skin], "Skin");
@@ -55,6 +55,7 @@ public OnPlayerConnect(playerid)
 	orm_setkey(ormid, "Name");
 	orm_select(ormid, "OnMySQL_SelectAccount", "d", playerid);
 
+
 	P[playerid][_p_speedo] = CreatePlayerTextDraw(playerid, 520.0, 340.0, "~w~123.0 ~b~KM/H~n~FUEL: ~w~123~n~~g~E ~g~L ~g~D");
 	PlayerTextDrawLetterSize(playerid, P[playerid][_p_speedo], 0.5, 2.0);
 	PlayerTextDrawTextSize(playerid, P[playerid][_p_speedo], 80.0, 160.0);
@@ -67,16 +68,6 @@ public OnPlayerConnect(playerid)
 	PlayerTextDrawBackgroundColor(playerid, P[playerid][_p_speedo], 255);
 	PlayerTextDrawFont(playerid, P[playerid][_p_speedo], 2);
 	PlayerTextDrawSetProportional(playerid, P[playerid][_p_speedo], 1);
-
-	P[playerid][_p_cent] = CreatePlayerTextDraw(playerid, 607.0, 97.0, "12 cent");
-	PlayerTextDrawLetterSize(playerid, P[playerid][_p_cent], 0.5, 2.1);
-	PlayerTextDrawAlignment(playerid, P[playerid][_p_cent], 3);
-	PlayerTextDrawColor(playerid, P[playerid][_p_cent], 0x33AA33AD);
-	PlayerTextDrawSetShadow(playerid, P[playerid][_p_cent], 0);
-	PlayerTextDrawSetOutline(playerid, P[playerid][_p_cent], 2);
-	PlayerTextDrawBackgroundColor(playerid, P[playerid][_p_cent], 0x000000FF);
-	PlayerTextDrawFont(playerid, P[playerid][_p_cent], 3);
-	PlayerTextDrawSetProportional(playerid, P[playerid][_p_cent], 1);
 
 	P[playerid][SpecText] = CreatePlayerTextDraw(playerid, 314.000000, 375.000000, " ");
 	PlayerTextDrawAlignment(playerid, P[playerid][SpecText], 2);
@@ -262,10 +253,7 @@ public OnPlayerSpawn(playerid)
 		SetPlayerRussifierType(playerid, RussifierType_SanLtd);
 		ResetPlayerMoney(playerid);
 		GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
-		new string[16];
-		format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-		PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
-		PlayerTextDrawShow(playerid, P[playerid][_p_cent]);
+
 		switch(P[playerid][p_job_team]) {
 			// Организаций
 			case ORG_GOVERNMENT:{
@@ -378,7 +366,6 @@ public OnPlayerSpawn(playerid)
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
-	PlayerTextDrawHide(playerid, P[playerid][_p_cent]);
 	P[playerid][p_health] = 0;
 	P[playerid][_p_spawned] = false;
 	if(waractive == true){ // Проверяем активно ли
@@ -472,7 +459,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данный автомобиль такси сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Введите время аренды. От 1 минуты ($%i) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_taxi, DIALOG_STYLE_INPUT, "Аренда такси",source,"Аренда","Выйти");
             break;
@@ -488,7 +475,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данный автомобиль инженеров сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Введите время аренды. От 1 минуты ($%i) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_officecar, DIALOG_STYLE_INPUT, "Аренда служебного транспорта",source,"Аренда","Выйти");
             break;
@@ -504,7 +491,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данный грузовой автомобиль сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Введите время аренды. От 1 минуты ($%i) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_truck, DIALOG_STYLE_INPUT, "Аренда грузовика",source,"Аренда","Выйти");
             break;
@@ -519,7 +506,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Введите время аренды. От 1 минуты ($%i) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_car, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
             break;
@@ -534,7 +521,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Введите время аренды. От 1 минуты ($%i) до 240 минут",
 				Prices_RentCar_Standart);
             ShowPlayerDialog(playerid, d_vehicle_rent_car_standart, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
             break;
@@ -549,7 +536,7 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
+				Введите время аренды. От 1 минуты ($%i) до 240 минут",
 				Prices_RentCar_Premium);
             ShowPlayerDialog(playerid, d_vehicle_rent_car_premium, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
             break;
@@ -582,7 +569,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			if(GetPVarInt(playerid,"id_repair") == 1){
 				new engineer = GetPVarInt(playerid,"id_repair")-1;
-				new Float: price_offer = GetPVarInt(engineer,"price_repair");
+				new price_offer = GetPVarInt(engineer,"price_repair");
 
 				DeletePVar(engineer,"id_repair");
 				DeletePVar(engineer,"price_repair");
@@ -668,7 +655,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		}
 		else if(GetPVarInt(playerid, "Buy_PetrolStation") != -1){
 			new seller = GetPVarInt(playerid,"Buy_PetrolStation");
-			new Float:price = GetPVarFloat(playerid,"Price_PetrolStation");
+			new price = GetPVarInt(playerid,"Price_PetrolStation");
 			new y = GetPVarInt(playerid, "PetrolStation_ID");
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили у %s АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(seller),PS[y-1][ps_name],price);
 			va_SendClientMessage(seller, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s купил у вас АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[y-1][ps_name],price);
@@ -975,11 +962,6 @@ public OnPlayerUpdate(playerid)
         return 0;
     }
 
-	new string[32];
-	format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-	PlayerTextDrawSetString(playerid,P[playerid][_p_cent], string);
-	PlayerTextDrawShow(playerid, P[playerid][_p_cent]);
-
     if(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
 	{
 		Message_ToAdmins(0xB9C9BFFF, "[Защита]: Реактивный ранец - %s[%d]", Name(playerid),playerid);
@@ -1099,7 +1081,7 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 			name[8+22+1];
 		format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
 		format(string,sizeof(string),
-		"Взять деньги {FF8888}(%.2f $)\n\
+		"Взять деньги {FF8888}(%i$)\n\
 		Взять патроны {FF8888}(%d)\n\
 		Взять материалы {FF8888}(%d)\n\
 		Положить деньги\n\
@@ -1490,7 +1472,7 @@ public Show_PlayerStats(playerid,targetid){
 	Работа/Организация:\t\t\t\t%s\n\
 	Должность:\t\t\t\t\t%s\n\
 	Пол:\t\t\t\t\t\t%s\n\
-	Денег:\t\t\t\t\t\t$%.2f\n\
+	Денег:\t\t\t\t\t\t$%i\n\
 	Патронов:\t\t\t\t\t%d\n\
 	Материалов:\t\t\t\t\t%d\n\n\
 	АЗС:\t\t\t\t\t\t%s",
