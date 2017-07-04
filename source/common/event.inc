@@ -6,7 +6,7 @@ public OnGameModeInit()
 	INI_Load("prices.ini");
 	INI_Load("settings.ini");
 	// Подключение MySQL
-	mysql_log(ERROR | WARNING | INFO | DEBUG);
+	mysql_log(ERROR | WARNING);
 	mysql_connect(g_MySQL_Host,g_MySQL_User,g_MySQL_Password,g_MySQL_Database);
 	if(mysql_errno() != 0) {
 	    print("\n[Ошибка]: Внимание! Подключение к базе данных MySQL не установлено.\n");
@@ -65,9 +65,6 @@ public OnGameModeInit()
 	CreateDynamicMapIcon(2333.0837,61.5298,26.7058,6,0xFFFFFFFF,0,0);
 	// Casino
 	CreateDynamicMapIcon(2019.3190,1007.7921,10.8203,43,0xFFFFFFFF,0,0);
-	// Работы
-	CreateDynamicMapIcon(1622.3585,-1552.2335,13.6824,56,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(-2070.7686,8.4370,35.3203,56,0xFFFFFFFF,0,0);
 	// Банды
 	CreateDynamicMapIcon(2495.4309,-1691.1400,14.7656,62,0xFFFFFFFF,0,0);
 	CreateDynamicMapIcon(2022.8790,-1120.2637,26.4210,59,0xFFFFFFFF,0,0);
@@ -305,6 +302,12 @@ public OnGameModeInit()
 	V_PETROL_TRAILER[10] = Vehicle_Add(584, -980.0000, -674.1000, 33.0000, 90.0000);
 	V_PETROL_TRAILER[11] = Vehicle_Add(584, -980.0000, -679.2000, 33.0000, 90.0000);
 	V_PETROL_TRAILER[12] = Vehicle_Add(584, -980.0000, -684.3000, 33.0000, 90.0000);
+
+	new string[42+4+1];
+	for(new x=0; x<13;x++){
+		format(string,sizeof(string),"{FFFFFF}Топлива в цистерне: %.0f/1000 литров",trailer_fuel_v[x]);
+		text_trailer[x] = CreateDynamic3DTextLabel(string,-1,0.0,0.0,2.0,20.0,INVALID_PLAYER_ID,V_PETROL_TRAILER[x]);
+	}
 	// Для аренды по штату
 	V_RENT[0] = Vehicle_Add(462, 1560.5000, -2237.7600, 13.3000, 90.0000);
 	V_RENT[1] = Vehicle_Add(462, 1560.5000, -2241.1001, 13.1000, 90.0000);
@@ -393,8 +396,6 @@ public OnGameModeInit()
 	obj_MILITARY[0] = CreateDynamicObject(19313, 286.00000, 1822.00000, 20.03000,   0.00000, 0.00000, 90.00000);
 	obj_MILITARY[1] = CreateDynamicObject(19313, 134.85001, 1941.53406, 21.71000,   0.00000, 0.00000, 180.00000);
 	obj_AUTOSCHOOL[0] = CreateDynamicObject(968, -2057.275634, -94.831848, 34.890388, 	0.000000, 90.000000, 270.000000);
-	obj_AUTOSCHOOL[1] = CreateDynamicObject(2933, -2040.962646, -102.313003, 35.849075, 0.000000, 0.000000, 180.000000);
-	obj_AUTOSCHOOL[2] = CreateDynamicObject(2933, -2052.734619, -102.313003, 35.849075, 0.000000, 0.000000, 180.000000);
 	// Пикапы Аммунаций
 	Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469);
 	Ammu_Nation[1] = CreateDynamicPickup(1318,23,285.4752,-41.7966,1001.5156);
@@ -507,12 +508,12 @@ public OnGameModeInit()
 	TextDrawSetProportional(Capture[1], 1);
 	// 3D текст
 	CreateDynamic3DTextLabel("Сдача ПДД",0x1E90FFFF, -2034.9918,-119.1462,35.2370, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
-	// Объекты
-	autoschool_obj = CreateDynamicObject(19483, -2020.911132, -120.107528, 36.110103, 0.000000, 0.000000, 131.500000, -1, -1, -1, 300.00, 300.00);
-	SetDynamicObjectMaterialText(autoschool_obj, 0, "1.-\n2.-\n3.-\n4.-\n5.-\n6.-\n7.-", 140, "Ariel", 59, 0, 0xFFFFFFFF, 0x00000000, 0);
+	CreateDynamic3DTextLabel("Пункт закупки топлива.",0x1E90FFFF,-1034.8696,-617.4734,32.5861, 35.0, INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	// Лифт
 	ResetElevatorQueue();
 	Elevator_Initialize();
+	// Army GangZone
+	army = GangZoneCreate(-77, 1631, 452, 2163);
 	return 1;
 }
 

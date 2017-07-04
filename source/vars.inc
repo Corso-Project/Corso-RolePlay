@@ -59,9 +59,11 @@ enum {
 
 enum E_PLAYER_DATA {
 	PlayerText: _p_speedo,
+	PlayerText: _p_cent,
 	PlayerText: SpecText,
 	bool: _p_in_game,
 	bool: _p_spawned,
+	bool: _p_dialog,
 	ORM: _p_ormid,
 	_p_chat_msg[144],
 	_p_skin_shop,
@@ -75,7 +77,7 @@ enum E_PLAYER_DATA {
 	p_unban_date[16],
 	p_last_ip[46],
 	p_reg_ip[46],
-	p_cash,
+	Float: p_cash,
 	p_mute,
 	p_sex,
 	p_skin,
@@ -89,6 +91,8 @@ enum E_PLAYER_DATA {
 	p_patrons,
 	p_materials,
 	p_business_ps,
+	Float: p_ticket,
+	p_wanted_level,
 	p_weapon_1,
 	p_weapon_2,
 	p_weapon_3,
@@ -121,12 +125,14 @@ enum E_PETROL_STATIONS_DATA {
 	Float: ps_volume,
 	ps_owner[24+1],
 	ps_status,
-	ps_price,
-	ps_fuel_price,
-	ps_profit,
+	Float: ps_price,
+	Float: ps_fuel_price,
+	Float: ps_profit,
 	Float: ps_pos_x,
 	Float: ps_pos_y,
-	Float: ps_pos_z
+	Float: ps_pos_z,
+	Float: ps_buy_fuel,
+	Float:ps_price_buy_fuel
 }
 enum E_GANG_ZONES_DATA{
 	ORM: _gz_ormid,
@@ -144,7 +150,7 @@ enum E_GANG_STORAGE{
 	// mysql synced
 	g_uid,
 	g_status,
-	g_cash,
+	Float: g_cash,
 	g_patrons,
 	g_materials
 }
@@ -184,6 +190,8 @@ enum
 	d_gps_pleasure,
 	d_gps_nearest_filling,
 	// job dialogs
+	d_job_add_fuell_trailer,
+	d_job_fuel_list,
 	// law's dialogs
 	d_law_test,
 	d_law_sell_lic,
@@ -196,7 +204,9 @@ enum
 	// business dialogs
 	d_ps_business_show_edit,
 	d_ps_business_edit,
-	d_ps_business_set_take
+	d_ps_business_set_take,
+	d_ps_business_get_fuel,
+	d_ps_business_get_fuel2
 }
 enum E_EXAM_ANSWER {
 	e_exam_question[88],
@@ -245,32 +255,32 @@ new obj_FBI,
 	obj_SFPD[2],
 	obj_LVPD,
 	obj_MILITARY[2],
-	obj_AUTOSCHOOL[3];
+	obj_AUTOSCHOOL[1];
 
 new bool: obj_state_FBI,
 	bool: obj_state_LSPD,
 	bool: obj_state_SFPD[2],
 	bool: obj_state_LVPD,
 	bool: obj_state_MILITARY[2],
-	bool: obj_state_AUTOSCHOOL[3];
+	bool: obj_state_AUTOSCHOOL[1];
 
 new g_hour,
 	g_minute;
 
 // budget.ini
-new Budget_GOVERNMENT;
+new Float: Budget_GOVERNMENT;
 // mysql.ini
 new g_MySQL_Host[46],
 	g_MySQL_User[46],
 	g_MySQL_Database[46],
 	g_MySQL_Password[46];
 // prices.ini
-new Prices_RentCar_Econom,
-	Prices_RentCar_Standart,
-	Prices_RentCar_Premium;
+new Float: Prices_RentCar_Econom,
+	Float: Prices_RentCar_Standart,
+	Float: Prices_RentCar_Premium;
 // settings.ini
 new g_Chat_OOC,
-	g_Payment_Register;
+	Float: g_Payment_Register;
 // Пикапы
 new PickupGetTime[MAX_PLAYERS];
 new Ammu_Nation[8];
@@ -292,6 +302,8 @@ new Buy_Weapon,
 	Gang_Storage[5],
 	Mafia_Storage[3],
 	p_gps;
+	// Race
+new Freighter_Job;
 // Text-Draws
 new Text:Corso;
 new Text:Capture[2];
@@ -299,6 +311,9 @@ new Text:Capture[2];
 new gSpectateID[MAX_PLAYERS];
 new gSpectateType[MAX_PLAYERS];
 // Работы
+	// 3D текст
+new Text3D: text_trailer[13];
+new Float: trailer_fuel_v[13] = 0.0;
 // NPC's
 new FBI_Actors[3];
 // Capture
@@ -309,14 +324,15 @@ new gangs[2] = 0,
 	gangskills[2] = 0;
 new GangZoneSeconds,
 	GangZoneMinuts;
-// Для специальных объектов
-new autoschool_obj;
 //TD
 new PlayerText: ChoseSkin[8],
-	PlayerText: Press_ALT[5];
+	PlayerText: Press_ALT[5],
+	PlayerText: Wanted_New_Cash;
 //Динамические зоны
 new auto_school_press_alt[5],
 	police_press_alt[4];
+// Gang Zone
+new army;
 // Скины
 new male_skins[] = {
 	3,6,136,78,200,137,79,2,7,230
@@ -325,7 +341,6 @@ new male_skins[] = {
 new female_skins[] = {
 	10,11,12,13,40
 };
-
 new Streams[][][] = {
 {"Выключить радио\n", ""},
 {"Включить музыку с URL\n", ""},
@@ -357,27 +372,27 @@ new Server_Rules[][] = {
 "{5a5fed}3.{FFFFFF} Продажа игровых денег,бизнесов,домов и т.д. за реальные деньги карается удалением аккаунта!\n"
 };
 new Float:cam_start_pos[][] = {
-{1482.074462, -898.318481, 92.719245, 1482.074462, -898.318481, 92.719245},
-{423.594848, -2073.024902, 43.753078, 423.594848, -2073.024902, 43.753078},
-{905.401794, -1200.925048, 106.217491, 905.401794, -1200.925048, 106.217491},
-{2042.314697, 1462.658447, 34.089710, 2042.314697, 1462.658447, 34.089710},
-{-1168.268310, 1134.234008, 136.937957, -1168.268310, 1134.234008, 136.937957},
-{-1011.961486, 2105.833984, 149.920181, -1011.961486, 2105.833984, 149.920181},
-{22.611024, -1959.371337, 84.940864, 22.611024, -1959.371337, 84.940864},
+	{1482.074462, -898.318481, 92.719245, 1482.074462, -898.318481, 92.719245},
+	{423.594848, -2073.024902, 43.753078, 423.594848, -2073.024902, 43.753078},
+	{905.401794, -1200.925048, 106.217491, 905.401794, -1200.925048, 106.217491},
+	{2042.314697, 1462.658447, 34.089710, 2042.314697, 1462.658447, 34.089710},
+	{-1168.268310, 1134.234008, 136.937957, -1168.268310, 1134.234008, 136.937957},
+	{-1011.961486, 2105.833984, 149.920181, -1011.961486, 2105.833984, 149.920181},
+	{22.611024, -1959.371337, 84.940864, 22.611024, -1959.371337, 84.940864},
 
-{2158.117431, 1082.130737, 88.801651, 2174.856201, 1066.589477, 88.791961}
+	{2158.117431, 1082.130737, 88.801651, 2174.856201, 1066.589477, 88.791961}
 };
 
 new Float:cam_start_look[][] = {
-{1479.071166, -894.389892, 91.979782, 1479.071166, -894.389892, 91.979782},
-{422.012817, -2068.566406, 42.134643, 422.012817, -2068.566406, 42.134643},
-{910.388732, -1201.068725, 105.885704, 910.388732, -1201.068725, 105.885704},
-{2038.087890, 1460.144287, 33.188415, 2038.087890, 1460.144287, 33.188415},
-{-1172.385009, 1131.439697, 136.442672, -1172.385009, 1131.439697, 136.442672},
-{-1007.483459, 2104.049316, 148.592544, -1007.483459, 2104.049316, 148.592544},
-{26.822828, -1956.851684, 83.985832, 26.822828, -1956.851684, 83.985832},
+	{1479.071166, -894.389892, 91.979782, 1479.071166, -894.389892, 91.979782},
+	{422.012817, -2068.566406, 42.134643, 422.012817, -2068.566406, 42.134643},
+	{910.388732, -1201.068725, 105.885704, 910.388732, -1201.068725, 105.885704},
+	{2038.087890, 1460.144287, 33.188415, 2038.087890, 1460.144287, 33.188415},
+	{-1172.385009, 1131.439697, 136.442672, -1172.385009, 1131.439697, 136.442672},
+	{-1007.483459, 2104.049316, 148.592544, -1007.483459, 2104.049316, 148.592544},
+	{26.822828, -1956.851684, 83.985832, 26.822828, -1956.851684, 83.985832},
 
-{2154.756347, 1079.329711, 86.381553, 2171.865234, 1063.261596, 86.560485}
+	{2154.756347, 1079.329711, 86.381553, 2171.865234, 1063.261596, 86.560485}
 };
 forward SetPlayerCameraPos_(playerid);
 public SetPlayerCameraPos_(playerid)

@@ -90,14 +90,6 @@ timer OnGateClosed[7500](objectid)
 		obj_state_AUTOSCHOOL[0] = false;
 		MoveDynamicObject(obj_AUTOSCHOOL[0], -2057.275634, -94.831848-0.05, 34.890388, 0.03,  0.000000, 90.000000, 270.000000);
 	}
-	if(objectid == obj_AUTOSCHOOL[1]){
-		obj_state_AUTOSCHOOL[1] = false;
-		MoveDynamicObject(obj_AUTOSCHOOL[1], -2040.962646, -102.313003, 35.849075,MOVE_GATE_SPEED,0.000000, 0.000000, 180.00000);
-	}
-	if(objectid == obj_AUTOSCHOOL[2]){
-		obj_state_AUTOSCHOOL[2] = false;
-		MoveDynamicObject(obj_AUTOSCHOOL[2], -2052.734619, -102.313003, 35.849075,MOVE_GATE_SPEED,0.000000, 0.000000, 180.00000);
-	}
 }
 
 task OnSecUpdate[1000](){
@@ -170,6 +162,45 @@ task OnUpdateTime[10*1000]()
 			}
 		}
 	}
+}
+task PayDay[60*1000]()
+{
+	new hour, minute, second;
+	gettime(hour, minute, second);
+	if(minute == 55){
+		foreach(new i : Player) {
+			// Розыск
+			if(P[i][p_wanted_level] != 0){
+				P[i][p_wanted_level] -= 1;
+				SetPlayerWantedLevel(i, P[i][p_wanted_level]);
+			}
+			else if(P[i][p_wanted_level] == 0){
+				PlayerTextDrawHide(i, Wanted_New_Cash);
+				
+				new string[16];
+				format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[i][p_cash]), 100.0));
+				PlayerTextDrawSetString(i, P[i][_p_cent], string);
+				PlayerTextDrawShow(i, P[i][_p_cent]);
+			}
+			// 1200000 milliseconds = 20 min
+			if(NetStats_GetConnectedTime(i) < 5)
+				SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы не получили зарплату так как отыграли меньше 20 минут.");
+			else{
+				// Уровень
+				P[i][p_exp]++;
+				if(P[i][p_exp] >= P[i][p_level]*6)
+				{
+					P[i][p_exp] = 0;
+					P[i][p_level]++;
+					SetPlayerScore(i, P[i][p_level]);
+					va_SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы перешли на %i уровень.",P[i][p_level]);
+				}
+			}
+			orm_update(P[i][_p_ormid]);
+			va_SendClientMessage(i,0xB9C9BFFF,"Акаунт {B1BBBB}%s{B9C9BF} успешно сохранен.",P[i][p_name]);
+		}
+	}
+	return true;
 }
 task OnSecTimer[1000]()
 {

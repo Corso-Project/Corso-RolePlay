@@ -1,5 +1,6 @@
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
+	P[playerid][_p_dialog] = false;
     while(strfind(inputtext, "%s",true) !=-1) strdel(inputtext,strfind(inputtext, "%s",true),strfind(inputtext, "%s",true)+2);
 	while(strfind(inputtext, "%",true) !=-1) strdel(inputtext,strfind(inputtext, "%",true),strfind(inputtext, "%",true)+2);
     switch(dialogid) {
@@ -176,12 +177,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new amount = minute*Prices_RentCar_Econom;
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
 	        }
-	        va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%i", minute,amount);
+	        va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
 	        Cash_Give(playerid, -amount);
 	        Budget_GOVERNMENT += amount;
 	        for(new i; i < sizeof(V_RENT); i++) {
@@ -200,12 +201,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
                 return RemovePlayerFromVehicle(playerid);
             }
-            new amount = minute*Prices_RentCar_Standart;
+            new Float: amount = floatmul(minute, Prices_RentCar_Standart);
             if(P[playerid][p_cash] < amount) {
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
                 return RemovePlayerFromVehicle(playerid);
             }
-            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%i", minute,amount);
+            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
             Cash_Give(playerid, -amount);
             Budget_GOVERNMENT += amount;
             for(new i; i < sizeof(V_RENT_STANDART); i++) {
@@ -224,12 +225,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
                 return RemovePlayerFromVehicle(playerid);
             }
-            new amount = minute*Prices_RentCar_Premium;
+            new Float: amount = floatmul(minute, Prices_RentCar_Premium);
             if(P[playerid][p_cash] < amount) {
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
                 return RemovePlayerFromVehicle(playerid);
             }
-            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%i", minute,amount);
+            va_SendClientMessage(playerid, -1, "Транспортное средство арендовано на %d минут за $%.2f", minute,amount);
             Cash_Give(playerid, -amount);
             Budget_GOVERNMENT += amount;
             for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
@@ -248,7 +249,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new amount = minute*Prices_RentCar_Econom;
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -272,7 +273,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new amount = minute*Prices_RentCar_Econom;
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
@@ -297,12 +298,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 1 до 240");
 	            return RemovePlayerFromVehicle(playerid);
 	    	}
-	        new amount = minute*Prices_RentCar_Econom;
+	        new Float: amount = floatmul(minute, Prices_RentCar_Econom);
 	        if(P[playerid][p_cash] < amount) {
 	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
 	            return RemovePlayerFromVehicle(playerid);
 	        }
-	        va_SendClientMessage(playerid, -1, "Автомобиль такси арендован на %d минут за $%.2f", minute,amount);
+	        va_SendClientMessage(playerid, -1, "Фура арендована на %d минут за $%.2f", minute,amount);
 	        Cash_Give(playerid, -amount);
 	        Budget_GOVERNMENT += amount;
 	        for(new i; i < sizeof(V_FREIGHTER); i++) {
@@ -310,6 +311,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	            V_FREIGHTER_OWNER[i] = P[playerid][p_uid];
 	        	defer OnRentVehicleEnd[minute*60*1000](V_FREIGHTER[i], JOB_FREIGHTER);
 	        }
+            Freighter_Job = CreateDynamicCP(-1034.8696,-617.4734,32.5861,5.0,-1,-1,playerid,20.5);
 	    }
 	}
     // Мену
@@ -437,9 +439,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
              5. Авторынок (Премиум класс)\n\
              6. Моторынок","Выбрать","Назад");
         case 2: ShowPlayerDialog(playerid, d_gps_jobs, DIALOG_STYLE_LIST,"Работы",
-            "1. Уборщик улиц г.Лос-Сантос\n\
-             2. Уборщик улиц г.Сан-Фиеро\n\
-             3. Уборщик улиц г.Лас-Вентурас","Выбрать","Назад");
+            "1. Перевозчик топлива","Выбрать","Назад");
         case 3: ShowPlayerDialog(playerid, d_gps_state_organizations, DIALOG_STYLE_LIST,"Государственные организации",
             "1. Правительство штата\n\
              2. Федеральное Бюро Расследований\n\
@@ -482,7 +482,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     // Спутниковая Система Навигации: Работы
     case d_gps_jobs: if(response) switch(listitem){
-        case 0: p_gps = CreateDynamicCP(1622.3394,-1552.2294,13.2362, 5.0,-1,-1,playerid,99999.0);
+        case 0: p_gps = CreateDynamicCP(-1034.8696,-617.4734,32.5861, 5.0,-1,-1,playerid,99999.0);
     }
     // Спутниковая Система Навигации: Государственные организации
     case d_gps_state_organizations: if(response) switch(listitem){
@@ -708,7 +708,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             return 0;
         }
         if(gang_take_cash == 1){
-            new take_cash = strval(inputtext);
+            new Float:take_cash = floatstr(inputtext);
             if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
             if(take_cash < 1) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
@@ -763,7 +763,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             return 0;
         }
         if(gang_put_cash == 1){
-            new put_cash = strval(inputtext);
+            new Float:put_cash = floatstr(inputtext);
             if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
             if(put_cash < 1) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
@@ -804,19 +804,19 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         }
     }
     case d_ps_business_show_edit:if(response){
-        new x = P[playerid][p_business_ps]-1,
+        new x = P[playerid][p_business_ps],
         	ps_name_[30+7],
-            str_status[43+1],
-            info[65+44];
+            str_status[44],
+            info[134+44];
         format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
 
         str_status = (PS[x][ps_status] == 0) ? "{00FF00}Открыть {FFFFFF}заправочную станцию" : "{FF0000}Закрыть {FFFFFF}заправочную станцию";
 
-        format(info,sizeof(info),"%s\nУстановить цену за 1л топливо\nВзять деньги из бюджета АЗС\nПродать АЗС по гос. цене",str_status);
+        format(info,sizeof(info),"%s\nУстановить цену за 1л топливо\nДобавить деньги в бюджет АЗС\nВзять деньги из бюджета АЗС\nЗаказать топливо\nПродать АЗС по гос. цене",str_status);
         ShowPlayerDialog(playerid, d_ps_business_edit, DIALOG_STYLE_LIST, ps_name_, info, "Открыть", "Закрыть");
     }
     case d_ps_business_edit:if(response){
-        new x = P[playerid][p_business_ps]-1,
+        new x = P[playerid][p_business_ps],
             ps_name_[30+7];
         format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
         switch(listitem){
@@ -827,15 +827,25 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             case 1:{
                 SetPVarInt(playerid, "d_ps_business_set", 1);
                 ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,
-                    "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до 150.00$.", "Взять", "Назад");
+                    "{FFFFFF}Введите стоимость одного литра топливо:\nУсловие:\n  -От 0.00$ до 150.00$.", "Взять", "Назад");
             }
             case 2:{
-                SetPVarInt(playerid, "d_ps_business_take", 1);
-                new info[122];
-                format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до %.2f",PS[x][ps_profit]);
-                ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,info, "Взять", "Назад");
+                SetPVarInt(playerid, "d_ps_business_put",1);
+                new info[150];
+                format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели добавить в кассу АЗС:\nУсловие:\n  -Не больше того количество денег что у вас есть.");
+                ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_, info,"Положить","Назад");
             }
             case 3:{
+                SetPVarInt(playerid, "d_ps_business_take", 1);
+                new info[122];
+                format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до %.2f$.",PS[x][ps_profit]);
+                ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,info, "Взять", "Назад");
+            }
+            case 4:{
+                if(PS[x][ps_buy_fuel] != 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы уже в очереди заказов. Ждите.");
+                ShowPlayerDialog(playerid, d_ps_business_get_fuel, DIALOG_STYLE_INPUT, ps_name_, "{FFFFFF}Введите количество топлива которую хотите заказать:\nУсловие:\n  -Заказывать можно от 100 до 5000 литров топлива.", "Далее","Отмена");
+            }
+            case 5:{
                 SetPVarInt(playerid, "d_ps_state_bussiness", 1);
                 new sell_business_ps[221+1];
                 format(sell_business_ps, sizeof(sell_business_ps), "{FFFFFF}Государственная цена: {FF8888}%.2f$\n\
@@ -845,36 +855,51 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 ShowPlayerDialog(playerid,d_ps_business_set_take,DIALOG_STYLE_MSGBOX,"Продажа АЗС",sell_business_ps,"Да","Нет");
             }
         }
+        orm_update(PS[x][_ps_ormid]);
     }
     case d_ps_business_set_take: if(response){
         if(!response){
             if(GetPVarInt(playerid, "d_ps_business_set") == 1)
                 DeletePVar(playerid, "d_ps_business_set");
+            if(GetPVarInt(playerid, "d_ps_business_put") == 1)
+                DeletePVar(playerid, "d_ps_business_put");
             if(GetPVarInt(playerid, "d_ps_business_take") == 1)
                 DeletePVar(playerid, "d_ps_business_take");
-            if(GetPVarInt(playerid, "d_ps_state_bussiness"))
+            if(GetPVarInt(playerid, "d_ps_state_bussiness") == 1)
                 DeletePVar(playerid, "d_ps_state_bussiness");
             return 0;
         }
-        new price = strval(inputtext),
-            x = P[playerid][p_business_ps]-1,
+        new Float:price = floatstr(inputtext),
+            x = P[playerid][p_business_ps],
             ps_name_[30+7];
         format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
         if(GetPVarInt(playerid, "d_ps_business_set") == 1){
-            if(price <= 0 || price >= 150.0)
-                return ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,"{FFFFFF}Введите стоимость одного литра топливо:\nУсловие:\n{FF0000}  -От 0.00$ до 150.00$.", "Взять", "Назад");
+            if(price < 1 || price > 150.0)
+                return ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,"{FFFFFF}Введите стоимость одного литра топливо:\nУсловие:\n{FF0000}  -От 1.00$ до 150.00$.", "Взять", "Назад");
             PS[x][ps_fuel_price] = price;
-            va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Цена за 1литр бензина %.2f$.",price);
+            va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Цена за 1 литр бензина %.2f$.",price);
             PS_Update3DInfo(x);
+            DeletePVar(playerid, "d_ps_business_set");
+        }
+        else if(GetPVarInt(playerid, "d_ps_business_put") == 1){
+            new info[142];
+            format(info,sizeof(info),"Введите количество денежных средств, которые вы бы хотели добавить в кассу АЗС:\nУсловие:\n  -Не больше того количество денег что у вас есть.");
+            if(P[playerid][p_cash] < price)
+                return ShowPlayerDialog(playerid, d_ps_business_set_take,DIALOG_STYLE_INPUT,ps_name_,info,"Положить","Назад");
+            Cash_Give(playerid, -price);
+            PS[x][ps_profit] += price;
+            va_SendClientMessage(playerid, 0xFFCC66FF,"[Уведмоление]: {FFFFFF}Вы добавили в бюджет АЗС %.2f$",price);
+            DeletePVar(playerid, "d_ps_business_put");
         }
         else if(GetPVarInt(playerid, "d_ps_business_take") == 1){
             new info[124];
-            format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до %.2f$.",PS[x][ps_profit]);
-            if(price <= 0 || price >= PS[x][ps_profit])
+            format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 1.00$ до %.2f$.",PS[x][ps_profit]);
+            if(price < 1 || price > PS[x][ps_profit])
                 return ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,info, "Взять", "Назад");
             PS[x][ps_profit] = PS[x][ps_profit]-price;
             Cash_Give(playerid, PS[x][ps_profit]-price);
             va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы взяли из кассы АЗС %.2f$.",price);
+            DeletePVar(playerid, "d_ps_business_take");
         }
         else if(GetPVarInt(playerid, "d_ps_state_bussiness") == 1){
             va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы продали АЗС {FFCC66}%s{FFFFFF} по Гос. цене за %.2f$",PS[x][ps_name],PS[x][ps_price]/100*80);
@@ -886,7 +911,106 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             orm_update(PS[x][_ps_ormid]);
             orm_update(P[playerid][_p_ormid]);
             PS_Update3DInfo(x);
+            DeletePVar(playerid, "d_ps_state_bussiness");
         }
+        orm_update(PS[x][_ps_ormid]);
+    }
+    case d_ps_business_get_fuel:{
+        if(!response) return 1;
+        new fuel = strval(inputtext),
+            x = P[playerid][p_business_ps],
+            ps_name_[30+7];
+        format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
+        if(fuel < 100 || fuel > 5000) return ShowPlayerDialog(playerid, d_ps_business_get_fuel, DIALOG_STYLE_INPUT, ps_name_, "{FFFFFF}Введите количество топлива которую хотите заказать:\nУсловие:\n  -Заказывать можно от 100 до 5000 литров топлива.", "Далее","Отмена");
+        //PS[x][ps_buy_fuel] = fuel;
+        SetPVarInt(playerid, "ps_buy_fuel", fuel);
+        ShowPlayerDialog(playerid, d_ps_business_get_fuel2, DIALOG_STYLE_INPUT, ps_name_, "{FFFFFF}Введите цену за 1 литр топлива:\nУсловие:\n  -Не меньше 5.45$ до 100$.", "Далее","Отмена");
+    }
+    case d_ps_business_get_fuel2:{
+        if(!response) return 1;
+        new Float:price = floatstr(inputtext),
+            x = P[playerid][p_business_ps],
+            ps_name_[30+7],
+            Float: amount;
+        format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
+        new ps_buy_fuels = GetPVarInt(playerid, "ps_buy_fuel");
+        if(price < 5.45 || price > 100) return ShowPlayerDialog(playerid, d_ps_business_get_fuel2, DIALOG_STYLE_INPUT, ps_name_, "{FFFFFF}Введите цену за 1 литр топлива:\nУсловие:\n{FF0000}  -Не меньше 5.45$ до 100$.", "Далее","Отмена");
+        amount = ps_buy_fuels * price;
+        if(PS[x][ps_profit] < amount){
+            SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Бюджет вашей АЗС слишком маленький для установки такой цены за 1 литр топлива.");
+            SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Введите цену поменьше или положите деньги в бюджет и снова попробуйте выполнить данное действие.");
+            ShowPlayerDialog(playerid, d_ps_business_get_fuel2, DIALOG_STYLE_INPUT, ps_name_, "{FFFFFF}Введите цену за 1 литр топлива:\nУсловие:\n{FF0000}  -Не меньше 5.45$ до 100$.", "Далее","Отмена");
+        }
+		va_SendClientMessage(playerid, 0xFFCC66FF,"[Уведомление]: {FFFFFF}Вы успешно заказали топлива.Сумма: {FF8888}%.2f${FFFFFF}.",amount);
+		va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}- Ожидайте пока вам доставят топливо");
+        va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}- Также вы можете устроиться развозчиком топливо, и доставить сами.");
+        PS[x][ps_buy_fuel] = ps_buy_fuels;
+        PS[x][ps_price_buy_fuel] = price;
+        orm_update(PS[x][_ps_ormid]);
+    }
+    case d_job_add_fuell_trailer:{
+        if(!response) return 1;
+        new Float: fuel = floatstr(inputtext);
+        if(fuel < 1 || fuel > 1000)
+            return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}От 1 до 1000 литров");
+        new Float: amount = floatmul(fuel, 5.45);
+        if(P[playerid][p_cash] < amount) {
+            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
+            ShowPlayerDialog(playerid, d_job_add_fuell_trailer, DIALOG_STYLE_INPUT, "Купить топливо","{FFFFFF}Введите количество топлива которое хотите купить\n  -За 1 литр 5.45$","Ок","Назад");
+            return true;
+        }
+        //доход владельцу
+        new vehicleid = GetPlayerVehicleID(playerid);
+        new trailerid = GetVehicleTrailer(vehicleid),
+            string[42+4+1];
+        for(new i; i < sizeof(V_PETROL_TRAILER); i++){
+            if(V_PETROL_TRAILER[i] != trailerid) continue;
+            if(trailer_fuel_v[i]+fuel > 1000){
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно места в цистерне для такого количества топлива.");
+                ShowPlayerDialog(playerid, d_job_add_fuell_trailer, DIALOG_STYLE_INPUT, "Купить топливо","{FFFFFF}Введите количество топлива которое хотите купить\n  -За 1 литр 5.45$","Ок","Назад");
+                return true;
+            }
+            va_SendClientMessage(playerid, -1, "Вы наполнили цистерну для топлива на %.2f литров за $%.2f", fuel,amount);
+            Cash_Give(playerid, -amount);
+            trailer_fuel_v[i] += fuel;
+            format(string,sizeof(string),"{FFFFFF}Топлива в цистерне: %.0f/1000 литров",trailer_fuel_v[i]);
+            UpdateDynamic3DTextLabelText(text_trailer[i], -1, string);
+        }
+    }
+    case d_job_fuel_list: {
+        if(!response) return true;
+        new ps_0 = -1,ps_1 = -1,ps_2 = -1,ps_3 = -1,ps_4 = -1;
+        for(new x; x < sizeof(PS); x++) {
+    		if(PS[x][ps_buy_fuel] == 0) continue;
+            if(ps_0 == -1) ps_0 = PS[x][ps_uid];
+			else if(ps_1 == -1) ps_1 = PS[x][ps_uid];
+			else if(ps_2 == -1) ps_2 = PS[x][ps_uid];
+			else if(ps_3 == -1) ps_3 = PS[x][ps_uid];
+			else if(ps_4 == -1) ps_4 = PS[x][ps_uid];
+    	}
+        switch(listitem){
+            case 0:{
+				va_SendClientMessage(playerid,0xFFCC66FF,"[Уведмоление]: {FFFFFF}АЗС {FF8888}%s{FFFFFF} отмечен на вашей карте.",PS[ps_0][ps_name]);
+				p_gps = CreateDynamicCP(PS[ps_0][ps_pos_x],PS[ps_0][ps_pos_y],PS[ps_0][ps_pos_z], 5.0,-1,-1,playerid,99999.0);
+            }
+            case 1:{
+				va_SendClientMessage(playerid,0xFFCC66FF,"[Уведмоление]: {FFFFFF}АЗС {FF8888}%s{FFFFFF} отмечен на вашей карте.",PS[ps_1][ps_name]);
+				p_gps = CreateDynamicCP(PS[ps_1][ps_pos_x],PS[ps_1][ps_pos_y],PS[ps_1][ps_pos_z], 5.0,-1,-1,playerid,99999.0);
+            }
+			case 2:{
+				va_SendClientMessage(playerid,0xFFCC66FF,"[Уведмоление]: {FFFFFF}АЗС {FF8888}%s{FFFFFF} отмечен на вашей карте.",PS[ps_2][ps_name]);
+				p_gps = CreateDynamicCP(PS[ps_2][ps_pos_x],PS[ps_2][ps_pos_y],PS[ps_2][ps_pos_z], 5.0,-1,-1,playerid,99999.0);
+            }
+			case 3:{
+				va_SendClientMessage(playerid,0xFFCC66FF,"[Уведмоление]: {FFFFFF}АЗС {FF8888}%s{FFFFFF} отмечен на вашей карте.",PS[ps_3][ps_name]);
+				p_gps = CreateDynamicCP(PS[ps_3][ps_pos_x],PS[ps_3][ps_pos_y],PS[ps_3][ps_pos_z], 5.0,-1,-1,playerid,99999.0);
+            }
+			case 4:{
+				va_SendClientMessage(playerid,0xFFCC66FF,"[Уведмоление]: {FFFFFF}АЗС {FF8888}%s{FFFFFF} отмечен на вашей карте.",PS[ps_4][ps_name]);
+				p_gps = CreateDynamicCP(PS[ps_4][ps_pos_x],PS[ps_4][ps_pos_y],PS[ps_4][ps_pos_z], 5.0,-1,-1,playerid,99999.0);
+            }
+        }
+        if(IsPlayerInRangeOfPoint(playerid, 20.5, -1034.8696,-617.4734,32.5861)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Точка назначения будет показана как только вы отдолитесь от места загрузки топлива.");
     }
     }
     return 1;

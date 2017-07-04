@@ -23,7 +23,7 @@ public OnPlayerConnect(playerid)
 	orm_addvar_string(ormid, P[playerid][p_unban_date], 16, "Unban_Date");
 	orm_addvar_string(ormid, P[playerid][p_last_ip], 46, "Last_IP");
 	orm_addvar_string(ormid, P[playerid][p_reg_ip], 46, "Reg_IP");
-	orm_addvar_int(ormid, P[playerid][p_cash], "Cash");
+	orm_addvar_float(ormid, P[playerid][p_cash], "Cash");
 	orm_addvar_int(ormid, P[playerid][p_mute], "Mute");
 	orm_addvar_int(ormid, P[playerid][p_sex], "Sex");
 	orm_addvar_int(ormid, P[playerid][p_skin], "Skin");
@@ -35,8 +35,10 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_armour], "Armour");
 	orm_addvar_int(ormid, P[playerid][p_vehicle], "Vehicle");
 	orm_addvar_int(ormid, P[playerid][p_patrons], "Patrons");
-	orm_addvar_int(ormid, P[playerid][p_business_ps], "Business_PS");
 	orm_addvar_int(ormid, P[playerid][p_materials], "Materials");
+	orm_addvar_int(ormid, P[playerid][p_business_ps], "Business_PS");
+	orm_addvar_float(ormid, P[playerid][p_ticket], "Ticket");
+	orm_addvar_int(ormid, P[playerid][p_wanted_level], "Wanted_Level");
 	orm_addvar_int(ormid, P[playerid][p_weapon_1], "Weapon_1");
 	orm_addvar_int(ormid, P[playerid][p_weapon_2], "Weapon_2");
 	orm_addvar_int(ormid, P[playerid][p_weapon_3], "Weapon_3");
@@ -55,7 +57,6 @@ public OnPlayerConnect(playerid)
 	orm_setkey(ormid, "Name");
 	orm_select(ormid, "OnMySQL_SelectAccount", "d", playerid);
 
-
 	P[playerid][_p_speedo] = CreatePlayerTextDraw(playerid, 520.0, 340.0, "~w~123.0 ~b~KM/H~n~FUEL: ~w~123~n~~g~E ~g~L ~g~D");
 	PlayerTextDrawLetterSize(playerid, P[playerid][_p_speedo], 0.5, 2.0);
 	PlayerTextDrawTextSize(playerid, P[playerid][_p_speedo], 80.0, 160.0);
@@ -68,6 +69,26 @@ public OnPlayerConnect(playerid)
 	PlayerTextDrawBackgroundColor(playerid, P[playerid][_p_speedo], 255);
 	PlayerTextDrawFont(playerid, P[playerid][_p_speedo], 2);
 	PlayerTextDrawSetProportional(playerid, P[playerid][_p_speedo], 1);
+	
+	P[playerid][_p_cent] = CreatePlayerTextDraw(playerid, 607.0, 97.0, "12 cent");
+	PlayerTextDrawLetterSize(playerid, P[playerid][_p_cent], 0.5, 2.1);
+	PlayerTextDrawAlignment(playerid, P[playerid][_p_cent], 3);
+	PlayerTextDrawColor(playerid, P[playerid][_p_cent], 0x33AA33AD);
+	PlayerTextDrawSetShadow(playerid, P[playerid][_p_cent], 0);
+	PlayerTextDrawSetOutline(playerid, P[playerid][_p_cent], 2);
+	PlayerTextDrawBackgroundColor(playerid, P[playerid][_p_cent], 0x000000FF);
+	PlayerTextDrawFont(playerid, P[playerid][_p_cent], 3);
+	PlayerTextDrawSetProportional(playerid, P[playerid][_p_cent], 1);
+	
+	Wanted_New_Cash = CreatePlayerTextDraw(playerid, 607.0, 122.0, "12 cent");
+	PlayerTextDrawLetterSize(playerid, Wanted_New_Cash, 0.5, 2.1);
+	PlayerTextDrawAlignment(playerid, Wanted_New_Cash, 3);
+	PlayerTextDrawColor(playerid, Wanted_New_Cash, 0x33AA33AD);
+	PlayerTextDrawSetShadow(playerid, Wanted_New_Cash, 0);
+	PlayerTextDrawSetOutline(playerid, Wanted_New_Cash, 2);
+	PlayerTextDrawBackgroundColor(playerid, Wanted_New_Cash, 0x000000FF);
+	PlayerTextDrawFont(playerid, Wanted_New_Cash, 3);
+	PlayerTextDrawSetProportional(playerid, Wanted_New_Cash, 1);
 
 	P[playerid][SpecText] = CreatePlayerTextDraw(playerid, 314.000000, 375.000000, " ");
 	PlayerTextDrawAlignment(playerid, P[playerid][SpecText], 2);
@@ -227,6 +248,7 @@ public OnPlayerConnect(playerid)
 	TextDrawShowForPlayer(playerid, Corso);
 
 	SetPVarInt(playerid, "firstspawn", 1);
+	SetPVarInt(playerid, "Buy_PetrolStation",-1);
 
 	SetTimerEx("SetPlayerCameraPos_", 500, 0, "d", playerid);
 
@@ -253,7 +275,20 @@ public OnPlayerSpawn(playerid)
 		SetPlayerRussifierType(playerid, RussifierType_SanLtd);
 		ResetPlayerMoney(playerid);
 		GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
-
+		if(P[playerid][p_wanted_level] == 0){
+			new string[16];
+			format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
+			PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
+			PlayerTextDrawShow(playerid, P[playerid][_p_cent]);
+		}
+		else if(P[playerid][p_wanted_level] > 0){
+			new string[16];
+			format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
+			PlayerTextDrawSetString(playerid, Wanted_New_Cash, string);
+			PlayerTextDrawShow(playerid, Wanted_New_Cash);
+			
+			SetPlayerWantedLevel(playerid, P[playerid][p_wanted_level]);
+		}
 		switch(P[playerid][p_job_team]) {
 			// Организаций
 			case ORG_GOVERNMENT:{
@@ -353,6 +388,7 @@ public OnPlayerSpawn(playerid)
 		if(GetPVarInt(playerid, "firstspawn") == 1){
 			for(new i=0; i < sizeof(GZ); i++)
 				GangZoneShowForPlayer(playerid, GZ[i][_gz_local], Get_TeamZoneColor(GZ[i][gz_team]));
+			GangZoneShowForPlayer(playerid, army, 0x000000AA);
 			SetPVarInt(playerid, "firstspawn", 0);
 			if(waractive == true && P[playerid][p_job_team] == gangs[0] || waractive == true && P[playerid][p_job_team] == gangs[1]){
 				GangZoneFlashForPlayer(playerid, zone, 0xFF000080);
@@ -366,6 +402,13 @@ public OnPlayerSpawn(playerid)
 
 public OnPlayerDeath(playerid, killerid, reason)
 {
+	PlayerTextDrawHide(playerid, P[playerid][_p_cent]);
+	if(P[playerid][p_wanted_level] == 0){
+		PlayerTextDrawHide(playerid, P[playerid][_p_cent]);
+	}
+	else if(P[playerid][p_wanted_level] > 0){
+		PlayerTextDrawHide(playerid, Wanted_New_Cash);
+	}
 	P[playerid][p_health] = 0;
 	P[playerid][_p_spawned] = false;
 	if(waractive == true){ // Проверяем активно ли
@@ -459,9 +502,10 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данный автомобиль такси сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%i) до 240 минут",
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_taxi, DIALOG_STYLE_INPUT, "Аренда такси",source,"Аренда","Выйти");
+			P[playerid][_p_dialog] = true;
             break;
 	    }
 	    for(new i; i < sizeof(V_ENGINEER); i++) {
@@ -475,9 +519,10 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данный автомобиль инженеров сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%i) до 240 минут",
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_officecar, DIALOG_STYLE_INPUT, "Аренда служебного транспорта",source,"Аренда","Выйти");
+			P[playerid][_p_dialog] = true;
             break;
 	    }
 	    for(new i; i < sizeof(V_FREIGHTER); i++) {
@@ -491,9 +536,10 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данный грузовой автомобиль сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%i) до 240 минут",
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_truck, DIALOG_STYLE_INPUT, "Аренда грузовика",source,"Аренда","Выйти");
+			P[playerid][_p_dialog] = true;
             break;
 	    }
 	    for(new i; i < sizeof(V_RENT); i++) {
@@ -506,14 +552,15 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%i) до 240 минут",
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_car, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
+			P[playerid][_p_dialog] = true;
             break;
 	    }
 		for(new i; i < sizeof(V_RENT_STANDART); i++) {
 	        if(vehicleid != V_RENT_STANDART[i]) continue;
-	        if(V_RENT_OWNER[i] != 0) break;
+	        if(V_RENT_OWNER_STANDART[i] != 0) break;
 	        if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
                 break;
@@ -521,14 +568,15 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%i) до 240 минут",
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
 				Prices_RentCar_Standart);
             ShowPlayerDialog(playerid, d_vehicle_rent_car_standart, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
+			P[playerid][_p_dialog] = true;
             break;
 	    }
 		for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
 	        if(vehicleid != V_RENT_PREMIUM[i]) continue;
-	        if(V_RENT_OWNER[i] != 0) break;
+	        if(V_RENT_OWNER_PREMIUM[i] != 0) break;
 	        if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
                 break;
@@ -536,9 +584,10 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
             new source[128];
             format(source, sizeof(source),
 				"{FFFFFF}Данное транспортное средство сдаётся в аренду.\n\n\
-				Введите время аренды. От 1 минуты ($%i) до 240 минут",
+				Введите время аренды. От 1 минуты ($%.2f) до 240 минут",
 				Prices_RentCar_Premium);
             ShowPlayerDialog(playerid, d_vehicle_rent_car_premium, DIALOG_STYLE_INPUT, "Аренда транспорта",source,"Аренда","Выйти");
+			P[playerid][_p_dialog] = true;
             break;
 	    }
 	}
@@ -569,7 +618,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		{
 			if(GetPVarInt(playerid,"id_repair") == 1){
 				new engineer = GetPVarInt(playerid,"id_repair")-1;
-				new price_offer = GetPVarInt(engineer,"price_repair");
+				new Float: price_offer = GetPVarInt(engineer,"price_repair");
 
 				DeletePVar(engineer,"id_repair");
 				DeletePVar(engineer,"price_repair");
@@ -615,6 +664,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 						str_engine,str_lights,str_doors,str_bonnet,str_boot);
 				}
 		    	ShowPlayerDialog(playerid, d_vehicle_panel, DIALOG_STYLE_LIST, "Управление автомобилем",source,"Выбор","Отмена");
+				P[playerid][_p_dialog] = true;
 			}
 	    }
 		else if(GetPVarInt(playerid, "Show_PlayerLic") == 1){
@@ -655,10 +705,10 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 		}
 		else if(GetPVarInt(playerid, "Buy_PetrolStation") != -1){
 			new seller = GetPVarInt(playerid,"Buy_PetrolStation");
-			new price = GetPVarInt(playerid,"Price_PetrolStation");
+			new Float:price = GetPVarFloat(playerid,"Price_PetrolStation");
 			new y = GetPVarInt(playerid, "PetrolStation_ID");
-			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили у %s АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(seller),PS[y-1][ps_name],price);
-			va_SendClientMessage(seller, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s купил у вас АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[y-1][ps_name],price);
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили у %s АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(seller),PS[y][ps_name],price);
+			va_SendClientMessage(seller, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s купил у вас АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[y][ps_name],price);
 			new owner[24+1];
 			format(owner,sizeof(owner),"%s",Name(playerid));
 			P[playerid][p_business_ps] = GetPVarInt(playerid, "PetrolStation_ID");
@@ -666,7 +716,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			PS[P[playerid][p_business_ps]][ps_owner] = owner;
 			Cash_Give(seller, price);
 			Cash_Give(playerid, -price);
-			PS_Update3DInfo(P[playerid][p_business_ps]-1);
+			PS_Update3DInfo(P[playerid][p_business_ps]);
 			SetPVarInt(playerid, "Buy_PetrolStation",-1);
 			DeletePVar(playerid, "Price_PetrolStation");
 			DeletePVar(seller, "Buy_PetrolStation");
@@ -675,7 +725,8 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			orm_update(P[seller][_p_ormid]);
 			orm_update(PS[y][_ps_ormid]);
 		}
-		else if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT){
+		else if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT)
+		{
 			new Float:pos[3];
 			GetPlayerPos(playerid, pos[0], pos[1], pos[2]);
 
@@ -746,8 +797,6 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			new seller = GetPVarInt(playerid,"Buy_PetrolStation");
 			new Float:price = GetPVarFloat(playerid,"Price_PetrolStation");
 			new x = P[seller][p_business_ps];
-			printf("N %d %d %.2f | %s",GetPVarInt(playerid, "Buy_PetrolStation"),GetPVarInt(playerid, "PetrolStation_ID"),GetPVarFloat(playerid, "Price_PetrolStation"),PS[x-1][ps_name]);
-			printf("N %d",seller);
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказил в покупке %s АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(seller),PS[x-1][ps_name],price);
 			va_SendClientMessage(seller, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался покупать у вас АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[x-1][ps_name],price);
 			SetPVarInt(playerid, "Buy_PetrolStation",-1);
@@ -823,20 +872,6 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 					obj_state_AUTOSCHOOL[0] = true;
 					MoveDynamicObject(obj_AUTOSCHOOL[0],-2057.275634, -94.831848+0.05, 34.890388, 0.03 ,0.000000, 0.000000, 270.000000);
 					defer OnGateClosed(obj_AUTOSCHOOL[0]);
-				}
-			}
-			if(IsPlayerInRangeOfPoint(playerid,7.5,-2040.962646, -102.313003, 35.849075)){
-				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[1] == false){
-					obj_state_AUTOSCHOOL[1] = true;
-					MoveDynamicObject(obj_AUTOSCHOOL[1],-2040.962646, -102.313003, 32.419116, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
-					defer OnGateClosed(obj_AUTOSCHOOL[1]);
-				}
-			}
-			if(IsPlayerInRangeOfPoint(playerid,7.5,-2052.734619, -102.313003, 35.849075)){
-				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[2] == false){
-					obj_state_AUTOSCHOOL[2] = true;
-					MoveDynamicObject(obj_AUTOSCHOOL[2],-2052.732910, -102.313003, 32.409118, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
-					defer OnGateClosed(obj_AUTOSCHOOL[2]);
 				}
 			}
 		}
@@ -933,20 +968,6 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 					defer OnGateClosed(obj_AUTOSCHOOL[0]);
 				}
 			}
-			if(IsPlayerInRangeOfPoint(playerid, 1.0, -2045.722778, -103.206237, 35.607597) || IsPlayerInRangeOfPoint(playerid, 1.0, -2045.722778, -102.226257, 35.607597)){
-				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[1] == false){
-					obj_state_AUTOSCHOOL[1] = true;
-					MoveDynamicObject(obj_AUTOSCHOOL[1],-2040.962646, -102.313003, 32.419116, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
-					defer OnGateClosed(obj_AUTOSCHOOL[1]);
-				}
-			}
-			if(IsPlayerInRangeOfPoint(playerid, 1.0, -2047.912719, -103.196243, 35.607597) || IsPlayerInRangeOfPoint(playerid, 1.0, -2047.912719, -102.216247, 35.607597)){
-				if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL && obj_state_AUTOSCHOOL[2] == false){
-					obj_state_AUTOSCHOOL[2] = true;
-					MoveDynamicObject(obj_AUTOSCHOOL[2],-2052.732910, -102.313003, 32.409118, MOVE_GATE_SPEED,0.000000, 0.000000, 180.000000);
-					defer OnGateClosed(obj_AUTOSCHOOL[2]);
-				}
-			}
 		}
 	}
 	return 0;
@@ -961,6 +982,23 @@ public OnPlayerUpdate(playerid)
         Kick(playerid);
         return 0;
     }
+
+	/*new string[32];
+	format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
+	PlayerTextDrawSetString(playerid,P[playerid][_p_cent], string);
+	PlayerTextDrawShow(playerid, P[playerid][_p_cent]);*/
+	if(P[playerid][p_wanted_level] == 0){		
+		new string[16];
+		format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
+		PlayerTextDrawSetString(playerid, P[playerid][_p_cent], string);
+		PlayerTextDrawShow(playerid, P[playerid][_p_cent]);
+	}
+	else if(P[playerid][p_wanted_level] > 0){
+		new string[16];
+		format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
+		PlayerTextDrawSetString(playerid, Wanted_New_Cash, string);
+		PlayerTextDrawShow(playerid, Wanted_New_Cash);
+	}
 
     if(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
 	{
@@ -1071,6 +1109,7 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 			MP5\t$2000\t90\n\
 			AK47\t$3500\t120\n\
 			M4\t$4500\t150","Выбор","Выйти");
+		P[playerid][_p_dialog] = true;
 	}
 	if(checkpointid == Gang_Storage[0] || checkpointid == Gang_Storage[1] || checkpointid == Gang_Storage[2] || checkpointid == Gang_Storage[3] || checkpointid == Gang_Storage[4] || checkpointid == Mafia_Storage[0] || checkpointid == Mafia_Storage[1] || checkpointid == Mafia_Storage[2]){
 		if((checkpointid == Gang_Storage[0] && P[playerid][p_job_team] != 10) || (checkpointid == Gang_Storage[1] && P[playerid][p_job_team] != 11) || (checkpointid == Gang_Storage[2] && P[playerid][p_job_team] != 12) || (checkpointid == Gang_Storage[3] && P[playerid][p_job_team] != 13) || (checkpointid == Gang_Storage[4] && P[playerid][p_job_team] != 14) ||
@@ -1081,17 +1120,24 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 			name[8+22+1];
 		format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
 		format(string,sizeof(string),
-		"Взять деньги {FF8888}(%i$)\n\
+		"Взять деньги {FF8888}(%.2f $)\n\
 		Взять патроны {FF8888}(%d)\n\
 		Взять материалы {FF8888}(%d)\n\
 		Положить деньги\n\
 		Положить патроны\n\
 		Положить материалы",GS[x][g_cash],GS[x][g_patrons],GS[x][g_materials]);
 		ShowPlayerDialog(playerid, d_gang_storage, DIALOG_STYLE_LIST, name, string, "Выбрать", "Закрыть");
+		P[playerid][_p_dialog] = true;
 	}
 	if(checkpointid == p_gps){
 		SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы прибыли на точку назначения.");
 		if(IsValidDynamicCP(p_gps)) DestroyDynamicCP(p_gps);
+	}
+	if(checkpointid == Freighter_Job){
+		new vehicleid = GetPlayerVehicleID(playerid);
+		if(IsTrailerAttachedToVehicle(vehicleid) == 0) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Что бы купить топливо к вашей машине должен быть прикреплена цистерна.");
+		ShowPlayerDialog(playerid, d_job_add_fuell_trailer, DIALOG_STYLE_INPUT, "Купить топливо","{FFFFFF}Введите количество топлива которое хотите купить\n  -За 1 литр 5.45$","Ок","Назад");
+		P[playerid][_p_dialog] = true;
 	}
 	return true;
 }
@@ -1302,6 +1348,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		new lawstring[256];
 		format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
 		ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+		P[playerid][_p_dialog] = true;
 	}
 	else if(pickupid == Russian[0])
 	{
@@ -1458,9 +1505,9 @@ public Show_PlayerStats(playerid,targetid){
 	sex = (P[playerid][p_sex] == 0) ? "Женский" : "Мужской";
 
 	new name[30+1];
-	new x = P[playerid][p_business_ps]-1;
+	new x = P[playerid][p_business_ps];
 
-	if(P[playerid][p_business_ps] == 0){
+	if(P[playerid][p_business_ps] == -1){
 		format(name,sizeof(name),"Не имеется.");
 	}else{
 		format(name,sizeof(name),"%s",PS[x][ps_name]);
@@ -1472,12 +1519,13 @@ public Show_PlayerStats(playerid,targetid){
 	Работа/Организация:\t\t\t\t%s\n\
 	Должность:\t\t\t\t\t%s\n\
 	Пол:\t\t\t\t\t\t%s\n\
-	Денег:\t\t\t\t\t\t$%i\n\
+	Денег:\t\t\t\t\t\t$%.2f\n\
 	Патронов:\t\t\t\t\t%d\n\
 	Материалов:\t\t\t\t\t%d\n\n\
 	АЗС:\t\t\t\t\t\t%s",
 		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash],P[playerid][p_patrons],P[playerid][p_materials],name);
 	ShowPlayerDialog(targetid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
+	P[playerid][_p_dialog] = true;
 	return true;
 }
 forward Show_PlayerLic(playerid,targetid);
@@ -1500,6 +1548,7 @@ public Show_PlayerLic(playerid,targetid){
 		Лицензия на пилотирования вертолётом:\t\t%s",
 		lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_freight,lic_helicopter);
 	ShowPlayerDialog(targetid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
+	P[playerid][_p_dialog] = true;
 	return 1;
 }
 forward StartSpectate(playerid, specid);
