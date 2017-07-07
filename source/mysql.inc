@@ -38,14 +38,14 @@ public OnMySQL_SelectPetrolStations()
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_volume], "Volume");
 	    orm_addvar_string(PS[x][_ps_ormid], PS[x][ps_owner], 24, "Owner");
 		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_status], "Status");
-		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_price], "Price");
-		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_fuel_price], "Fuel_Price");
-	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_profit], "Profit");
+		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_price], "Price");
+		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_fuel_price], "Fuel_Price");
+	    orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_profit], "Profit");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_x], "Pos_X");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_y], "Pos_Y");
 	    orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_pos_z], "Pos_Z");
 		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_buy_fuel], "Buy_Fuel");
-		orm_addvar_float(PS[x][_ps_ormid], PS[x][ps_price_buy_fuel], "Price_Buy_Fuel");
+		orm_addvar_int(PS[x][_ps_ormid], PS[x][ps_price_buy_fuel], "Price_Buy_Fuel");
 
 	    orm_apply_cache(PS[x][_ps_ormid], x);
 
@@ -53,18 +53,18 @@ public OnMySQL_SelectPetrolStations()
 			format(string, sizeof(string),
 			    "Автозаправочная станция:\n{FFFFAD}%s\n\
 			    Владелец: {99b4ff}Правительство штата{FFFFAD}\n\
-			    Стоимость: $%.2f\n\
+			    Стоимость: $%m\n\
 			    Цистерна: %.0f из %d литров\n\
-			    Цена: $%.2f за 1 литр бензина\n\
+			    Цена: $%m за 1 литр бензина\n\
 			    Заправится: {99b4ff}/fill",
 			    PS[x][ps_name],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
 		}else{
 			format(string, sizeof(string),
 			    "Автозаправочная станция:\n{FFFFAD}%s\n\
 			    Владелец: {99b4ff}%s{FFFFAD}\n\
-			    Стоимость: $%.2f\n\
+			    Стоимость: $%m\n\
 			    Цистерна: %.0f из %d литров\n\
-			    Цена: $%.2f за 1 литр бензина\n\
+			    Цена: $%m за 1 литр бензина\n\
 			    Заправится: {99b4ff}/fill",
 			    PS[x][ps_name],PS[x][ps_owner],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
 		}
@@ -106,7 +106,7 @@ public OnMySQL_SelectGangStorage()
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_uid], "UID");
 		orm_setkey(GS[x][_g_ormid], "UID");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_status],"Status");
-		orm_addvar_float(GS[x][_g_ormid], GS[x][g_cash], "Money");
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_cash], "Money");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_patrons],"Patrons");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_materials],"Materials");
 

@@ -178,7 +178,7 @@ task PayDay[60*1000]()
 				PlayerTextDrawHide(i, Wanted_New_Cash);
 				
 				new string[16];
-				format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[i][p_cash]), 100.0));
+				format(string, sizeof(string), "%d Cent", P[i][p_cash] % 100);
 				PlayerTextDrawSetString(i, P[i][_p_cent], string);
 				PlayerTextDrawShow(i, P[i][_p_cent]);
 			}

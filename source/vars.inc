@@ -77,7 +77,7 @@ enum E_PLAYER_DATA {
 	p_unban_date[16],
 	p_last_ip[46],
 	p_reg_ip[46],
-	Float: p_cash,
+	p_cash,
 	p_mute,
 	p_sex,
 	p_skin,
@@ -91,7 +91,7 @@ enum E_PLAYER_DATA {
 	p_patrons,
 	p_materials,
 	p_business_ps,
-	Float: p_ticket,
+	p_ticket,
 	p_wanted_level,
 	p_weapon_1,
 	p_weapon_2,
@@ -125,14 +125,14 @@ enum E_PETROL_STATIONS_DATA {
 	Float: ps_volume,
 	ps_owner[24+1],
 	ps_status,
-	Float: ps_price,
-	Float: ps_fuel_price,
-	Float: ps_profit,
+	ps_price,
+	ps_fuel_price,
+	ps_profit,
 	Float: ps_pos_x,
 	Float: ps_pos_y,
 	Float: ps_pos_z,
 	Float: ps_buy_fuel,
-	Float:ps_price_buy_fuel
+	ps_price_buy_fuel
 }
 enum E_GANG_ZONES_DATA{
 	ORM: _gz_ormid,
@@ -150,7 +150,7 @@ enum E_GANG_STORAGE{
 	// mysql synced
 	g_uid,
 	g_status,
-	Float: g_cash,
+	g_cash,
 	g_patrons,
 	g_materials
 }
@@ -268,19 +268,19 @@ new g_hour,
 	g_minute;
 
 // budget.ini
-new Float: Budget_GOVERNMENT;
+new Budget_GOVERNMENT;
 // mysql.ini
 new g_MySQL_Host[46],
 	g_MySQL_User[46],
 	g_MySQL_Database[46],
 	g_MySQL_Password[46];
 // prices.ini
-new Float: Prices_RentCar_Econom,
-	Float: Prices_RentCar_Standart,
-	Float: Prices_RentCar_Premium;
+new Prices_RentCar_Econom,
+	Prices_RentCar_Standart,
+	Prices_RentCar_Premium;
 // settings.ini
 new g_Chat_OOC,
-	Float: g_Payment_Register;
+	g_Payment_Register;
 // Пикапы
 new PickupGetTime[MAX_PLAYERS];
 new Ammu_Nation[8];

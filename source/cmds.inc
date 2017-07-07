@@ -44,7 +44,6 @@ CMD:lock(playerid, params[])
 	}
     return 1;
 }
-
 CMD:fill(playerid, params[])
 {
 	if(P[playerid][_p_in_game] == false) return 1;
@@ -55,7 +54,7 @@ CMD:fill(playerid, params[])
 		if (IsPlayerInRangeOfPoint(playerid, 5.0, PS[i][ps_pos_x],PS[i][ps_pos_y],PS[i][ps_pos_z]) == 0)
 			continue;
 
-		new Float: volume, Float: amount;
+		new Float: volume, amount;
 		new vehicleid = GetPlayerVehicleID(playerid);
 		if(PS[i][ps_status] == 0)
 			return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не моежете в данный момент заправить своё ТС. на этом АЗС.");
@@ -69,17 +68,16 @@ CMD:fill(playerid, params[])
 			return va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Объем заправляемого не может превышать %d литров.", Vehicle_GetMaxFuel(GetVehicleModel(vehicleid)));
 		if ((volume + V[vehicleid][v_fuel]) > Vehicle_GetMaxFuel(GetVehicleModel(vehicleid)))
 			return va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Объем заправляемого не может превышать %d литров.", Vehicle_GetMaxFuel(GetVehicleModel(vehicleid)));
-		amount = volume * PS[i][ps_fuel_price];
+		amount = floatround(volume * PS[i][ps_fuel_price]);
 		Cash_Give(playerid, -amount);
 		V[vehicleid][v_fuel] = floatadd(V[vehicleid][v_fuel], volume);
 		PS[i][ps_volume] -= volume;
 		PS[i][ps_profit] += amount;
 		PS_Update3DInfo(i);
-		va_SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Автомобиль был запралвен на %.0f литра, цена: $%.2f.",volume,amount);
+		va_SendClientMessageF(playerid,0xB22222FF,"[Справка]: {FFFFFF}Автомобиль был запралвен на %.2f литра, цена: $%m.",volume,amount);
     }
-	return 1;
+	return true;
 }
-
 CMD:o(playerid, params[])
 {
 	if(P[playerid][_p_in_game] == false) return 1;
@@ -448,7 +446,7 @@ CMD:sinf(playerid, params[]){
 	if(P[playerid][_p_dialog] == true) return 1;
 	if(P[playerid][p_access] < 1) return true;
 	new output[128];
-	format(output, sizeof(output),"{FFFFFF} Бюджет штата: %.2f",Budget_GOVERNMENT);
+	format(output, sizeof(output),"{FFFFFF} Бюджет штата: %m",Budget_GOVERNMENT);
 	ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX,"Данные об штате",output,"Ок","");
 	P[playerid][_p_dialog] = true;
 	return true;
@@ -477,7 +475,7 @@ CMD:buyfilling(playerid, params[]){
 		PS[x][ps_owner] = owner;
 		P[playerid][p_business_ps] = PS[x][ps_uid];
 		orm_update(PS[x][_ps_ormid]);
-		va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Поздравляю, Вы купили АЗС {FFFFAD}%s{FFFFFF} за %.2f$.",PS[x][ps_name],PS[x][ps_price]);
+		va_SendClientMessageF(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Поздравляю, Вы купили АЗС {FFFFAD}%s{FFFFFF} за $%m.",PS[x][ps_name],PS[x][ps_price]);
 		Cash_Give(playerid, -PS[x][ps_price]);
 		PS_Update3DInfo(x);
 	}
@@ -569,7 +567,7 @@ CMD:getip(playerid, params[]){
 	GetIPCountry(params[0], country_last_ip, sizeof country_last_ip);
 	format(output,sizeof(output),"{1C5A8D}Имя:\t\t\t\t\t{FFFFFF}%s\n\
 		{1C5A8D}Номер аккаунта:\t\t\t{FFFFFF}%d\n\
-		{1C5A8D}Наличные:\t\t\t\t{FFFFFF}$%.2f\n\
+		{1C5A8D}Наличные:\t\t\t\t{FFFFFF}$%m\n\
 		{1C5A8D}Уровень:\t\t\t\t{FFFFFF}%d\n\
 		{1C5A8D}IP адресс(регис.):\t\t\t{FFFFFF}%s (%s)\n\
 		{1C5A8D}IP адресс(послед.):\t\t\t{FFFFFF}%s (%s)",Name(params[0]),P[params[0]][p_uid],P[params[0]][p_cash],P[params[0]][p_level],
@@ -586,8 +584,8 @@ CMD:pay(playerid, params[]){
 	if(P[playerid][p_level] < 1) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Данная команда доступна со 2 уровня.");
 	if(GetPlayerVirtualWorld(playerid) != GetPlayerVirtualWorld(user)) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Вы находитесь далеко друг от друга.");
 	if(money < 1 || money > 5000) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}Можно передавать от 1$ до 5000$.");
-	va_SendClientMessage(playerid,-1,"Вы передали %s $%.2f.",Name(user),money);
-	va_SendClientMessage(user,-1,"%s передал Вам $%.2f.",Name(playerid),money);
+	va_SendClientMessageF(playerid,-1,"Вы передали %s $%m.",Name(user),money);
+	va_SendClientMessageF(user,-1,"%s передал Вам $%m.",Name(playerid),money);
 	Cash_Give(playerid, -money);
 	Cash_Give(user, money);
 	return true;
@@ -848,9 +846,9 @@ CMD:repair(playerid, params[]){
 	if(price < 1 || price > 2000) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Цена за починку автомобиля: 1$ до 2000$.");
 	if(!IsPlayerInAnyVehicle(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Указанный вами игрок не находится в Т.С.");
 	if(price > P[user][p_cash]) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У этого человека не достаточно денег для воспользования ваших услуг.");
-	va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s починить его транспортное средство за $%.2f.",IC_Name(user), price);
-	va_SendClientMessage(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s предлагает вам починить транспортное средство за $%.2f.",IC_Name(playerid), price);
-	va_SendClientMessage(user, 0xB22222FF, "[Справка]: {FFFFFF}Что-бы подвердить нажмите {007F0E}Y{FFFFFF} для соглашение, {FF0000}N{FFFFFF} для отказа.");
+	va_SendClientMessageF(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s починить его транспортное средство за $%m.",IC_Name(user), price);
+	va_SendClientMessageF(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s предлагает вам починить транспортное средство за $%m.",IC_Name(playerid), price);
+	SendClientMessage(user, 0xB22222FF, "[Справка]: {FFFFFF}Что-бы подвердить нажмите {007F0E}Y{FFFFFF} для соглашение, {FF0000}N{FFFFFF} для отказа.");
 	SetPVarInt(playerid,"id_repair",user + 1);
 	SetPVarFloat(playerid,"price_repair", price);
 	SetPVarInt(user,"id_repair",playerid + 1);
@@ -992,9 +990,9 @@ CMD:sellfilling(playerid, params[]){
 	if(sscanf(subparams,"uf",user,price)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /sellfilling to [ID игрока] [Цена]");
 	if(user == INVALID_PLAYER_ID || user == -1) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Игрок не найден.");
 	new Float:state_price = PS[x][ps_price]/100*80;
-	if(price < state_price) return va_SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Цена не должна быть меньше %.2f$.",state_price);
-	va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s купить АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(user),PS[x-1][ps_name],price);
-	va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s предлгает вам купить АЗС {FFCC66}%s{FFFFFF} за %.2f$.",IC_Name(playerid),PS[x-1][ps_name],price);
+	if(price < state_price) return va_SendClientMessageF(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Цена не должна быть меньше $%m.",state_price);
+	va_SendClientMessageF(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s купить АЗС {FFCC66}%s{FFFFFF} за $%m.",IC_Name(user),PS[x-1][ps_name],price);
+	va_SendClientMessageF(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s предлгает вам купить АЗС {FFCC66}%s{FFFFFF} за $%m.",IC_Name(playerid),PS[x-1][ps_name],price);
 	va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить покупку нажмите {007F0E}Y{FFFFFF}, {FF0000}N{FFFFFF} для отказа.");
 	SetPVarInt(user,"Buy_PetrolStation",playerid);
 	SetPVarInt(user, "PetrolStation_ID", x);
@@ -1011,9 +1009,9 @@ CMD:filling(playerid, params[]){
 	format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
 	format(info,sizeof(info),
 		"{FFFFFF}Номер заправки: %i\n\
-		Цена: %.2f$\n\
-		Бюджет заправки: %.2f$\n\
-		Цена топливо: %.2f$\n\
+		Цена: $%m\n\
+		Бюджет заправки: $%m\n\
+		Цена топливо: $%m\n\
 		Литров в цистерне: %.0f",PS[x][ps_uid],PS[x][ps_price],PS[x][ps_profit],PS[x][ps_fuel_price],PS[x][ps_volume]);
 	ShowPlayerDialog(playerid, d_ps_business_show_edit, DIALOG_STYLE_MSGBOX, ps_name_, info, "Изменить","Закрыть");
 	P[playerid][_p_dialog] = true;
@@ -1023,15 +1021,15 @@ CMD:ticket(playerid, params[]){
 	if(P[playerid][_p_in_game] == false) return 1;
 	if(P[playerid][p_job_team] < 2 || P[playerid][p_job_team] > 5)
 		return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы не можете выполнить данное действие.");
-	new user, Float: price, string[44];
+	new user, price, string[44];
 	new Float:x, Float:y,Float:z;
 	GetPlayerPos(playerid,x,y,z);
-	if(sscanf(params,"ufs[44]",user,price,string)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /ticket [ID игрока] [Сумма штрафа] [Причина]");
+	if(sscanf(params,"uis[44]",user,price,string)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /ticket [ID игрока] [Сумма штрафа] [Причина]");
 	if(user == INVALID_PLAYER_ID || !IsPlayerConnected(user) || playerid == user) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Введён неправильный ID.");
 	if(!IsPlayerInRangeOfPoint(playerid, 8.0, x,y,z)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: Этот человек не находится рядом с вами.");
 	if(price < 1 || price > 10000) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Штраф не должен превышать 10.000$ и не должен быть меньше 1$.");
-	va_SendClientMessage(playerid, 0xFFCC66FF,"[Уведмоление]: {FFFFFF}Вы выписали штраф %s на сумму %.2f$ с причиной: %s.",IC_Name(user),price,string);
-	va_SendClientMessage(user, 0xFFCC66FF,"[Уведомление]: {FFFFFF}%s выписал вам штраф в размере %.2f$.Причина: %s.",IC_Name(playerid),price,string);
+	va_SendClientMessageF(playerid, 0xFFCC66FF,"[Уведмоление]: {FFFFFF}Вы выписали штраф %s на сумму $%m с причиной: %s.",IC_Name(user),price,string);
+	va_SendClientMessageF(user, 0xFFCC66FF,"[Уведомление]: {FFFFFF}%s выписал вам штраф в размере $%m.Причина: %s.",IC_Name(playerid),price,string);
 	va_SendClientMessage(user, 0xB22222FF,"[Справка]: {FFFFFF}Штраф вы можете оплатить в любом из полицейских участков.");
 	P[playerid][p_ticket] = price;
 	return true;
@@ -1050,8 +1048,8 @@ CMD:fuellist(playerid, params[]){
 		for(new x; x < sizeof(PS); x++) {
 			if(PS[x][ps_buy_fuel] == 0) continue;
 			count++;
-			new Float: amount = PS[x][ps_buy_fuel]*PS[x][ps_price_buy_fuel];
-			format(needs, sizeof(needs),"%s\t%.0f\t%.2f$\n",PS[x][ps_name],PS[x][ps_buy_fuel],amount);
+			new amount = floatround(PS[x][ps_buy_fuel]*PS[x][ps_price_buy_fuel]);
+			format(needs, sizeof(needs),"%s\t%.0f\t$%m\n",PS[x][ps_name],PS[x][ps_buy_fuel],amount);
 			strcat(final,needs);
 			if(count >= 8) break;
 		}
@@ -1081,16 +1079,16 @@ CMD:putfuel(playerid, params[]){
 			if(trailer_fuel_v[x] <= 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}В вашем баке с топливом уже ничего не осталось.");
 			if(PS[i][ps_buy_fuel] == 0){
 				SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Данному АЗС не нужно топливо.");
-				PS[i][ps_price_buy_fuel] = 0.0;
+				PS[i][ps_price_buy_fuel] = 0;
 				return true;
 			}
 			if(PS[i][ps_buy_fuel] < fuel) return va_SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этому АЗС нужно всего лишь %.0f литров топливо.",PS[i][ps_buy_fuel]);
             trailer_fuel_v[x] -= fuel;
 			PS[i][ps_volume] += fuel;
 			PS[i][ps_buy_fuel] -= fuel;
-			new Float:amount = fuel * PS[i][ps_price_buy_fuel];
+			new amount = floatround(fuel * PS[i][ps_price_buy_fuel]);
 			Cash_Give(playerid, amount);
-			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы наполнили цистерну АЗС %s на %.0f литров и получили $%.2f.",PS[x][ps_name],fuel,amount);
+			va_SendClientMessageF(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы наполнили цистерну АЗС %s на %.0f литров и получили $%m.",PS[i][ps_name],fuel,amount);
             format(string,sizeof(string),"{FFFFFF}Топлива в цистерне: %.0f/1000 литров",trailer_fuel_v[x]);
             UpdateDynamic3DTextLabelText(text_trailer[x], -1, string);
         }
@@ -1113,12 +1111,18 @@ CMD:su(playerid, params[]){
 	
 	PlayerTextDrawHide(user, P[user][_p_cent]);
 	new string_td[16];
-	format(string_td, sizeof(string_td), "%.0f Cent", floatmul(floatfract(P[user][p_cash]), 100.0));
+	format(string_td, sizeof(string_td), "%d Cent", P[playerid][p_cash] % 100);
 	PlayerTextDrawSetString(user, Wanted_New_Cash, string_td);
 	PlayerTextDrawShow(user, Wanted_New_Cash);
 	return true;
 }
 CMD:online(playerid, params[]){
 	va_SendClientMessage(playerid, -1,"%i milliseconds",NetStats_GetConnectedTime(playerid));
+	return true;
+}
+CMD:money(playerid, params[]){
+	new user, money,cent;
+	if(sscanf(params,"p<.>uiI(0)",user,money,cent)) return SendClientMessage(playerid, -1, "Use /money [ID] [cash]");
+	Cash_Give(playerid,money,cent);
 	return true;
 }

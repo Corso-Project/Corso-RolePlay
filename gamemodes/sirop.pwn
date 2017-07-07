@@ -21,6 +21,7 @@
 #include <geolocation>
 #include <gl_common>
 #include <rustext>
+#include <formatex>
 
 #include "..\source\vars.inc"
 

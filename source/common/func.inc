@@ -293,18 +293,18 @@ stock PS_Update3DInfo(x){
 		format(string, sizeof(string),
             "Автозаправочная станция:\n{FFFFAD}%s\n\
             Владелец: {99b4ff}Правительство штата{FFFFAD}\n\
-            Стоимость: $%.2f\n\
+            Стоимость: $%m\n\
             Цистерна: %.0f из %d литров\n\
-            Цена: $%.2f за 1 литр бензина\n\
+            Цена: $%m за 1 литр бензина\n\
             Заправится: {99b4ff}/fill",
             PS[x][ps_name],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
 	}else{
 		format(string, sizeof(string),
 			"Автозаправочная станция:\n{FFFFAD}%s\n\
 			Владелец: {99b4ff}%s{FFFFAD}\n\
-			Стоимость: $%.2f\n\
+			Стоимость: $%m\n\
 			Цистерна: %.0f из %d литров\n\
-			Цена: $%.2f за 1 литр бензина\n\
+			Цена: $%m за 1 литр бензина\n\
 			Заправится: {99b4ff}/fill",
 			PS[x][ps_name],PS[x][ps_owner],PS[x][ps_price],PS[x][ps_volume],FUEL_TANK_LIMIT,PS[x][ps_fuel_price]);
 	}
@@ -395,3 +395,6 @@ stock Get_GangName(gangid){
 	}
 	return dests;
 }
+FormatSpecifier<'m'>(output[], money) { 
+    format(output, sizeof(output), "%i.%i", money / 100, money % 100); 
+}  
