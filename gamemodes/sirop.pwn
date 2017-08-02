@@ -16,12 +16,15 @@
 #include <YSI_Server\y_flooding>
 #include <YSI_Storage\y_ini>
 
+#include <YSF>
+
 #include <Pawn.CMD>
-#include <gangzone>
 #include <geolocation>
 #include <gl_common>
 #include <rustext>
 #include <formatex>
+#include <gangzone>
+#include <weaponskill>
 
 #include "..\source\vars.inc"
 

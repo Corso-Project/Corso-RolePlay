@@ -4,6 +4,7 @@ INI:budget[](name[], value[])
 	return 0;
 }
 
+
 INI:mysql[](name[], value[])
 {
 	INI_String("Host", g_MySQL_Host, 46);

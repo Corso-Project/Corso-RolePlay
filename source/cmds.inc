@@ -78,6 +78,7 @@ CMD:fill(playerid, params[])
     }
 	return true;
 }
+
 CMD:o(playerid, params[])
 {
 	if(P[playerid][_p_in_game] == false) return 1;
@@ -397,7 +398,6 @@ CMD:stats(playerid, params[]){
 CMD:lic(playerid, params[])
 {
 	if(P[playerid][_p_in_game] == false) return 1;
-	if(P[playerid][_p_dialog] == true) return 1;
 	new user;
 	if(sscanf(params,"u",user)) return SendClientMessage(playerid,0xB22222FF, "[Справка]: {FFFFFF}Используйте /lic [ID игрока]");
 	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере.");
@@ -750,7 +750,7 @@ CMD:spawn(playerid, params[]){
 	if(P[playerid][_p_in_game] == false) return 1;
 	if(P[playerid][p_access] < 1) return true;
 	new user;
-	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /spawn [ID игрока]");
+	if(sscanf(params,"U(playerid)",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /spawn [ID игрока]");
 	SpawnPlayer(user);
 	return true;
 }
@@ -1116,13 +1116,21 @@ CMD:su(playerid, params[]){
 	PlayerTextDrawShow(user, Wanted_New_Cash);
 	return true;
 }
-CMD:online(playerid, params[]){
-	va_SendClientMessage(playerid, -1,"%i milliseconds",NetStats_GetConnectedTime(playerid));
-	return true;
-}
-CMD:money(playerid, params[]){
-	new user, money,cent;
-	if(sscanf(params,"p<.>uiI(0)",user,money,cent)) return SendClientMessage(playerid, -1, "Use /money [ID] [cash]");
-	Cash_Give(playerid,money,cent);
+CMD:skill(playerid,params[]){
+	if(P[playerid][_p_in_game] == false) return 1;
+	new user;
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid,0xB22222FF, "[Справка]: {FFFFFF}Используйте /skill [ID игрока].");
+	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Веденный вами ID не найден на сервере.");
+	if(playerid != user){
+		va_SendClientMessage(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы предложили %s показать выписку из тира.",IC_Name(user));
+		va_SendClientMessage(user,0xFFCC66FF,"[Уведомление]: {FFFFFF}%s хочет показать Вам выписку из тира.",IC_Name(playerid));
+		va_SendClientMessage(user,0xB22222FF,"[Справка]: {FFFFFF}Что-бы подтвердить нажмите {007F0E}Y{FFFFFF} для просмотра, {FF0000}N{FFFFFF} для отказа.");
+
+		SetPVarInt(user,"Show_PlayerSkill",playerid);
+	}else{
+		Show_PlayerSkill(playerid,playerid);
+		P[playerid][_p_dialog] = true;
+		SetPlayerChatBubble(playerid, "Просматривает свою выписку из тира", 0xDDA0DDFF, 35.0, 5000);
+	}
 	return true;
 }

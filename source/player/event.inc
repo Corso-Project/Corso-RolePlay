@@ -43,9 +43,11 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_weapon_2], "Weapon_2");
 	orm_addvar_int(ormid, P[playerid][p_weapon_3], "Weapon_3");
 	orm_addvar_int(ormid, P[playerid][p_weapon_4], "Weapon_4");
+	orm_addvar_int(ormid, P[playerid][p_weapon_5], "Weapon_5");
 	orm_addvar_int(ormid, P[playerid][p_ammo_2], "Ammo_2");
 	orm_addvar_int(ormid, P[playerid][p_ammo_3], "Ammo_3");
 	orm_addvar_int(ormid, P[playerid][p_ammo_4], "Ammo_4");
+	orm_addvar_int(ormid, P[playerid][p_ammo_5], "Ammo_5");
 	orm_addvar_int(ormid, P[playerid][p_lic_moto], "Lic_Moto");
 	orm_addvar_int(ormid, P[playerid][p_lic_car], "Lic_Car");
 	orm_addvar_int(ormid, P[playerid][p_lic_freight], "Lic_Freight");
@@ -53,6 +55,15 @@ public OnPlayerConnect(playerid)
 	orm_addvar_int(ormid, P[playerid][p_lic_helicopter], "Lic_Helicopter");
 	orm_addvar_int(ormid, P[playerid][p_lic_aircraft], "Lic_Aircraft");
 	orm_addvar_int(ormid, P[playerid][p_lic_weapon], "Lic_Weapon");
+	orm_addvar_int(ormid, P[playerid][p_russifier_type],"Russifier_Type");
+	orm_addvar_int(ormid, P[playerid][p_skill_pistol], "Skill_Pistol");
+	orm_addvar_int(ormid, P[playerid][p_skill_pistol_silenced], "Skill_Pistol_Silenced");
+	orm_addvar_int(ormid, P[playerid][p_skill_desert_eagle], "Skill_Deagle");
+	orm_addvar_int(ormid, P[playerid][p_skill_shotgun], "Skill_ShotGun");
+	orm_addvar_int(ormid, P[playerid][p_skill_micro_uzi], "Skill_Micro_Uzi");
+	orm_addvar_int(ormid, P[playerid][p_skill_mp5], "Skill_MP5");
+	orm_addvar_int(ormid, P[playerid][p_skill_ak47], "Skill_AK47");
+	orm_addvar_int(ormid, P[playerid][p_skill_m4], "Skill_M4");
 
 	orm_setkey(ormid, "Name");
 	orm_select(ormid, "OnMySQL_SelectAccount", "d", playerid);
@@ -272,7 +283,17 @@ public OnPlayerSpawn(playerid)
 {
 	if(P[playerid][_p_in_game] == true)
 	{
-		SetPlayerRussifierType(playerid, RussifierType_SanLtd);
+		SetPlayerRussifierType(playerid, RussifierType:P[playerid][p_russifier_type]);
+		
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_PISTOL,P[playerid][p_skill_pistol]);
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_PISTOL_SILENCED,P[playerid][p_skill_pistol_silenced]);
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_DESERT_EAGLE,P[playerid][p_skill_desert_eagle]);
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_SHOTGUN,P[playerid][p_skill_shotgun]);
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_MICRO_UZI,P[playerid][p_skill_micro_uzi]);
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_MP5,P[playerid][p_skill_mp5]);
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_AK47,P[playerid][p_skill_ak47]);
+		SetPlayerSkillLevel(playerid,WEAPONSKILL_M4,P[playerid][p_skill_m4]);
+		
 		ResetPlayerMoney(playerid);
 		GivePlayerMoney(playerid, P[playerid][p_cash]/100);
 		if(P[playerid][p_wanted_level] == 0){
@@ -385,6 +406,7 @@ public OnPlayerSpawn(playerid)
 		if(P[playerid][p_weapon_2] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
 		if(P[playerid][p_weapon_3] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
 		if(P[playerid][p_weapon_4] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
+		if(P[playerid][p_weapon_5] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_5], P[playerid][p_ammo_5]);
 		if(GetPVarInt(playerid, "firstspawn") == 1){
 			for(new i=0; i < sizeof(GZ); i++)
 				GangZoneShowForPlayer(playerid, GZ[i][_gz_local], Get_TeamZoneColor(GZ[i][gz_team]));
@@ -673,6 +695,11 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			DeletePVar(playerid, "Show_PlayerLic");
 			DeletePVar(licer, "Show_PlayerLic");
 		}
+		else if(GetPVarInt(playerid, "Show_PlayerSkill") == 1){
+			new user = GetPVarInt(playerid,"Show_PlayerSkill");
+			Show_PlayerSkill(playerid,user);
+			DeletePVar(playerid, "Show_PlayerSkill");
+		}
 		else if(GetPVarInt(playerid, "Buy_License_B") == 1){
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы купили водительские права.");
 			new licer = GetPVarInt(playerid,"Buy_License_B");
@@ -778,6 +805,13 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от просмотра лицензий у %s",IC_Name(licer));
 			DeletePVar(playerid, "Show_PlayerLic");
 			DeletePVar(licer, "Show_PlayerLic");
+		}
+		if(GetPVarInt(playerid, "Show_PlayerSkill") == 1) {
+			new user = GetPVarInt(playerid,"Show_PlayerSkill");
+		    va_SendClientMessage(user, 0xFFCC66FF, "[Уведомление]: {FFFFFF}%s отказался смотреть вашу выписку из тира.", IC_Name(playerid));
+			va_SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы отказались от просмотра выписки из тира у %s",IC_Name(user));
+			DeletePVar(playerid, "Show_PlayerSkill");
+			DeletePVar(user, "Show_PlayerSkill");
 		}
 		else if(GetPVarInt(playerid, "Buy_License_B") == 1) {
 			new licer = GetPVarInt(playerid,"Buy_License_B")-1;
@@ -1098,35 +1132,45 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 {
 	if(checkpointid == Buy_Weapon){
 		if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете купить оружие без лицензий.");
-		ShowPlayerDialog(playerid, d_player_buy_gun, DIALOG_STYLE_TABLIST_HEADERS, "Покупка оружия",
-			"{FFFFFF}Оружие\t{FFFFFF}Цена\t{FFFFFF}Количество патронов\n\
-			Пистолет\t$200\t30\n\
-			Пистолет с глушителем\t$600\t30\n\
-			Desert Deagle\t$1200\t15\n\
-			Tec-9\t$300\t60\n\
-			Micro-Uzi\t$500\t60\n\
-			Помповый дробовик\t$600\t15\n\
-			MP5\t$2000\t90\n\
-			AK47\t$3500\t120\n\
-			M4\t$4500\t150","Выбор","Выйти");
+		new x = GetPVarInt(playerid,"Ammu_Nation");
+		new string[298];
+		format(string,sizeof(string),"{FFFFFF}Оружие\t{FFFFFF}Цена\t{FFFFFF}Количество патронов\n\
+			Пистолет\t$%m\t30\n\
+			Пистолет с глушителем\t$%m\t30\n\
+			Desert Deagle\t$%m\t15\n\
+			Tec-9\t$%m\t60\n\
+			Micro-Uzi\t$%m\t60\n\
+			Помповый дробовик\t$%m\t15\n\
+			MP5\t$%m\t90\n\
+			AK47\t$%m\t120\n\
+			M4\t$%m\t150",AN[x][an_price_colt45],AN[x][an_price_silenced],AN[x][an_price_deagle],AN[x][an_price_shotgun],AN[x][an_price_tec9],
+						  AN[x][an_price_micro_uzi],AN[x][an_price_mp5],AN[x][an_price_ak47],AN[x][an_price_m4]);
+		ShowPlayerDialog(playerid, d_player_buy_gun, DIALOG_STYLE_TABLIST_HEADERS, "Покупка оружия",string,"Выбор","Выйти");
 		P[playerid][_p_dialog] = true;
 	}
-	if(checkpointid == Gang_Storage[0] || checkpointid == Gang_Storage[1] || checkpointid == Gang_Storage[2] || checkpointid == Gang_Storage[3] || checkpointid == Gang_Storage[4] || checkpointid == Mafia_Storage[0] || checkpointid == Mafia_Storage[1] || checkpointid == Mafia_Storage[2]){
-		if((checkpointid == Gang_Storage[0] && P[playerid][p_job_team] != 10) || (checkpointid == Gang_Storage[1] && P[playerid][p_job_team] != 11) || (checkpointid == Gang_Storage[2] && P[playerid][p_job_team] != 12) || (checkpointid == Gang_Storage[3] && P[playerid][p_job_team] != 13) || (checkpointid == Gang_Storage[4] && P[playerid][p_job_team] != 14) ||
-			(checkpointid == Mafia_Storage[0] && P[playerid][p_job_team] != 15) || (checkpointid == Mafia_Storage[1] && P[playerid][p_job_team] != 16) || (checkpointid == Mafia_Storage[2] && P[playerid][p_job_team] != 17))
-				return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У вас нет доступа к этому складу.");
+	if(checkpointid == Gang_Storage[0] || checkpointid == Gang_Storage[1] || checkpointid == Gang_Storage[2] || checkpointid == Gang_Storage[3] || checkpointid == Gang_Storage[4] || checkpointid == Mafia_Storage[0] || checkpointid == Mafia_Storage[1] || checkpointid == Mafia_Storage[2])
+	{
+		if((checkpointid == Gang_Storage[0] && P[playerid][p_job_team] != 10) || 
+		   (checkpointid == Gang_Storage[1] && P[playerid][p_job_team] != 11) || 
+		   (checkpointid == Gang_Storage[2] && P[playerid][p_job_team] != 12) || 
+		   (checkpointid == Gang_Storage[3] && P[playerid][p_job_team] != 13) || 
+		   (checkpointid == Gang_Storage[4] && P[playerid][p_job_team] != 14) ||
+		   (checkpointid == Mafia_Storage[0] && P[playerid][p_job_team] != 15) || 
+		   (checkpointid == Mafia_Storage[1] && P[playerid][p_job_team] != 16) || 
+		   (checkpointid == Mafia_Storage[2] && P[playerid][p_job_team] != 17)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У вас нет доступа к этому складу.");
+		   
 		new x = P[playerid][p_job_team]-10;
-		new string[162+1],
+		new text[159+1],
 			name[8+22+1];
 		format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
-		format(string,sizeof(string),
+		format(text,sizeof(text),
 		"Взять деньги {FF8888}($%m)\n\
 		Взять патроны {FF8888}(%d)\n\
 		Взять материалы {FF8888}(%d)\n\
 		Положить деньги\n\
 		Положить патроны\n\
-		Положить материалы",GS[x][g_cash],GS[x][g_patrons],GS[x][g_materials]);
-		ShowPlayerDialog(playerid, d_gang_storage, DIALOG_STYLE_LIST, name, string, "Выбрать", "Закрыть");
+		Положить материалы",GS[x][g_cash],GS[x][g_ammo],GS[x][g_materials]);
+		ShowPlayerDialog(playerid, d_gang_storage, DIALOG_STYLE_LIST, name, text, "Выбрать", "Закрыть");
 		P[playerid][_p_dialog] = true;
 	}
 	if(checkpointid == p_gps){
@@ -1151,7 +1195,10 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerInterior(playerid,1);
 		SetPlayerPos(playerid,286.9145,-38.6596,1001.5156);
 		SetPlayerFacingAngle(playerid, 329.0564);
-		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 1);
+		SetPVarInt(playerid, "Ammu_Nation",0); // 0 = Ammu-Nation ID in Datebase
+		
+		Buy_Weapon = CreateDynamicCP(296.9160,-38.5113,1001.5156,1.0,1,1);
 	}
 	else if(pickupid == Ammu_Nation[1])
 	{
@@ -1160,58 +1207,246 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,1366.5776,-1279.5397,13.5469);
 		SetPlayerFacingAngle(playerid, 89.7301);
 		SetPlayerVirtualWorld(playerid,0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
 	}
 	else if(pickupid == Ammu_Nation[2])
-	{
-		SetCameraBehindPlayer(playerid);
-		SetPlayerInterior(playerid,4);
-		SetPlayerPos(playerid,286.8773,-83.5809,1001.5156);
-		SetPlayerFacingAngle(playerid, 334.2157);
-		SetPlayerVirtualWorld(playerid, 0);
-	}
-	else if(pickupid == Ammu_Nation[3])
-	{
-		SetCameraBehindPlayer(playerid);
-		SetPlayerInterior(playerid,0);
-		SetPlayerPos(playerid,-2626.6384,210.3960,4.5971);
-		SetPlayerFacingAngle(playerid, 13.1113);
-		SetPlayerVirtualWorld(playerid,0);
-	}
-	else if(pickupid == Ammu_Nation[4])
-	{
-	    SetCameraBehindPlayer(playerid);
-		SetPlayerInterior(playerid,7);
-		SetPlayerPos(playerid,313.7110,-140.3784,999.6016);
-		SetPlayerFacingAngle(playerid, 334.2157);
-		SetPlayerVirtualWorld(playerid, 0);
- 	}
-	else if(pickupid == Ammu_Nation[5])
-	{
-		SetCameraBehindPlayer(playerid);
-		SetPlayerInterior(playerid,0);
-		SetPlayerPos(playerid,2156.1997,943.3864,10.8203);
-		SetPlayerFacingAngle(playerid, 81.7582);
-		SetPlayerVirtualWorld(playerid,0);
-	}
-	else if(pickupid == Ammu_Nation[6])
 	{
 	    SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,6);
 		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
 		SetPlayerFacingAngle(playerid, 1.2438);
-		SetPlayerVirtualWorld(playerid, 0);
+		SetPlayerVirtualWorld(playerid, 2);
+		SetPVarInt(playerid, "Ammu_Nation",1);
 
-		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0);
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0,2,6);
  	}
- 	else if(pickupid == Ammu_Nation[7])
+ 	else if(pickupid == Ammu_Nation[3])
 	{
 		SetCameraBehindPlayer(playerid);
 		SetPlayerInterior(playerid,0);
 		SetPlayerPos(playerid,2400.5554,-1980.2947,13.5469);
 		SetPlayerFacingAngle(playerid, 5.1592);
 		SetPlayerVirtualWorld(playerid,0);
+		DeletePVar(playerid, "Ammu_Nation");
 
 		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation[4])
+	{
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,4);
+		SetPlayerPos(playerid,286.8773,-83.5809,1001.5156);
+		SetPlayerFacingAngle(playerid, 334.2157);
+		SetPlayerVirtualWorld(playerid, 3);
+		SetPVarInt(playerid, "Ammu_Nation",2);
+		
+		Buy_Weapon = CreateDynamicCP(293.5498,-80.8238,1001.5156,1.0,3,4);
+	}
+	else if(pickupid == Ammu_Nation[5])
+	{
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,0);
+		SetPlayerPos(playerid,-2626.6384,210.3960,4.5971);
+		SetPlayerFacingAngle(playerid, 13.1113);
+		SetPlayerVirtualWorld(playerid,0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	// 3 ammu
+	else if(pickupid == Ammu_Nation[6]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,6);
+		SetPlayerPos(playerid,316.524993,-167.706985,999.593750);
+		SetPlayerFacingAngle(playerid,0);
+		SetPlayerVirtualWorld(playerid, 4);
+		SetPVarInt(playerid, "Ammu_Nation",3);
+		
+		Buy_Weapon = CreateDynamicCP(312.7118,-166.1295,999.6010,1.0,4,6);
+	}
+	else if(pickupid == Ammu_Nation[7]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, 2537.5703,2083.9082,10.8203);
+		SetPlayerFacingAngle(playerid, 87.8557);
+		SetPlayerVirtualWorld(playerid, 0);
+		
+		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation[8])
+	{
+	    SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,7);
+		SetPlayerPos(playerid,313.7110,-140.3784,999.6016);
+		SetPlayerFacingAngle(playerid, 334.2157);
+		SetPlayerVirtualWorld(playerid, 5);
+		SetPVarInt(playerid, "Ammu_Nation",4);
+		
+		Buy_Weapon = CreateDynamicCP(308.1070,-141.4640,999.6016,1.0,5,7);
+ 	}
+	else if(pickupid == Ammu_Nation[9])
+	{
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,0);
+		SetPlayerPos(playerid,2156.1997,943.3864,10.8203);
+		SetPlayerFacingAngle(playerid, 81.7582);
+		SetPlayerVirtualWorld(playerid,0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation[10]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,6);
+		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
+		SetPlayerFacingAngle(playerid, 1.2438);
+		SetPlayerVirtualWorld(playerid, 6);
+		SetPVarInt(playerid, "Ammu_Nation",5);
+
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0,6,6);
+	}
+	else if(pickupid == Ammu_Nation[11]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, 241.3318,-178.5530,1.5781);
+		SetPlayerFacingAngle(playerid, 87.2704);
+		SetPlayerVirtualWorld(playerid, 0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation[12]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,6);
+		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
+		SetPlayerFacingAngle(playerid, 1.2438);
+		SetPlayerVirtualWorld(playerid, 7);
+		SetPVarInt(playerid, "Ammu_Nation",6);
+
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0,7,6);
+	}
+	else if(pickupid == Ammu_Nation[13]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, 2335.9712,61.5492,26.4819);
+		SetPlayerFacingAngle(playerid, 273.6243);
+		SetPlayerVirtualWorld(playerid, 0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation[14]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,6);
+		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
+		SetPlayerFacingAngle(playerid, 1.2438);
+		SetPlayerVirtualWorld(playerid, 8);
+		SetPVarInt(playerid, "Ammu_Nation",7);
+
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0,8,6);
+	}
+	else if(pickupid == Ammu_Nation[15]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, -2091.9421,-2462.7903,30.6250);
+		SetPlayerFacingAngle(playerid, 324.5531);
+		SetPlayerVirtualWorld(playerid, 0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation[16]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,6);
+		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
+		SetPlayerFacingAngle(playerid, 1.2438);
+		SetPlayerVirtualWorld(playerid, 9);
+		SetPVarInt(playerid, "Ammu_Nation",8);
+
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0,9,6);
+	}
+	else if(pickupid == Ammu_Nation[17]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, -1508.8813,2608.4429,55.8359);
+		SetPlayerFacingAngle(playerid, 179.6469);
+		SetPlayerVirtualWorld(playerid, 0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation[18]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,6);
+		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
+		SetPlayerFacingAngle(playerid, 1.2438);
+		SetPlayerVirtualWorld(playerid, 10);
+		SetPVarInt(playerid, "Ammu_Nation",9);
+
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0,10,6);
+	}
+	else if(pickupid == Ammu_Nation[19]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, -313.7351,830.0300,14.2422);
+		SetPlayerFacingAngle(playerid, 280.8498);
+		SetPlayerVirtualWorld(playerid, 0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	//
+	else if(pickupid == Ammu_Nation[20]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid,6);
+		SetPlayerPos(playerid,297.1230,-110.0104,1001.5156);
+		SetPlayerFacingAngle(playerid, 1.2438);
+		SetPlayerVirtualWorld(playerid, 11);
+		SetPVarInt(playerid, "Ammu_Nation",10);
+
+		Buy_Weapon = CreateDynamicCP(287.8425,-105.9843,1001.5156,1.0,11,6);
+	}
+	else if(pickupid == Ammu_Nation[21]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, 778.7020,1871.3378,4.9062);
+		SetPlayerFacingAngle(playerid, 266.9396);
+		SetPlayerVirtualWorld(playerid, 0);
+		DeletePVar(playerid, "Ammu_Nation");
+		
+		DestroyDynamicCP(playerid);
+	}
+	else if(pickupid == Ammu_Nation_Range[0]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerPos(playerid,286.2136,-27.8047,1001.5156);
+		SetPlayerFacingAngle(playerid, 2.5021);
+	}
+	else if(pickupid == Ammu_Nation_Range[1]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerPos(playerid,286.1425,-31.2853,1001.5156);
+		SetPlayerFacingAngle(playerid, 177.9238);
+	}
+	else if(pickupid == Ammu_Nation_Range[2]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerPos(playerid,303.0007,-141.9237,1004.0625);
+		SetPlayerFacingAngle(playerid, 90.2811);
+	}
+	else if(pickupid == Ammu_Nation_Range[3]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerPos(playerid,307.5168,-141.9299,1004.0625);
+		SetPlayerFacingAngle(playerid, 270.1295);
+	}
+	else if(pickupid == Ammu_Nation_Range[4]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerPos(playerid,301.6869,-74.0318,1001.5156);
+		SetPlayerFacingAngle(playerid, 2.4303);
+	}
+	else if(pickupid == Ammu_Nation_Range[5]){
+		SetCameraBehindPlayer(playerid);
+		SetPlayerPos(playerid,301.4428,-78.5331,1001.5156);
+		SetPlayerFacingAngle(playerid, 180.6889);	
 	}
 	else if(pickupid == Casino[0]){
 		SetPlayerInterior(playerid, 10);
@@ -1224,6 +1459,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,2022.6709,1007.9366,10.8203);
 	}
 	else if(pickupid == LSPD[0]){
+		SetPlayerVirtualWorld(playerid, 1);
 		SetPlayerInterior(playerid, 6);
 		SetPlayerPos(playerid,246.2850,64.8440,1003.6406);
 		SetPlayerFacingAngle(playerid, 359.2673);
@@ -1231,6 +1467,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 	}
 	else if(pickupid == LSPD[1]){
 		SetPlayerInterior(playerid,0);
+		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerPos(playerid,1552.6376,-1675.5725,16.1953);
 		SetPlayerFacingAngle(playerid, 92.8291);
 		SetCameraBehindPlayer(playerid);
@@ -1467,6 +1704,19 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
 	}
 	return true;
 }
+public OnPlayerClickTextDraw(playerid, Text:clickedid) 
+{ 
+	for (new i; i < TEXT_RUSSIFIERS_COUNT; i++) { 
+        if (TextRusTD[RussifierType:i] == _:clickedid) { 
+			SendClientMessage(playerid, -1,"Вы успешно сменили русификатор.");
+            SetPlayerRussifierType(playerid, RussifierType:i); 
+			P[playerid][p_russifier_type] = i;
+            CancelSelectTextDraw(playerid); 
+        } 
+        TextDrawHideForPlayer(playerid, Text:TextRusTD[RussifierType:i]); 
+    } 
+	return false;
+}
 public OnPlayerEnterDynamicArea(playerid, areaid){
 	if(areaid == auto_school_press_alt[0] || areaid == auto_school_press_alt[1] || areaid == auto_school_press_alt[2] || areaid == auto_school_press_alt[3] || areaid == auto_school_press_alt[4]){
 		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL){
@@ -1497,8 +1747,95 @@ public OnPlayerLeaveDynamicArea(playerid, areaid){
 	}
 	return true;
 }
-forward Show_PlayerStats(playerid,targetid);
-public Show_PlayerStats(playerid,targetid){
+public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y, Float:z)
+{
+	for(new i;i<sizeof(target_lv_1);i++){
+	    if(objectid == target_lv_1[i]){
+			DestroyDynamicObject(target_lv_1[i]); 
+			PlayerPlaySound(playerid, 17802, 0.0, 0.0, 0.0);
+			target_count_lv++;
+			target_shot[playerid]++;
+			foreach(new p : Player){
+				if(IsPlayerInRangeOfPoint(p, 30.0, 288.00000, -130.85989, 1007.165412) && GetPlayerInterior(p) == 7)
+					Streamer_Update(p,-1);
+			}
+		}
+	}
+	for(new i;i<sizeof(target_lv_2);i++){
+	    if(objectid == target_lv_2[i]){
+			DestroyDynamicObject(target_lv_2[i]); 
+			PlayerPlaySound(playerid, 17802, 0.0, 0.0, 0.0);
+			target_count_lv++;
+			target_shot[playerid]++;
+			foreach(new p : Player){
+				if(IsPlayerInRangeOfPoint(p, 30.0, 288.00000, -130.85989, 1007.165412) && GetPlayerInterior(p) == 7)
+					Streamer_Update(p,-1);
+			}
+		}
+	}
+	for(new i;i<sizeof(target_lv_3);i++){
+	    if(objectid == target_lv_3[i]){
+			DestroyDynamicObject(target_lv_3[i]); 
+			PlayerPlaySound(playerid, 17802, 0.0, 0.0, 0.0);
+			target_count_lv++;
+			target_shot[playerid]++;
+			foreach(new p : Player){
+				if(IsPlayerInRangeOfPoint(p, 30.0, 288.00000, -130.85989, 1007.165412) && GetPlayerInterior(p) == 7)
+					Streamer_Update(p,-1);
+			}
+		}
+	}
+	for(new i;i<sizeof(target_ls_1);i++){
+	    if(objectid == target_ls_1[i]){
+			DestroyDynamicObject(target_ls_1[i]); 
+			PlayerPlaySound(playerid, 17802, 0.0, 0.0, 0.0);
+			target_count_ls++;
+			target_shot[playerid]++;
+			foreach(new p : Player){
+				if(IsPlayerInRangeOfPoint(p, 30.0, 292.35,-24.62,1001.52) && GetPlayerInterior(p) == 1)
+					Streamer_Update(p,-1);
+			}
+		}
+	}
+	for(new i;i<sizeof(target_ls_2);i++){
+	    if(objectid == target_ls_2[i]){
+			DestroyDynamicObject(target_ls_2[i]); 
+			PlayerPlaySound(playerid, 17802, 0.0, 0.0, 0.0);
+			target_count_ls++;
+			target_shot[playerid]++;
+			foreach(new p : Player){
+				if(IsPlayerInRangeOfPoint(p, 30.0, 292.35,-24.62,1001.52) && GetPlayerInterior(p) == 1)
+					Streamer_Update(p,-1);
+			}
+		}
+	}
+	for(new i;i<sizeof(target_ls_3);i++){
+	    if(objectid == target_ls_3[i]){
+			DestroyDynamicObject(target_ls_3[i]); 
+			PlayerPlaySound(playerid, 17802, 0.0, 0.0, 0.0);
+			target_count_ls++;
+			target_shot[playerid]++;
+			foreach(new p : Player){
+				if(IsPlayerInRangeOfPoint(p, 30.0, 292.35,-24.62,1001.52) && GetPlayerInterior(p) == 1)
+					Streamer_Update(p,-1);
+			}
+		}
+	}
+	if(target_shot[playerid] == 10){
+		target_shot[playerid] = 0;
+		Update_Skill(playerid, weaponid);
+	}
+	if(target_count_lv == 21){
+		Update_Target(1);
+		target_count_lv = 0;
+	}  
+	if(target_count_ls == 21){
+		Update_Target(2);
+		target_count_ls = 0;
+	}
+    return 1;
+}
+stock Show_PlayerStats(playerid,targetid){
 	new string[292];
 
 	new sex[7+1];
@@ -1526,10 +1863,8 @@ public Show_PlayerStats(playerid,targetid){
 		Name(playerid),P[playerid][p_level],P[playerid][p_exp],P[playerid][p_level]*6,Get_TeamName(playerid),Get_RangName(playerid),sex,P[playerid][p_cash],P[playerid][p_patrons],P[playerid][p_materials],name);
 	ShowPlayerDialog(targetid,d_null,DIALOG_STYLE_MSGBOX,"Статистика",string,"Выход","");
 	P[playerid][_p_dialog] = true;
-	return true;
 }
-forward Show_PlayerLic(playerid,targetid);
-public Show_PlayerLic(playerid,targetid){
+stock Show_PlayerLic(playerid,targetid){
 	new output[482+1],lic_car[26],lic_aircraft[26],lic_boat[26],lic_moto[26],lic_weapon[26],lic_freight[26],lic_helicopter[26];
 	lic_car = (P[playerid][p_lic_car] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
 	lic_aircraft = (P[playerid][p_lic_aircraft] == 1) ? "{33AA33}В наличии{FFFFFF}" : "{AA3333}Нет{FFFFFF}";
@@ -1549,12 +1884,22 @@ public Show_PlayerLic(playerid,targetid){
 		lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_freight,lic_helicopter);
 	ShowPlayerDialog(targetid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
 	P[playerid][_p_dialog] = true;
-	return 1;
 }
-forward StartSpectate(playerid, specid);
-public StartSpectate(playerid, specid)
+stock StartSpectate(playerid, specid)
 {
 	PlayerTextDrawShow(playerid, P[playerid][SpecText]);
     SpectateUpdatePlayer(playerid);
-    return true;
+	printf("%i",specid);
+}
+stock Show_PlayerSkill(playerid, targetid){
+	new skillname[32],amount;
+	new string[186],skill_list[32];
+	for (new skill = 0; skill < MAX_WEAPON_SKILLS; skill++) {
+		if(skill == 4 || skill == 5) continue;
+		amount = GetPlayerSkillLevel(playerid, skill);
+		GetWeaponSkillName(skill, skillname);
+		format(skill_list,sizeof(skill_list),"{FFFFFF}%s - %d%%\n",skillname, amount/10);
+		strcat(string,skill_list);
+	}
+	ShowPlayerDialog(targetid, d_null, DIALOG_STYLE_MSGBOX,"Владение оружием",string,"Закрыть","");
 }

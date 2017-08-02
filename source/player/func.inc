@@ -320,9 +320,11 @@ stock Weapon_Sync(playerid)
 				P[playerid][p_weapon_2] = 0;
 				P[playerid][p_weapon_3] = 0;
 				P[playerid][p_weapon_4] = 0;
+				P[playerid][p_weapon_5] = 0;
 				P[playerid][p_ammo_2] = 0;
 				P[playerid][p_ammo_3] = 0;
 				P[playerid][p_ammo_4] = 0;
+				P[playerid][p_ammo_5] = 0;
 				Message_ToAdmins(0xB9C9BFFF, "[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
 				printf("[Защита]: Чёрный список оружия - %s[%d] | W: %d / A: %d", Name(playerid),playerid,weapon[i],ammo[i]);
 				P[playerid][_p_cheater]++;
@@ -355,6 +357,14 @@ stock Weapon_Sync(playerid)
 						P[playerid][_p_cheater]++;
 			        }
 			    }
+				else if(weapon[i] == P[playerid][p_weapon_5])
+				{
+			        if(ammo[i] > P[playerid][p_ammo_5]+1 && ammo[i] > P[playerid][p_ammo_5]+2) {
+						Message_ToAdmins(0xB9C9BFFF, "[Защита]: Несоответствие патронов - %s[%d] | %d | C: %d / S: %d",Name(playerid),playerid,weapon[i],ammo[i],P[playerid][p_ammo_5]);
+						SetPlayerAmmo(playerid, P[playerid][p_weapon_5], P[playerid][p_ammo_5]);
+						P[playerid][_p_cheater]++;
+			        }
+			    }
 				else
 				{
 					Message_ToAdmins(0xB9C9BFFF, "[Защита]: Несоответствие патронов - %s[%d] | %d / %d",Name(playerid),playerid,weapon[i],ammo[i]);
@@ -363,6 +373,7 @@ stock Weapon_Sync(playerid)
 					if(P[playerid][p_weapon_2] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_2],P[playerid][p_ammo_2]);
 					if(P[playerid][p_weapon_3] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_3],P[playerid][p_ammo_3]);
 					if(P[playerid][p_weapon_4] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_4],P[playerid][p_ammo_4]);
+					if(P[playerid][p_weapon_5] != 0) GivePlayerWeapon(playerid, P[playerid][p_weapon_5],P[playerid][p_ammo_5]);
 					P[playerid][_p_cheater]++;
 			    }
 			} // default
@@ -504,35 +515,29 @@ stock Weapon_Give(playerid, weaponid, ammo)
 		{
             P[playerid][p_weapon_1] = weaponid;
             GivePlayerWeapon(playerid, weaponid, 1);
-            GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
-            GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
-			GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
         }
-        case 22..24:
+        case 22,23,24:
 		{
             P[playerid][p_weapon_2] = weaponid;
             P[playerid][p_ammo_2] += ammo;
-            GivePlayerWeapon(playerid, P[playerid][p_weapon_1], 1);
             GivePlayerWeapon(playerid, weaponid, ammo);
-            GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
-			GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
         }
+		case 25,26,27:
+		{
+			P[playerid][p_weapon_3] = weaponid;
+            P[playerid][p_ammo_3] += ammo;
+			GivePlayerWeapon(playerid, weaponid, ammo);
+		}
         case 28, 29, 32:
         {
-            P[playerid][p_weapon_3] = weaponid;
-            P[playerid][p_ammo_3] += ammo;
-            GivePlayerWeapon(playerid, P[playerid][p_weapon_1], 1);
-			GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
-            GivePlayerWeapon(playerid, weaponid, ammo);
-			GivePlayerWeapon(playerid, P[playerid][p_weapon_4], P[playerid][p_ammo_4]);
-        }
-        case 25..27, 30, 31, 33:
-		{
             P[playerid][p_weapon_4] = weaponid;
             P[playerid][p_ammo_4] += ammo;
-            GivePlayerWeapon(playerid, P[playerid][p_weapon_1], 1);
-            GivePlayerWeapon(playerid, P[playerid][p_weapon_2], P[playerid][p_ammo_2]);
-			GivePlayerWeapon(playerid, P[playerid][p_weapon_3], P[playerid][p_ammo_3]);
+            GivePlayerWeapon(playerid, weaponid, ammo);
+        }
+        case 30, 31, 33:
+		{
+            P[playerid][p_weapon_5] = weaponid;
+            P[playerid][p_ammo_5] += ammo;
             GivePlayerWeapon(playerid, weaponid, ammo);
         }
     }
@@ -590,4 +595,50 @@ stock Get_PlayerFPS(playerid)
 		}
 	}
 	return 0;
+}
+stock Update_Skill(playerid,weaponid){
+	switch(weaponid){
+		case 22:{
+			if(P[playerid][p_skill_pistol] == 1000) return true;
+			P[playerid][p_skill_pistol] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_PISTOL,P[playerid][p_skill_pistol]);
+		}
+		case 23:{
+			if(P[playerid][p_skill_pistol_silenced] == 1000) return true;
+			P[playerid][p_skill_pistol_silenced] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_PISTOL_SILENCED,P[playerid][p_skill_pistol_silenced]);
+		}
+		case 24:{
+			if(P[playerid][p_skill_desert_eagle] == 1000) return true;
+			P[playerid][p_skill_desert_eagle] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_DESERT_EAGLE,P[playerid][p_skill_desert_eagle]);
+		}
+		case 25:{
+			if(P[playerid][p_skill_shotgun] == 1000) return true;
+			P[playerid][p_skill_shotgun] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_SHOTGUN,P[playerid][p_skill_shotgun]);
+		}
+		case 28,32:{
+			if(P[playerid][p_skill_micro_uzi] == 1000) return true;
+			P[playerid][p_skill_micro_uzi] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_MICRO_UZI,P[playerid][p_skill_micro_uzi]);
+		}
+		case 29:{
+			if(P[playerid][p_skill_mp5] == 1000) return true;
+			P[playerid][p_skill_mp5] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_MP5,P[playerid][p_skill_mp5]);
+		}
+		case 30:{
+			if(P[playerid][p_skill_ak47] == 1000) return true;
+			P[playerid][p_skill_ak47] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_AK47,P[playerid][p_skill_ak47]);
+		}
+		case 31:{
+			if(P[playerid][p_skill_m4] == 1000) return true;
+			P[playerid][p_skill_m4] += 10;
+			SetPlayerSkillLevel(playerid,WEAPONSKILL_M4,P[playerid][p_skill_m4]);
+		}
+	}
+	orm_update(P[playerid][_p_ormid]);
+	return true;
 }

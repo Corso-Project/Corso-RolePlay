@@ -70,6 +70,16 @@ stock Vehicle_IsNotForPlayer(vehicleid, playerid)
 		if(P[playerid][p_job_team] != ORG_CHINESE) return 1;
 		return 0;
 	}
+	for(new i; i < sizeof(V_RUSSIAN); i++){
+		if(vehicleid != V_RUSSIAN[i]) continue;
+		if(P[playerid][p_job_team] != ORG_RUSSIAN) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_ITALIAN); i++){
+		if(vehicleid != V_ITALIAN[i]) continue;
+		if(P[playerid][p_job_team] != ORG_ITALIAN) return 1;
+		return 0;
+	}
 	for(new i; i < sizeof(V_TAXI); i++) {
 		if(vehicleid != V_TAXI[i]) continue;
 		if(P[playerid][p_job_team] != JOB_TAXI) return 1;

@@ -167,7 +167,7 @@ task PayDay[60*1000]()
 {
 	new hour, minute, second;
 	gettime(hour, minute, second);
-	if(minute == 55){
+	if(minute == 00){
 		foreach(new i : Player) {
 			// Розыск
 			if(P[i][p_wanted_level] != 0){
@@ -183,7 +183,7 @@ task PayDay[60*1000]()
 				PlayerTextDrawShow(i, P[i][_p_cent]);
 			}
 			// 1200000 milliseconds = 20 min
-			if(NetStats_GetConnectedTime(i) < 5)
+			if(NetStats_GetConnectedTime(i) < 1200000)
 				SendClientMessage(i, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы не получили зарплату так как отыграли меньше 20 минут.");
 			else{
 				// Уровень

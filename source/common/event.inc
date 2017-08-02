@@ -18,6 +18,7 @@ public OnGameModeInit()
 	// Банды
 	mysql_tquery(MySQL:1,"SELECT * FROM `gangzones`", "OnMySQL_SelectGangZones");
 	mysql_tquery(MySQL:1,"SELECT * FROM `gang_storage`", "OnMySQL_SelectGangStorage");
+	mysql_tquery(MySQL:1,"SELECT * FROM `ammu_nation`", "OnMySQL_SelectAmmuNations");
 	// Параметры игрового режима
 	SendRconCommand("loadfs map");
 	SetGameModeText(GAMEMODE_VERSION);
@@ -53,16 +54,6 @@ public OnGameModeInit()
 	CreateDynamicMapIcon(-1056.0469,-632.4141,82.7891, 51, 0xFFFFFFFF, 0,0);
 	//Police Departament
 	CreateDynamicMapIcon(1555.5056,-1675.6830,16.1953,30,0xFFFFFFFF,0,0); //Los Santos Police Departament
-	//Ammu-Nation
-	CreateDynamicMapIcon(1368.9360,-1279.7216,13.5469,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(-2625.8296,208.2379,4.8125,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(2159.5449,943.2165,10.8203,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(2400.5959,-1981.9949,13.5469,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(2539.5420,2084.0088,10.8203,6,0xFFFFFFFF,0,0);// Без пикапа
-	CreateDynamicMapIcon(-2093.7271,-2464.8933,30.6250,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(-316.1618,829.9474,14.2422,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(776.7205,1871.4976,4.9072,6,0xFFFFFFFF,0,0);
-	CreateDynamicMapIcon(2333.0837,61.5298,26.7058,6,0xFFFFFFFF,0,0);
 	// Casino
 	CreateDynamicMapIcon(2019.3190,1007.7921,10.8203,43,0xFFFFFFFF,0,0);
 	// Банды
@@ -89,9 +80,6 @@ public OnGameModeInit()
 	V_FBI[3] = Vehicle_Add(490, -2422.2813, 521.6543, 30.0592, 226.4474);
 	V_FBI[4] = Vehicle_Add(490, -2419.0820, 525.0062, 30.0581, 231.1993);
 	V_FBI[5] = Vehicle_Add(490, -2414.8752, 531.9378, 30.0554, 247.5684);
-/*	V_FBI[6] = Vehicle_Add(490, 1261.2570, -1672.5151, 13.7971, 0.0000);
-	V_FBI[7] = Vehicle_Add(497, 1254.7615, -1685.4443, 34.9332, 0.0000, 0,0);
-	V_FBI[8] = Vehicle_Add(497, 1230.9314, -1685.1746, 34.9332, 0.0000, 0,0);*/
 	// Полиция Лос Сантос
 	V_LSPD[0] = Vehicle_Add(596,1554.5928,-1615.0944,13.1075,143.0);
 	V_LSPD[1] = Vehicle_Add(523,1560.2781,-1614.7255,13.1065,143.0);
@@ -397,63 +385,95 @@ public OnGameModeInit()
 	obj_MILITARY[1] = CreateDynamicObject(19313, 134.85001, 1941.53406, 21.71000,   0.00000, 0.00000, 180.00000);
 	obj_AUTOSCHOOL[0] = CreateDynamicObject(968, -2057.275634, -94.831848, 34.890388, 	0.000000, 90.000000, 270.000000);
 	// Пикапы Аммунаций
-	Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469);
-	Ammu_Nation[1] = CreateDynamicPickup(1318,23,285.4752,-41.7966,1001.5156);
-	Ammu_Nation[2] = CreateDynamicPickup(1318,23,-2625.8296,208.2379,4.8125);
-	Ammu_Nation[3] = CreateDynamicPickup(1318,23,285.9187,-86.7644,1001.5229);
-	Ammu_Nation[4] = CreateDynamicPickup(1318,23,2159.5449,943.2165,10.8203);
-	Ammu_Nation[5] = CreateDynamicPickup(1318,23,315.8831,-143.6591,999.6016);
-	Ammu_Nation[6] = CreateDynamicPickup(1318,23,2400.5959,-1981.9949,13.5469);
-	Ammu_Nation[7] = CreateDynamicPickup(1318,23,296.8016,-112.0710,1001.5156);
+	Ammu_Nation[0] = CreateDynamicPickup(1318,23,1368.9360,-1279.7216,13.5469,0,0);
+	Ammu_Nation[1] = CreateDynamicPickup(1318,23,285.4752,-41.7966,1001.5156,1,1);
+	Ammu_Nation[2] = CreateDynamicPickup(1318,23,2400.5959,-1981.9949,13.5469,0,0);
+	Ammu_Nation[3] = CreateDynamicPickup(1318,23,296.8016,-112.0710,1001.5156,2,6);
+	Ammu_Nation[4] = CreateDynamicPickup(1318,23,-2625.8296,208.2379,4.8125,0,0);
+	Ammu_Nation[5] = CreateDynamicPickup(1318,23,285.9187,-86.7644,1001.5229,3,4);
+	Ammu_Nation[6] = CreateDynamicPickup(1318,23,2539.5420,2084.0088,10.8203,0,0);
+	Ammu_Nation[7] = CreateDynamicPickup(1318,23,316.3372,-170.2961,999.5938,4,6);
+	Ammu_Nation[8] = CreateDynamicPickup(1318,23,2159.5449,943.2165,10.8203,0,0);
+	Ammu_Nation[9] = CreateDynamicPickup(1318,23,315.8831,-143.6591,999.6016,5,7);
+	Ammu_Nation[10] = CreateDynamicPickup(1318,23,243.2948,-178.4328,1.5822,0,0);
+	Ammu_Nation[11] = CreateDynamicPickup(1318,23,296.8448,-112.0711,1001.5156,6,6);
+	Ammu_Nation[12] = CreateDynamicPickup(1318,23,2333.0837,61.5298,26.7058,0,0);
+	Ammu_Nation[13] = CreateDynamicPickup(1318,23,296.8448,-112.0711,1001.5156,7,6); 
+	Ammu_Nation[14] = CreateDynamicPickup(1318,23,-2093.7271,-2464.8933,30.6250,0,0);
+	Ammu_Nation[15] = CreateDynamicPickup(1318,23,296.8448,-112.0711,1001.5156,8,6);
+	Ammu_Nation[16] = CreateDynamicPickup(1318,23,-1508.8650,2610.7014,55.8359,0,0);
+	Ammu_Nation[17] = CreateDynamicPickup(1318,23,296.8448,-112.0711,1001.5156,9,6);
+	Ammu_Nation[18] = CreateDynamicPickup(1318,23,-316.1617,829.8553,14.2422,0,0);
+	Ammu_Nation[19] = CreateDynamicPickup(1318,23,296.8448,-112.0711,1001.5156,10,6);
+	Ammu_Nation[20] = CreateDynamicPickup(1318,23,776.7217,1871.4266,4.9067,0,0);
+	Ammu_Nation[21] = CreateDynamicPickup(1318,23,296.8448,-112.0711,1001.5156,11,6);
+		// Тир
+	Ammu_Nation_Range[0] = CreateDynamicPickup(1318,23,286.1451,-29.8190,1001.5156,-1,1);
+	Ammu_Nation_Range[1] = CreateDynamicPickup(1318,23,286.1250,-29.1185,1001.5156,-1,1);
+	Ammu_Nation_Range[2] = CreateDynamicPickup(1318,23,305.3503,-141.8344,1004.0625,-1,7);
+	Ammu_Nation_Range[3] = CreateDynamicPickup(1318,23,304.5873,-141.8899,1004.0625,-1,7);
+	Ammu_Nation_Range[4] = CreateDynamicPickup(1318,23,301.7737,-76.5391,1001.5156,-1,4);
+	Ammu_Nation_Range[5] = CreateDynamicPickup(1318,23,301.7983,-75.6944,1001.5156,-1,4);
 	// Пикапы Казино
-	Casino[0] = CreateDynamicPickup(1318,23,2019.3190,1007.7921,10.8203);
-	Casino[1] = CreateDynamicPickup(1318,23,2019.0719,1017.8466,996.8750);
+	Casino[0] = CreateDynamicPickup(1318,23,2019.3190,1007.7921,10.8203,-1,0);
+	Casino[1] = CreateDynamicPickup(1318,23,2019.0719,1017.8466,996.8750,-1,10);
 	// Пикапы Полиций
-	LSPD[0] = CreateDynamicPickup(1318,23,1555.5056,-1675.6830,16.1953);
-	LSPD[1] = CreateDynamicPickup(1318,23,246.8327,62.3205,1003.6406);
+	LSPD[0] = CreateDynamicPickup(1318,23,1555.5056,-1675.6830,16.1953,-1,0);
+	LSPD[1] = CreateDynamicPickup(1318,23,246.8327,62.3205,1003.6406,1,6);
 	// Пикапы Мэрий
-	CityHall[0] = CreateDynamicPickup(1318,23,1481.0337,-1772.3137,18.7958);
-	// Пикапы Работ
+	CityHall[0] = CreateDynamicPickup(1318,23,1481.0337,-1772.3137,18.7958,-1,0); //cance
 	// Пикапы F.B.I
-	FBI[0] = CreateDynamicPickup(1318,23,-2456.1501,503.9673,30.0781);
-	FBI[1] = CreateDynamicPickup(1318,23,238.7148,138.6364,1003.0234);
-	FBI[2] = CreateDynamicPickup(1318,23,-2486.0371,514.0226,51.4849);
-	FBI[3] = CreateDynamicPickup(1318,23,288.8309,166.9291,1007.1719);
+	FBI[0] = CreateDynamicPickup(1318,23,-2456.1501,503.9673,30.0781,-1,0);
+	FBI[1] = CreateDynamicPickup(1318,23,238.7148,138.6364,1003.0234,-1,3);
+	FBI[2] = CreateDynamicPickup(1318,23,-2486.0371,514.0226,51.4849,-1,0);
+	FBI[3] = CreateDynamicPickup(1318,23,288.8309,166.9291,1007.1719,-1,3);
 	// Пикапы Grove
-	Grove[0] = CreateDynamicPickup(1318,23,2514.3142,-1691.6245,14.0460);
-	Grove[1] = CreateDynamicPickup(1318,23,2468.4163,-1698.2432,1013.5078);
+	Grove[0] = CreateDynamicPickup(1318,23,2514.3142,-1691.6245,14.0460,-1,0);
+	Grove[1] = CreateDynamicPickup(1318,23,2468.4163,-1698.2432,1013.5078,2,2);
 	// Пикапы Ballas
-	Ballas[0] = CreateDynamicPickup(1318,23,2022.8790,-1120.2637,26.4210);
-	Ballas[1] = CreateDynamicPickup(1318,23,-42.6055,1405.7949,1084.4297);
+	Ballas[0] = CreateDynamicPickup(1318,23,2022.8790,-1120.2637,26.4210,-1,0);
+	Ballas[1] = CreateDynamicPickup(1318,23,-42.6055,1405.7949,1084.4297,2,8);
 	// Пикапы Aztecas
-	Aztecas[0] = CreateDynamicPickup(1318,23,2185.8176,-1814.6786,13.5469);
-	Aztecas[1] = CreateDynamicPickup(1318,23,225.756989,1240.000000,1082.149902);
+	Aztecas[0] = CreateDynamicPickup(1318,23,2185.8176,-1814.6786,13.5469,-1,0);
+	Aztecas[1] = CreateDynamicPickup(1318,23,225.7569,1240.0000,1082.1499,2,2);
 	// Пикапы Vagos
-	Vagos[0] = CreateDynamicPickup(1318,23,2756.2825,-1182.4691,69.3998);
-	Vagos[1] = CreateDynamicPickup(1318,23,318.6152,1114.8966,1083.8828);
+	Vagos[0] = CreateDynamicPickup(1318,23,2756.2825,-1182.4691,69.3998,-1,0);
+	Vagos[1] = CreateDynamicPickup(1318,23,318.6152,1114.8966,1083.8828,2,5);
 	// Пикапы Rifa
-	Rifa[0] = CreateDynamicPickup(1318,23,2787.0759,-1926.1780,13.5469);
-	Rifa[1] = CreateDynamicPickup(1318,23,-68.8279,1351.3553,1080.2109);
+	Rifa[0] = CreateDynamicPickup(1318,23,2787.0759,-1926.1780,13.5469,-1,0);
+	Rifa[1] = CreateDynamicPickup(1318,23,-68.8279,1351.3553,1080.2109,2,6);
 	// Пикапы Chinese
-	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312);
+	Chinese[0] = CreateDynamicPickup(1318,23,2597.6414,1900.9031,11.0312,-1,0);
 	Chinese[1] = CreateDynamicPickup(1318,23,1298.9392,-797.0093,1084.0078,1,5);
 	// Пикапы Russian Mafia
-	Russian[0] = CreateDynamicPickup(1318, 23, 937.0819,1733.2162,8.8516);
+	Russian[0] = CreateDynamicPickup(1318, 23, 937.0819,1733.2162,8.8516,-1,0);
 	Russian[1] = CreateDynamicPickup(1318, 23, 1298.9171,-797.0092,1084.0078,2,5);
 	// Пикапы Italian Mafia
-	Italian[0] = CreateDynamicPickup(1318, 23, 1456.1318,2773.3865,10.8203);
+	Italian[0] = CreateDynamicPickup(1318, 23, 1456.1318,2773.3865,10.8203,-1,0);
 	Italian[1] = CreateDynamicPickup(1318, 23, 1298.9171,-797.0092,1084.0078,3,5);
 	// Пикап Сдачи Экзамена в АвтоШколе
 	AutoSchool_Exam[0] = CreateDynamicPickup(19133,2,-2034.9918,-119.1462,35.2370);
 	// FBI NPC
-	FBI_Actors[0] = CreateActor(286,293.1147,182.5184,1007.1719,133.6613);
-	FBI_Actors[1] = CreateActor(163,231.9374,159.9906,1003.0234,219.8474);
-	FBI_Actors[2] = CreateActor(166,230.5688,165.0592,1003.0234,270.5266);
+	FBI_Actors[0] = CreateDynamicActor(286,293.1147,182.5184,1007.1719,133.6613,1,100.0,-1,3);
+	FBI_Actors[1] = CreateDynamicActor(163,231.9374,159.9906,1003.0234,219.8474,1,100.0,-1,3);
+	FBI_Actors[2] = CreateDynamicActor(166,230.5688,165.0592,1003.0234,270.5266,1,100.0,-1,3);
 	for(new i;i<3;i++)
 	{
-		ApplyActorAnimation(FBI_Actors[i],"DEALER","Dealer_idle",4.1,1,0,0,0,0);
-		SetActorInvulnerable(FBI_Actors[i], 1);
+		ApplyDynamicActorAnimation(FBI_Actors[i],"DEALER","Dealer_idle",4.1,1,0,0,0,0);
 	}
+	// Ammu-Nation
+	CreateDynamicActor(179,296.7743,-40.2155,1001.5156,356.6301,1,100.0,1,1);
+	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,2,6);
+	CreateDynamicActor(179,293.5465,-82.5276,1001.5156,359.5493,1,100.0,3,4);
+	CreateDynamicActor(179,312.8817,-167.7641,999.5938,359.1643,1,100.0,4,6);
+	CreateDynamicActor(179,308.2369,-143.0903,999.6016,2.2882,1,100.0,5,7);
+	CreateDynamicActor(179,316.1078,-133.6847,999.6016,90.7535,1,100.0,5,7);
+	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,6,6);
+	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,7,6);
+	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,8,6);
+	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,9,6);
+	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,10,6);
+	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,11,6);
 	// Динамические зоны
 	auto_school_press_alt[0] = CreateDynamicSphere(-2056.885009, -93.754776, 34.157676,1.5);
 	auto_school_press_alt[1] = CreateDynamicSphere(-2045.722778, -102.226257, 35.607597,1.0);
@@ -514,6 +534,18 @@ public OnGameModeInit()
 	Elevator_Initialize();
 	// Army GangZone
 	army = GangZoneCreate(-77, 1631, 452, 2163);
+	// Ammu-Nation Range
+	Create_Target();
+	// Русификатор	
+	for (new i; i < TEXT_RUSSIFIERS_COUNT; i++) { 
+        TextRusTD[RussifierType:i] = _:TextDrawCreate(TEXT_BASE_X, 
+                                                      TEXT_BASE_Y + 14.7 * i, 
+                                                      "Я могу прочитать этот текст, это мой русификатор"); 
+        TextDrawSetSelectable(Text:TextRusTD[RussifierType:i], 1); 
+        TextDrawTextSize(Text:TextRusTD[RussifierType:i], 600.0, 10.0); 
+		TextDrawUseBox(Text:TextRusTD[RussifierType:i], 1);
+		TextDrawBoxColor(Text:TextRusTD[RussifierType:i], 0x00000080);
+    }
 	return 1;
 }
 
@@ -563,6 +595,7 @@ public OnRconLoginAttempt(ip[], password[], success)
 }
 public OnDynamicObjectMoved(objectid)
 {
+	// Лифт
     new Float:x, Float:y, Float:z;
 	for(new i; i < sizeof(Obj_FloorDoors); i ++)
 	{
@@ -587,5 +620,79 @@ public OnDynamicObjectMoved(objectid)
 	    ElevatorState  = ELEVATOR_STATE_WAITING;
 	    SetTimer("Elevator_TurnToIdle", ELEVATOR_WAIT_TIME, 0);
 	}
+	// Тир
+	if(objectid == target_frame[0]){
+	    switch(LoopStatus[0]){
+	        case 0:{
+				MoveDynamicObject(target_frame[0],289.498077, -126.685920, 1006.789062,Target_1, 0.0, 0.000000, 90.0);
+	    		LoopStatus[0] = 1;
+			}
+			case 1:{
+				MoveDynamicObject(target_frame[0],289.498077, -142.043945, 1006.789062,Target_1,0.0, 0.000000, 90.0);
+				LoopStatus[0] = 0;
+			}
+	    }
+   	}
+	if(objectid == target_frame[1]){
+	    switch(LoopStatus[1]){
+	        case 0:{
+				MoveDynamicObject(target_frame[1],284.531585, -126.685920, 1006.789062,Target_2, 0.0, 0.0, 90.0);
+	    		LoopStatus[1] = 1;
+			}
+			case 1:{
+				MoveDynamicObject(target_frame[1],284.531585, -142.043945, 1006.789062,Target_2,0.0, 0.0, 90.0);
+				LoopStatus[1] = 0;
+			}
+	    }
+   	}
+   	if(objectid == target_frame[2]){
+	    switch(LoopStatus[2]){
+	        case 0:{
+				MoveDynamicObject(target_frame[2],278.451599, -126.685920, 1006.789062,Target_3, 0.0, 0.0, 90.0);
+	    		LoopStatus[2] = 1;
+			}
+			case 1:{
+				MoveDynamicObject(target_frame[2],278.451599, -142.043945, 1006.789062,Target_3,0.0, 0.0, 90.0);
+				LoopStatus[2] = 0;
+			}
+	    }
+   	}
+	if(objectid == target_frame[3]){
+	    switch(LoopStatus[3]){
+	        case 0:{
+				MoveDynamicObject(target_frame[3],298.885986, -18.029937, 1004.186157,Target_1, 0.0, 0.0, 0.0);
+	    		LoopStatus[3] = 1;
+			}
+			case 1:{
+				MoveDynamicObject(target_frame[3],285.388122, -18.029937, 1004.186157,Target_1,0.0, 0.0, 0.0);
+				LoopStatus[3] = 0;
+			}
+	    }
+   	}
+	if(objectid == target_frame[4]){
+	    switch(LoopStatus[4]){
+	        case 0:{
+				MoveDynamicObject(target_frame[4],298.885986, -12.759922, 1004.186157,Target_2, 0.0, 0.0, 0.0);
+	    		LoopStatus[4] = 1;
+			}
+			case 1:{
+				MoveDynamicObject(target_frame[4],285.388122, -12.759922, 1004.186157,Target_2,0.0, 0.0, 0.0);
+				LoopStatus[4] = 0;
+			}
+	    }
+   	}
+	if(objectid == target_frame[5]){
+	    switch(LoopStatus[5]){
+	        case 0:{
+				MoveDynamicObject(target_frame[5],298.885986, -7.349909, 1004.186157,Target_3, 0.0, 0.0, 0.0);
+	    		LoopStatus[5] = 1;
+			}
+			case 1:{
+				MoveDynamicObject(target_frame[5],285.388122, -7.349909, 1004.186157,Target_3,0.0, 0.0, 0.0);
+				LoopStatus[5] = 0;
+			}
+	    }
+   	}
 	return 1;
 }
+

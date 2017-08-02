@@ -27,7 +27,7 @@ public OnMySQL_InsertAccount(playerid)
 forward OnMySQL_SelectPetrolStations();
 public OnMySQL_SelectPetrolStations()
 {
-	new string[226];
+	new string[230];
 	new TotalPetrolStations;
 	for(new x; x < sizeof(PS); x++) {
 	    PS[x][_ps_ormid] = orm_create("petrol_stations");
@@ -106,13 +106,61 @@ public OnMySQL_SelectGangStorage()
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_uid], "UID");
 		orm_setkey(GS[x][_g_ormid], "UID");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_status],"Status");
-		orm_addvar_int(GS[x][_g_ormid], GS[x][g_cash], "Money");
-		orm_addvar_int(GS[x][_g_ormid], GS[x][g_patrons],"Patrons");
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_cash], "Cash");
+		orm_addvar_int(GS[x][_g_ormid], GS[x][g_ammo],"Ammo");
 		orm_addvar_int(GS[x][_g_ormid], GS[x][g_materials],"Materials");
 
 		orm_apply_cache(GS[x][_g_ormid], x);
-
 		TotalGangStorage++;
 	}
 	printf("Загруженно Общаков:%i         [Длительность загрузки: %d ms]",TotalGangStorage,cache_get_query_exec_time(MILLISECONDS));
+}
+forward OnMySQL_SelectAmmuNations();
+public OnMySQL_SelectAmmuNations()
+{
+	new TotalAmmuNations;
+	for(new x; x < sizeof(AN); x++){
+		AN[x][_an_ormid] = orm_create("ammu_nation");
+
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_uid], "UID");
+		orm_setkey(AN[x][_an_ormid], "UID");
+		orm_addvar_string(AN[x][_an_ormid], AN[x][an_name],31,"Name");
+		orm_addvar_string(AN[x][_an_ormid], AN[x][an_owner],24,"Owner");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price], "Price");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_profit], "Profit");
+		orm_addvar_float(AN[x][_an_ormid], AN[x][an_pos_x],"Pos_X");
+		orm_addvar_float(AN[x][_an_ormid], AN[x][an_pos_y],"Pos_Y");
+		orm_addvar_float(AN[x][_an_ormid], AN[x][an_pos_z],"Pos_Z");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_colt45], "Price_Colt45");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_silenced], "Price_Silenced");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_deagle], "Price_Deagle");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_shotgun], "Price_Shotgun");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_tec9], "Price_Tec9");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_micro_uzi], "Price_Micro_UZI");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_mp5], "Price_MP5");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_ak47], "Price_AK47");
+		orm_addvar_int(AN[x][_an_ormid], AN[x][an_price_m4], "Price_M4");
+
+		orm_apply_cache(AN[x][_an_ormid], x);
+		
+		new string[115];
+		if(!strcmp(AN[x][an_owner], "The State")){
+			format(string, sizeof(string),
+			    "Амму-Нация:\n{FFFFAD}%s\n\
+			    Владелец: {99b4ff}Правительство штата{FFFFAD}\n\
+			    Стоимость: $%m",
+			    AN[x][an_name],AN[x][an_price]);
+		}else{
+			format(string, sizeof(string),
+			    "Амму-Нация:\n{FFFFAD}%s\n\
+			    Владелец: {99b4ff}%s{FFFFAD}\n\
+			    Стоимость: $%m",
+			    AN[x][an_name],AN[x][an_owner],AN[x][an_price]);
+		}
+		AN[x][_an_text3d] = CreateDynamic3DTextLabel(string, 0xFFFFFFFF, AN[x][an_pos_x],AN[x][an_pos_y],AN[x][an_pos_z]+1,35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
+		CreateDynamicMapIcon(AN[x][an_pos_x],AN[x][an_pos_y],AN[x][an_pos_z],6,0xFFFFFFFF,0,0);
+		
+		TotalAmmuNations++;
+	}
+	printf("Загруженно Амунаций:%i       [Длительность загрузки: %d ms]",TotalAmmuNations,cache_get_query_exec_time(MILLISECONDS));
 }

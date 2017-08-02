@@ -27,7 +27,10 @@
 #define ELEVATOR_STATE_WAITING  (1)
 #define ELEVATOR_STATE_MOVING   (2)
 #define INVALID_FLOOR           (-1)
-
+// Тир
+#define Target_1 2.0
+#define Target_2 3.0
+#define Target_3 4.0
 enum {
 	ORG_UNKNOWN,
 	ORG_GOVERNMENT,
@@ -97,16 +100,27 @@ enum E_PLAYER_DATA {
 	p_weapon_2,
 	p_weapon_3,
 	p_weapon_4,
+	p_weapon_5,
 	p_ammo_2,
 	p_ammo_3,
 	p_ammo_4,
+	p_ammo_5,
 	p_lic_moto,
 	p_lic_car,
 	p_lic_freight,
 	p_lic_boat,
 	p_lic_helicopter,
 	p_lic_aircraft,
-	p_lic_weapon
+	p_lic_weapon,
+	p_russifier_type,
+	p_skill_pistol,
+	p_skill_pistol_silenced,
+	p_skill_desert_eagle,
+	p_skill_shotgun,
+	p_skill_micro_uzi,
+	p_skill_mp5,
+	p_skill_ak47,
+	p_skill_m4
 }
 
 enum E_VEHICLE_DATA {
@@ -145,13 +159,35 @@ enum E_GANG_ZONES_DATA{
 	Float: gz_max_pos_y,
 	gz_team
 }
+enum E_AMMU_NATION_DATA{
+	ORM: _an_ormid,
+	Text3D: _an_text3d,
+	// mysql synced
+	an_uid,
+	an_name[31],
+	an_owner[24+1],
+	an_price,
+	an_profit,
+	Float: an_pos_x,
+	Float: an_pos_y,
+	Float: an_pos_z,
+	an_price_colt45,
+	an_price_silenced,
+	an_price_deagle,
+	an_price_shotgun,
+	an_price_tec9,
+	an_price_micro_uzi,
+	an_price_mp5,
+	an_price_ak47,
+	an_price_m4
+}
 enum E_GANG_STORAGE{
 	ORM: _g_ormid,
 	// mysql synced
 	g_uid,
-	g_status,
+	bool: g_status,
 	g_cash,
-	g_patrons,
+	g_ammo,
 	g_materials
 }
 enum
@@ -216,7 +252,8 @@ new P[MAX_PLAYERS][E_PLAYER_DATA];
 new V[MAX_VEHICLES][E_VEHICLE_DATA];
 new PS[16][E_PETROL_STATIONS_DATA];
 new GZ[104][E_GANG_ZONES_DATA];
-new GS[7][E_GANG_STORAGE];
+new GS[8][E_GANG_STORAGE];
+new AN[11][E_AMMU_NATION_DATA];
 
 new V_GOVERNMENT[7],
 	V_FBI[7],
@@ -283,7 +320,8 @@ new g_Chat_OOC,
 	g_Payment_Register;
 // Пикапы
 new PickupGetTime[MAX_PLAYERS];
-new Ammu_Nation[8];
+new Ammu_Nation[22],
+	Ammu_Nation_Range[6];
 new Casino[2];
 new FBI[4],
 	LSPD[2];
@@ -341,6 +379,22 @@ new male_skins[] = {
 new female_skins[] = {
 	10,11,12,13,40
 };
+// Тир в Амунаций
+new target_frame[6],
+	target_shot[MAX_PLAYERS];
+	//Ammu-Nation LV
+new target_lv_1[7],
+	target_lv_2[7],
+	target_lv_3[7];
+	//Ammu-Nation Central LS
+new target_ls_1[7],
+	target_ls_2[7],
+	target_ls_3[7];
+	
+new LoopStatus[6] = 0,
+	target_count_lv = 0,
+	target_count_ls = 0;
+// All
 new Streams[][][] = {
 {"Выключить радио\n", ""},
 {"Включить музыку с URL\n", ""},
@@ -558,3 +612,11 @@ new ElevatorBoostTimer;
 
 forward Float:GetElevatorZCoordForFloor(floorid);
 forward Float:GetDoorsZCoordForFloor(floorid);
+// Русификатор
+new  
+    TextRusTD[RussifierType]; 
+
+const 
+    Float:TEXT_BASE_X = 150.0, 
+    Float:TEXT_BASE_Y = 200.0, 
+    TEXT_RUSSIFIERS_COUNT = 7; // only Russian localizations 

@@ -636,7 +636,7 @@ stock va_SendClientMessage(playerid, colour, const fmat[], va_args<>)
 	return SendClientMessage(playerid, colour, va_return(fmat, va_start<3>));
 }
 // Formatex
-stock va_SendClientMessageF(playerid, colour, fmat[], va_args<>)
+stock va_SendClientMessageF(playerid, colour, const fmat[], va_args<>)
 {
 	va_formatex(gs_Buffer, sizeof(gs_Buffer), fmat, va_start<3>);
 	SendClientMessage(playerid, colour, gs_Buffer);

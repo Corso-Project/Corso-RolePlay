@@ -26,7 +26,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        }
 	    }
 	    P[playerid][_p_in_game] = true;
-	    GivePlayerMoney(playerid, floatround(P[playerid][p_cash]));
+	    GivePlayerMoney(playerid, P[playerid][p_cash]);
 	    SetPlayerHealth(playerid, P[playerid][p_health]);
 	    TogglePlayerSpectating(playerid, 0);
 	    SetSpawnInfo(playerid, 0, P[playerid][p_skin], 1642.4329,-2239.0205,13.4967,180.0, 0,0,0,0,0,0);
@@ -318,7 +318,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	case d_player_menu: if(response) switch(listitem)
 	{
 	    case 0:Show_PlayerStats(playerid,playerid);
-        case 1:ShowPlayerDialog(playerid,d_player_settings, DIALOG_STYLE_LIST,"Настройки учётной записи","Сменить пароль","Выход","");
+        case 1:ShowPlayerDialog(playerid, d_player_settings, DIALOG_STYLE_LIST,"Настройки учётной записи","Сменить пароль\nСменить русификатор","Выход","");
         case 2:ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Справка о доступных командах", "{FFFFFF}/lock - закрыть/открыть двери автомобиля\n/fill - заправить ТС\n/mn - меню\n/lic - посмотреть список лицензий", "Выход", "");
         case 3:{
             new string[2048];
@@ -326,7 +326,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             {
                 strcat(string,Server_Rules[msg]);
             }
-            ShowPlayerDialog(playerid,d_null,DIALOG_STYLE_MSGBOX,"Правила сервера",string,"Закрыть","");
+            ShowPlayerDialog(playerid, d_null,DIALOG_STYLE_MSGBOX,"Правила сервера",string,"Закрыть","");
         }
         case 4:ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связь","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
     }
@@ -334,6 +334,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         case 0:{
             ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT,"Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:","Сменить","Назад");
         }
+		case 1:{
+			for (new i; i < TEXT_RUSSIFIERS_COUNT; i++) { 
+				SetPlayerRussifierType(playerid, RussifierType:i); 
+				TextDrawShowForPlayer(playerid, Text:TextRusTD[RussifierType:i]); 
+			} 
+			SelectTextDraw(playerid, 0xAA3333FF); 
+		}
     }
     // Репорт
     case d_player_report:{
@@ -367,53 +374,66 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         orm_update(P[playerid][_p_ormid]);
     }
     // Покупка оружия
-	case d_player_buy_gun: if(response) switch(listitem)
-    {
-		case 0:{
-            if(P[playerid][p_cash] < 200) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-			Weapon_Give(playerid,22,30);
-			Cash_Give(playerid, -200);
+	case d_player_buy_gun: if(response){
+		new x = GetPVarInt(playerid, "Ammu_Nation");
+		switch(listitem)
+		{
+			case 0:{
+				if(P[playerid][p_cash] < AN[x][an_price_colt45]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,22,30);
+				Cash_Give(playerid, -AN[x][an_price_colt45]);
+				AN[x][an_profit] += AN[x][an_price_colt45];
+			}
+			case 1:{
+				if(P[playerid][p_cash] < AN[x][an_price_silenced]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,23,30);
+				Cash_Give(playerid, -AN[x][an_price_silenced]);
+				AN[x][an_profit] += AN[x][an_price_silenced];
+			}
+			case 2:{
+				if(P[playerid][p_cash] < AN[x][an_price_deagle]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,24,15);
+				Cash_Give(playerid,-AN[x][an_price_deagle]);
+				AN[x][an_profit] += AN[x][an_price_deagle];
+			}
+			case 3:{
+				if(P[playerid][p_cash] < AN[x][an_price_shotgun]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,32,60);
+				Cash_Give(playerid, -AN[x][an_price_shotgun]);
+				AN[x][an_profit] += AN[x][an_price_shotgun];
+			}
+			case 4:{
+				if(P[playerid][p_cash] < AN[x][an_price_tec9]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,28,60);
+				Cash_Give(playerid,-AN[x][an_price_tec9]);
+				AN[x][an_profit] += AN[x][an_price_tec9];
+			}
+			case 5:{
+				if(P[playerid][p_cash] < AN[x][an_price_micro_uzi]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,25,15);
+				Cash_Give(playerid,-AN[x][an_price_micro_uzi]);
+				AN[x][an_profit] += AN[x][an_price_micro_uzi];
+			}
+			case 6:{
+				if(P[playerid][p_cash] < AN[x][an_price_mp5]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,29, 90);
+				Cash_Give(playerid,-AN[x][an_price_mp5]);
+				AN[x][an_profit] += AN[x][an_price_mp5];
+			}
+			case 7:{
+				if(P[playerid][p_cash] < AN[x][an_price_ak47]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,30,120);
+				Cash_Give(playerid,-AN[x][an_price_ak47]);
+				AN[x][an_profit] += AN[x][an_price_ak47];
+			}
+			case 8:{
+				if(P[playerid][p_cash] < AN[x][an_price_m4]) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
+				Weapon_Give(playerid,31,150);
+				Cash_Give(playerid,-AN[x][an_price_m4]);
+				AN[x][an_profit] += AN[x][an_price_m4];
+			}
 		}
-        case 1:{
-            if(P[playerid][p_cash] < 600) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,23,30);
-            Cash_Give(playerid, -600);
-        }
-        case 2:{
-            if(P[playerid][p_cash] < 1200) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,24,15);
-            Cash_Give(playerid,-1200);
-        }
-        case 3:{
-            if(P[playerid][p_cash] < 300) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,32,60);
-            Cash_Give(playerid, -300);
-        }
-        case 4:{
-            if(P[playerid][p_cash] < 500) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,28,60);
-            Cash_Give(playerid,-500);
-        }
-        case 5:{
-            if(P[playerid][p_cash] < 600) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,25,15);
-            Cash_Give(playerid,-600);
-        }
-        case 6:{
-            if(P[playerid][p_cash] < 2000) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,29, 90);
-            Cash_Give(playerid,-2000);
-        }
-        case 7:{
-            if(P[playerid][p_cash] < 3500) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,30,120);
-            Cash_Give(playerid,-3500);
-        }
-        case 8:{
-            if(P[playerid][p_cash] < 4500) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас не достаточно денег для покупки данного оружия.");
-            Weapon_Give(playerid,31,150);
-            Cash_Give(playerid,-4500);
-        }
+		orm_update(AN[x][_an_ormid]);
 	}
     // Основное меню GPS
     case d_player_gps: if(response) switch(listitem){
@@ -664,18 +684,18 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         new x = P[playerid][p_job_team]-10;
         switch(listitem){
             case 0:{
-                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
+                if(GS[x][g_status] == false) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
                 ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                     "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
                 SetPVarInt(playerid, "gang_take_cash", 1);
             }
             case 1:{
-                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
+                if(GS[x][g_status] == false) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
                 ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
                 SetPVarInt(playerid, "gang_take_patrons", 1);
             }
             case 2:{
-                if(GS[x][g_status] == 0) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
+                if(GS[x][g_status] == false) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Доступ к складу закрыт.");
                 ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name, "{FFFFFF}Введите количество материалов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество материалов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
                 SetPVarInt(playerid, "gang_take_materials", 1);
             }
@@ -708,16 +728,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             return 0;
         }
         if(gang_take_cash == 1){
-            new take_cash = strval(inputtext);
+            new Float:take_cash = floatstr(inputtext);
             if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
             if(take_cash < 1) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
             if(take_cash > GS[x][g_cash]) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n{FF0000}  -Сумма не должна привышать ту, что есть в общаке.", "Взять", "Назад");
-            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s взял со склада $%m",Get_RangName(playerid), IC_Name(playerid), take_cash);
-            GS[x][g_cash] -= take_cash;
-            Cash_Give(playerid, take_cash);
+			foreach(new i : Player){
+				switch(P[playerid][p_job_team]){
+					case 10..17: if(P[i][p_job_team] == P[playerid][p_job_team]) va_SendClientMessageF(i, 0x6699CCFF,"[F] %s %s взял со склада $%m.",Get_RangName(playerid), IC_Name(playerid), floatround(take_cash*100));
+				}
+			}
+            GS[x][g_cash] -= floatround(take_cash*100);
+            Cash_Give(playerid, floatround(take_cash*100));
             orm_update(GS[x][_g_ormid]);
             DeletePVar(playerid, "gang_take_cash");
         }
@@ -726,10 +750,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
             if(take < 1) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
-            if(take > GS[x][g_patrons]) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
+            if(take > GS[x][g_ammo]) return ShowPlayerDialog(playerid, d_gang_take, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество патронов, которые вы бы хотели взять из общяка:\nУсловие:\n  -Число больше 0.\n{FF0000}  -Количество патронов не должна привышать ту, что есть в общаке.", "Взять", "Назад");
             Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s взял со склада %i патронов",Get_RangName(playerid), IC_Name(playerid), take);
-            GS[x][g_patrons] -= take;
+            GS[x][g_ammo] -= take;
             P[playerid][p_patrons] += take;
             orm_update(GS[x][_g_ormid]);
             DeletePVar(playerid, "gang_take_patrons");
@@ -763,16 +787,20 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             return 0;
         }
         if(gang_put_cash == 1){
-            new put_cash = strval(inputtext);
+            new Float:put_cash = floatstr(inputtext);
             if(!strlen(inputtext)) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
             if(put_cash < 1) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n{FF0000}  -Число больше 0.\n{FFFFFF}  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
             if(put_cash > P[playerid][p_cash]) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество денежных средств, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n{FF0000}  -Не больше той суммы что у вас есть.", "Добавить", "Назад");
-            Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s положил в общак $%m.",Get_RangName(playerid), IC_Name(playerid), put_cash);
-            GS[x][g_cash] += put_cash;
-            Cash_Give(playerid, -put_cash);
+			foreach(new i : Player){
+				switch(P[playerid][p_job_team]){
+					case 10..17: if(P[i][p_job_team] == P[playerid][p_job_team]) va_SendClientMessageF(i, 0x6699CCFF,"[F] %s %s положил в общак $%m.",Get_RangName(playerid), IC_Name(playerid), floatround(put_cash*100));
+				}
+			}
+            GS[x][g_cash] += floatround(put_cash*100);
+            Cash_Give(playerid, -floatround(put_cash*100));
             orm_update(GS[x][_g_ormid]);
             DeletePVar(playerid, "gang_put_cash");
         }
@@ -784,7 +812,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             if(put > P[playerid][p_patrons]) return ShowPlayerDialog(playerid, d_gang_put, DIALOG_STYLE_INPUT, name,
                 "{FFFFFF}Введите количество патронов, которые вы бы хотели положить в общяк:\nУсловиие:\n  -Число больше 0.\n{FF0000}  -Не больше того количество что у вас есть.", "Добавить", "Назад");
             Message_ToComuneTeam(P[playerid][p_job_team],0x6699CCFF,"[F] %s %s положил в общак %d патронов.",Get_RangName(playerid), IC_Name(playerid), put);
-            GS[x][g_patrons] += put;
+            GS[x][g_ammo] += put;
             P[playerid][p_patrons] -= put;
             orm_update(GS[x][_g_ormid]);
             DeletePVar(playerid, "gang_put_patrons");
@@ -837,7 +865,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             }
             case 3:{
                 SetPVarInt(playerid, "d_ps_business_take", 1);
-                new info[122];
+                new info[125];
                 format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от 0.00$ до $%m.",PS[x][ps_profit]);
                 ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,info, "Взять", "Назад");
             }
@@ -869,41 +897,41 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 DeletePVar(playerid, "d_ps_state_bussiness");
             return 0;
         }
-        new price = strval(inputtext),
+        new Float: price = floatstr(inputtext),
             x = P[playerid][p_business_ps],
             ps_name_[30+7];
         format(ps_name_,sizeof(ps_name_),"{FFFFFF}%s",PS[x][ps_name]);
         if(GetPVarInt(playerid, "d_ps_business_set") == 1){
             if(price < 1 || price > 150.0)
                 return ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,"{FFFFFF}Введите стоимость одного литра топливо:\nУсловие:\n{FF0000}  -От 1.00$ до 150.00$.", "Взять", "Назад");
-            PS[x][ps_fuel_price] = price;
-            va_SendClientMessageF(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Цена за 1 литр бензина $%m.",price);
+            PS[x][ps_fuel_price] = floatround(price*100);
+            va_SendClientMessageF(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Цена за 1 литр бензина $%m.",price*100);
             PS_Update3DInfo(x);
             DeletePVar(playerid, "d_ps_business_set");
         }
         else if(GetPVarInt(playerid, "d_ps_business_put") == 1){
             new info[142];
             format(info,sizeof(info),"Введите количество денежных средств, которые вы бы хотели добавить в кассу АЗС:\nУсловие:\n  -Не больше того количество денег что у вас есть.");
-            if(P[playerid][p_cash] < price)
+            if(P[playerid][p_cash] < floatround(price*100))
                 return ShowPlayerDialog(playerid, d_ps_business_set_take,DIALOG_STYLE_INPUT,ps_name_,info,"Положить","Назад");
-            Cash_Give(playerid, -price);
-            PS[x][ps_profit] += price;
-            va_SendClientMessageF(playerid, 0xFFCC66FF,"[Уведмоление]: {FFFFFF}Вы добавили в бюджет АЗС $%m",price);
+            Cash_Give(playerid, floatround(-price*100));
+            PS[x][ps_profit] += floatround(price*100);
+            va_SendClientMessageF(playerid, 0xFFCC66FF,"[Уведмоление]: {FFFFFF}Вы добавили в бюджет АЗС $%m",price*100);
             DeletePVar(playerid, "d_ps_business_put");
         }
         else if(GetPVarInt(playerid, "d_ps_business_take") == 1){
-            new info[124];
+            new info[123];
             format(info,sizeof(info),"{FFFFFF}Введите количество денежных средств, которые вы бы хотели взять из кассы АЗС:\nУсловие:\n  -Число от $1.00 до $%m.",PS[x][ps_profit]);
             if(price < 1 || price > PS[x][ps_profit])
                 return ShowPlayerDialog(playerid, d_ps_business_set_take, DIALOG_STYLE_INPUT, ps_name_,info, "Взять", "Назад");
-            PS[x][ps_profit] = PS[x][ps_profit]-price;
-            Cash_Give(playerid, PS[x][ps_profit]-price);
-            va_SendClientMessageF(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы взяли из кассы АЗС $%m.",price);
+            PS[x][ps_profit] -= floatround(price*100);
+            Cash_Give(playerid, floatround(price*100));
+            va_SendClientMessageF(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы взяли из кассы АЗС $%m.",floatround(price*100));
             DeletePVar(playerid, "d_ps_business_take");
         }
         else if(GetPVarInt(playerid, "d_ps_state_bussiness") == 1){
-            va_SendClientMessageF(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы продали АЗС {FFCC66}%s{FFFFFF} по Гос. цене за $%m",PS[x][ps_name],PS[x][ps_price]/100*80);
-            Cash_Give(playerid, PS[x][ps_price]/100*80);
+            va_SendClientMessageF(playerid,0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы продали АЗС {FFCC66}%s{FFFFFF} по Гос. цене за $%m",PS[x][ps_name],(PS[x][ps_price]/100*80)*100);
+            Cash_Give(playerid, (PS[x][ps_price]/100*80)*100);
             new owner[24+1];
             format(owner,sizeof(owner),"The State");
             PS[x][ps_owner] = owner;

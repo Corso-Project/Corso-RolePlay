@@ -397,4 +397,235 @@ stock Get_GangName(gangid){
 }
 FormatSpecifier<'m'>(output[], money) { 
     format(output, sizeof(output), "%i.%i", money / 100, money % 100); 
-}  
+}
+stock Create_Target(){		
+	// ammu-nation lv
+	target_frame[0] = CreateDynamicObject(3025, 289.498077, -142.043945, 1006.789062, 0.0, 0.0, 90.0, -1,7);
+
+	target_lv_1[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_1[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_1[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_1[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_1[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_1[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_1[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	
+	AttachDynamicObjectToObject(target_lv_1[0],target_frame[0],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_1[1],target_frame[0],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_1[2],target_frame[0],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_1[3],target_frame[0],-0.02,0.0059509,0.0395, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_1[4],target_frame[0],-0.022,0.0059509,0.044678, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_1[5],target_frame[0],-0.02,0.028061,0.046204, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_1[6],target_frame[0],-0.02,0.016861,0.046204, 0,0,0);
+	
+	MoveDynamicObject(target_frame[0],289.498077, -126.685920, 1006.789062,Target_1, 0.000099, 0.0, 90.0);
+	LoopStatus[0] = 1;
+	
+	target_frame[1] = CreateDynamicObject(3025, 284.531585, -142.043945, 1006.789062, 0.0, 0.0, 90.0, -1,7);
+	
+	target_lv_2[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_2[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_2[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_2[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_2[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_2[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_2[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	
+	AttachDynamicObjectToObject(target_lv_2[0],target_frame[1],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_2[1],target_frame[1],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_2[2],target_frame[1],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_2[3],target_frame[1],-0.02,0.0059509,0.0395, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_2[4],target_frame[1],-0.022,0.0059509,0.044678, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_2[5],target_frame[1],-0.02,0.028061,0.046204, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_2[6],target_frame[1],-0.02,0.016861,0.046204, 0,0,0);
+	
+	MoveDynamicObject(target_frame[1],284.531585, -126.685920, 1006.789062,Target_2, 0.0, 0.0, 90.0);
+	LoopStatus[1] = 1;
+	
+	target_frame[2] = CreateDynamicObject(3025, 278.451599, -142.043945, 1006.789062, 0.0, 0.0, 90.0, -1,7);
+	
+	target_lv_3[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_3[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_3[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_3[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_3[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_3[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	target_lv_3[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+	
+	AttachDynamicObjectToObject(target_lv_3[0],target_frame[2],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_3[1],target_frame[2],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_3[2],target_frame[2],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_3[3],target_frame[2],-0.02,0.0059509,0.0395, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_3[4],target_frame[2],-0.022,0.0059509,0.044678, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_3[5],target_frame[2],-0.02,0.028061,0.046204, 0,0,0);
+	AttachDynamicObjectToObject(target_lv_3[6],target_frame[2],-0.02,0.016861,0.046204, 0,0,0);
+	
+	MoveDynamicObject(target_frame[2],278.451599, -126.685920, 1006.789062,Target_3, 0.0, 0.0, 90.0);
+	LoopStatus[2] = 1;
+	
+	// ammu-nation central ls
+	target_frame[3] = CreateDynamicObject(3025, 285.388122, -18.029937, 1004.186157, 0.0, 0.0, 0.0, -1,1);
+	
+	target_ls_1[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_1[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_1[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_1[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_1[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_1[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_1[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	
+	AttachDynamicObjectToObject(target_ls_1[0],target_frame[3],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_1[1],target_frame[3],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_1[2],target_frame[3],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_1[3],target_frame[3],-0.02,0.0059509,0.0395, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_1[4],target_frame[3],-0.022,0.0059509,0.044678, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_1[5],target_frame[3],-0.02,0.028061,0.046204, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_1[6],target_frame[3],-0.02,0.016861,0.046204, 0,0,0);
+	
+	MoveDynamicObject(target_frame[3],298.885986, -18.029937, 1004.186157,Target_1, 0.0, 0.0, 0.0);
+	LoopStatus[3] = 1;
+	
+	target_frame[4] = CreateDynamicObject(3025, 285.388122, -12.759922, 1004.186157, 0.0, 0.0, 0.0, -1,1);
+	
+	target_ls_2[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_2[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_2[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_2[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_2[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_2[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_2[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	
+	AttachDynamicObjectToObject(target_ls_2[0],target_frame[4],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_2[1],target_frame[4],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_2[2],target_frame[4],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_2[3],target_frame[4],-0.02,0.0059509,0.0395, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_2[4],target_frame[4],-0.022,0.0059509,0.044678, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_2[5],target_frame[4],-0.02,0.028061,0.046204, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_2[6],target_frame[4],-0.02,0.016861,0.046204, 0,0,0);
+	
+	MoveDynamicObject(target_frame[4],298.885986, -12.759922, 1004.186157,Target_2, 0.0, 0.0, 0.0);
+	LoopStatus[4] = 1;
+	
+	target_frame[5] = CreateDynamicObject(3025, 285.388122, -7.349909, 1004.186157, 0.0, 0.0, 0.0, -1,1);
+	
+	target_ls_3[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_3[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_3[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_3[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_3[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_3[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	target_ls_3[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+	
+	AttachDynamicObjectToObject(target_ls_3[0],target_frame[5],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_3[1],target_frame[5],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_3[2],target_frame[5],-0.02,0.0059509,0.035522, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_3[3],target_frame[5],-0.02,0.0059509,0.0395, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_3[4],target_frame[5],-0.022,0.0059509,0.044678, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_3[5],target_frame[5],-0.02,0.028061,0.046204, 0,0,0);
+	AttachDynamicObjectToObject(target_ls_3[6],target_frame[5],-0.02,0.016861,0.046204, 0,0,0);
+	
+	MoveDynamicObject(target_frame[5],298.885986, -7.349909, 1004.186157,Target_3, 0.0, 0.0, 0.0);
+	LoopStatus[5] = 1;
+}
+stock Update_Target(ammunation){
+	switch(ammunation){
+		case 1:{
+			target_lv_1[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_1[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_1[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_1[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_1[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_1[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_1[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			
+			AttachDynamicObjectToObject(target_lv_1[0],target_frame[0],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_1[1],target_frame[0],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_1[2],target_frame[0],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_1[3],target_frame[0],-0.02,0.0059509,0.0395, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_1[4],target_frame[0],-0.022,0.0059509,0.044678, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_1[5],target_frame[0],-0.02,0.028061,0.046204, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_1[6],target_frame[0],-0.02,0.016861,0.046204, 0,0,0);
+				
+			target_lv_2[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_2[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_2[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_2[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_2[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_2[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_2[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+				
+			AttachDynamicObjectToObject(target_lv_2[0],target_frame[1],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_2[1],target_frame[1],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_2[2],target_frame[1],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_2[3],target_frame[1],-0.02,0.0059509,0.0395, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_2[4],target_frame[1],-0.022,0.0059509,0.044678, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_2[5],target_frame[1],-0.02,0.028061,0.046204, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_2[6],target_frame[1],-0.02,0.016861,0.046204, 0,0,0);
+			
+			target_lv_3[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_3[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_3[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_3[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_3[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_3[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+			target_lv_3[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,90.0, -1,7);
+				
+			AttachDynamicObjectToObject(target_lv_3[0],target_frame[2],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_3[1],target_frame[2],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_3[2],target_frame[2],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_3[3],target_frame[2],-0.02,0.0059509,0.0395, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_3[4],target_frame[2],-0.022,0.0059509,0.044678, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_3[5],target_frame[2],-0.02,0.028061,0.046204, 0,0,0);
+			AttachDynamicObjectToObject(target_lv_3[6],target_frame[2],-0.02,0.016861,0.046204, 0,0,0);
+		}
+		case 2:{ // Central Ammu-Nation LS
+			target_ls_1[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_1[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_1[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_1[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_1[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_1[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_1[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			
+			AttachDynamicObjectToObject(target_ls_1[0],target_frame[3],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_1[1],target_frame[3],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_1[2],target_frame[3],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_1[3],target_frame[3],-0.02,0.0059509,0.0395, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_1[4],target_frame[3],-0.022,0.0059509,0.044678, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_1[5],target_frame[3],-0.02,0.028061,0.046204, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_1[6],target_frame[3],-0.02,0.016861,0.046204, 0,0,0);
+			
+			target_ls_2[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_2[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_2[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_2[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_2[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_2[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_2[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			
+			AttachDynamicObjectToObject(target_ls_2[0],target_frame[4],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_2[1],target_frame[4],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_2[2],target_frame[4],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_2[3],target_frame[4],-0.02,0.0059509,0.0395, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_2[4],target_frame[4],-0.022,0.0059509,0.044678, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_2[5],target_frame[4],-0.02,0.028061,0.046204, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_2[6],target_frame[4],-0.02,0.016861,0.046204, 0,0,0);
+	
+			target_ls_3[0] = CreateDynamicObject(3024, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_3[1] = CreateDynamicObject(3023, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_3[2] = CreateDynamicObject(3022, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_3[3] = CreateDynamicObject(3021, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_3[4] = CreateDynamicObject(3020, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_3[5] = CreateDynamicObject(3019, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			target_ls_3[6] = CreateDynamicObject(3018, 0.0,0.0,0.0, 0.0,0.0,0.0, -1,1);
+			
+			AttachDynamicObjectToObject(target_ls_3[0],target_frame[5],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_3[1],target_frame[5],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_3[2],target_frame[5],-0.02,0.0059509,0.035522, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_3[3],target_frame[5],-0.02,0.0059509,0.0395, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_3[4],target_frame[5],-0.022,0.0059509,0.044678, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_3[5],target_frame[5],-0.02,0.028061,0.046204, 0,0,0);
+			AttachDynamicObjectToObject(target_ls_3[6],target_frame[5],-0.02,0.016861,0.046204, 0,0,0);
+		}
+	}
+}
