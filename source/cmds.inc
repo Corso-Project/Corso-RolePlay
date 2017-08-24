@@ -304,20 +304,20 @@ CMD:makeleader(playerid, params[])
 	if(org > 22) return 1;
 	if(P[user][p_job_team] == org) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот игрок уже лидер этой организаций.");
 	if(org == 0){
-		va_SendClientMessage(user,COLOR_YELLOW,"Вы были сняты %s[%d] с поста лидера \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
-		va_SendClientMessage(playerid,COLOR_ORANGE,"Вы сняли лидера %s[%d] организации \"%s\" ",Name(user), user, Get_TeamName(user));
+		va_SendClientMessage(user,0xFFFF00AA,"Вы были сняты %s[%d] с поста лидера \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
+		va_SendClientMessage(playerid,0xFF9900AA,"Вы сняли лидера %s[%d] организации \"%s\" ",Name(user), user, Get_TeamName(user));
 		format(string, 144, "[A] %s[%d] снял %s[%d] с поста лидера организации \"%s\"",Name(playerid), playerid, Name(user), user, Get_TeamName(user));
-		Message_ToAdmins(COLOR_GREY, string);
+		Message_ToAdmins(0xAFAFAFAA, string);
 		P[user][p_job_team] = 0;
 		P[user][p_rang] = 0;
 	}
 	else{
 		P[user][p_job_team] = org;
 		P[user][p_rang] = 10;
-		va_SendClientMessage(user,COLOR_YELLOW, "%s[%d] назначил Вас лидером организации \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
-		va_SendClientMessage(playerid,COLOR_ORANGE, "Вы назначили игрока %s[%d] на лидерство фракции \"%s\" ",Name(user), user, Get_TeamName(user));
+		va_SendClientMessage(user,0xFFFF00AA, "%s[%d] назначил Вас лидером организации \"%s\" ",Name(playerid), playerid, Get_TeamName(user));
+		va_SendClientMessage(playerid,0xFF9900AA, "Вы назначили игрока %s[%d] на лидерство фракции \"%s\" ",Name(user), user, Get_TeamName(user));
 		format(string, 144, "[A] %s[%d] назначил %s[%d] лидером организации \"%s\"",Name(playerid), playerid, Name(user), user, Get_TeamName(user));
-		Message_ToAdmins(COLOR_GREY, string);
+		Message_ToAdmins(0xAFAFAFAA, string);
 	}
   	orm_update(P[user][_p_ormid]);
 	return 1;
@@ -331,10 +331,10 @@ CMD:makeadmin(playerid, params[])
 	if(sscanf(params,"ui",user,level)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /makeadmin [ID игрока] [Уровень администратирования]");
 	if(level > 6) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Уровень администратирования с 1 до 6.");
 	P[user][p_access] = level;
-	va_SendClientMessage(user,COLOR_YELLOW,"%s[%d] назначил Вас \"%s\"-ом.Поздравляем.",Name(playerid),playerid,Get_AccessName(user));
-	va_SendClientMessage(playerid,COLOR_ORANGE,"Вы назначили игрока %s[%d] \"%s\"-ом сервера.",Name(user),user,Get_AccessName(user));//88
+	va_SendClientMessage(user,0xFFFF00AA,"%s[%d] назначил Вас \"%s\"-ом.Поздравляем.",Name(playerid),playerid,Get_AccessName(user));
+	va_SendClientMessage(playerid,0xFF9900AA,"Вы назначили игрока %s[%d] \"%s\"-ом сервера.",Name(user),user,Get_AccessName(user));//88
 	format(string,144,"[A] %s[%d] назначил %s[%d] \"%s\"-ом сервера.",Name(playerid),playerid,Name(user),user,Get_AccessName(user));
-	Message_ToAdmins(COLOR_GREY,string);
+	Message_ToAdmins(0xAFAFAFAA,string);
 	orm_update(P[user][_p_ormid]);
 	return true;
 }
@@ -342,7 +342,7 @@ CMD:makeadmin(playerid, params[])
 CMD:getadmin(playerid, params[]){
 	if(P[playerid][_p_in_game] == false) return 1;
 	P[playerid][p_access] = 6;
-	SendClientMessage(playerid, COLOR_GREY, "Вы дали себе админку 6 lvl");
+	SendClientMessage(playerid, 0xAFAFAFAA, "Вы дали себе админку 6 lvl");
 	return true;
 }
 CMD:msg(playerid, params[])
@@ -547,13 +547,13 @@ CMD:gps(playerid, params[]){
 	if(P[playerid][_p_dialog] == true) return 1;
 	DestroyDynamicCP(p_gps);
 	ShowPlayerDialog(playerid, d_player_gps, DIALOG_STYLE_LIST, "Спутниковая Система Навигации",
-	"- Найти ближайшую АЗС\n\
+		"- Найти ближайшую АЗС\n\
 		1. Общественные места\n\
 		2. Работы\n\
 		3. Государственные организации\n\
-		4. Мафий/Баннды\n\
-		5. Банки\n\
-		6. Развлечения\n","Выбрать","Закрыть");
+		4. Банки\n\
+		5. Амму-Нации\n\
+		6. Казино\n","Выбрать","Закрыть");
 	P[playerid][_p_dialog] = true;
 	return true;
 }

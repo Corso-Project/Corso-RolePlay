@@ -1,10 +1,10 @@
 public OnGameModeInit()
 {
 	// Дополнительная конфигурация
-	INI_Load("budget.ini");
-	INI_Load("mysql.ini");
-	INI_Load("prices.ini");
-	INI_Load("settings.ini");
+	Load_Budget();
+	Load_MySQL();
+	Load_Settings();
+	Load_Prices();
 	// Подключение MySQL
 	mysql_log(ERROR | WARNING);
 	mysql_connect(g_MySQL_Host,g_MySQL_User,g_MySQL_Password,g_MySQL_Database);
@@ -22,7 +22,6 @@ public OnGameModeInit()
 	// Параметры игрового режима
 	SendRconCommand("loadfs map");
 	SetGameModeText(GAMEMODE_VERSION);
-	SetMaxConnections(1);
 	ShowNameTags(1);
 	ShowPlayerMarkers(0);
 	EnableStuntBonusForAll(0);
@@ -30,7 +29,7 @@ public OnGameModeInit()
 	DisableInteriorEnterExits();
 	ManualVehicleEngineAndLights();
 	gettime(g_hour, g_minute);
-	OnWeatherChanger();
+	//OnWeatherChanger();
 	ShowPlayerMarkers(PLAYER_MARKERS_MODE_STREAMED);
 	//==========================================================================
 	// Pay'n'Spray
@@ -427,6 +426,14 @@ public OnGameModeInit()
 	FBI[1] = CreateDynamicPickup(1318,23,238.7148,138.6364,1003.0234,-1,3);
 	FBI[2] = CreateDynamicPickup(1318,23,-2486.0371,514.0226,51.4849,-1,0);
 	FBI[3] = CreateDynamicPickup(1318,23,288.8309,166.9291,1007.1719,-1,3);
+	// Пикапы Авто-Школы
+	AutoSchool[0] = CreateDynamicPickup(1318,23,-2026.5968,-102.0665,35.1641,-1,0);
+	AutoSchool[1] = CreateDynamicPickup(1318,23,-2026.9194,-103.6019,1035.1835,-1,3);
+	AutoSchool[2] = CreateDynamicPickup(1318,23,-2029.7811,-120.5182,35.1692,-1,0);
+	AutoSchool[3] = CreateDynamicPickup(1318,23,-2029.6917,-119.6248,1035.1719,-1,3);
+		// Пикап Сдачи Экзамена в АвтоШколе
+	AutoSchool_Exam[0] = CreateDynamicPickup(19133,2,-2026.7712,-114.3431,1035.1719,-1,3);
+	AutoSchool_Exam[1] = CreateDynamicPickup(1239,2, -2021.6069,-116.7922,1035.1719,-1,3);
 	// Пикапы Grove
 	Grove[0] = CreateDynamicPickup(1318,23,2514.3142,-1691.6245,14.0460,-1,0);
 	Grove[1] = CreateDynamicPickup(1318,23,2468.4163,-1698.2432,1013.5078,2,2);
@@ -451,8 +458,6 @@ public OnGameModeInit()
 	// Пикапы Italian Mafia
 	Italian[0] = CreateDynamicPickup(1318, 23, 1456.1318,2773.3865,10.8203,-1,0);
 	Italian[1] = CreateDynamicPickup(1318, 23, 1298.9171,-797.0092,1084.0078,3,5);
-	// Пикап Сдачи Экзамена в АвтоШколе
-	AutoSchool_Exam[0] = CreateDynamicPickup(19133,2,-2034.9918,-119.1462,35.2370);
 	// FBI NPC
 	FBI_Actors[0] = CreateDynamicActor(286,293.1147,182.5184,1007.1719,133.6613,1,100.0,-1,3);
 	FBI_Actors[1] = CreateDynamicActor(163,231.9374,159.9906,1003.0234,219.8474,1,100.0,-1,3);
@@ -527,7 +532,7 @@ public OnGameModeInit()
 	TextDrawFont(Capture[1], 1);
 	TextDrawSetProportional(Capture[1], 1);
 	// 3D текст
-	CreateDynamic3DTextLabel("Сдача ПДД",0x1E90FFFF, -2034.9918,-119.1462,35.2370, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
+	CreateDynamic3DTextLabel("Сдача ПДД",0x1E90FFFF, -2034.9918,-119.1462,35.2370, 35.0,INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,-1,3);
 	CreateDynamic3DTextLabel("Пункт закупки топлива.",0x1E90FFFF,-1034.8696,-617.4734,32.5861, 35.0, INVALID_PLAYER_ID,INVALID_VEHICLE_ID,1,0,0);
 	// Лифт
 	ResetElevatorQueue();
@@ -555,12 +560,13 @@ public OnGameModeExit()
     // Обновление игроков
     foreach(new i : Player) CallLocalFunction("OnPlayerDisconnect", "dd", i,1);
 	// Обновление конфигурации
-	new INI: txtfile = INI_Open("budget.ini");
-	INI_WriteFloat(txtfile, "Government", Budget_GOVERNMENT,2);
-	INI_Close(txtfile);
-	txtfile = INI_Open("settings.ini");
-	INI_WriteInt(txtfile, "Chat_OOC", g_Chat_OOC);
-	INI_Close(txtfile);
+	new budget_ini = ini_openFile("budget.ini");
+	ini_setInteger(budget_ini,"Government",Budget_GOVERNMENT);
+	ini_closeFile(budget_ini);
+	
+	new settings_ini = ini_openFile("settings.ini");
+	ini_setInteger(settings_ini,"Chat_OOC",g_Chat_OOC);
+	ini_closeFile(settings_ini);
 	// АЗС
 	for(new i; i < sizeof(PS); i++) {
 		if(!PS[i][_ps_ormid]) continue;
@@ -569,9 +575,8 @@ public OnGameModeExit()
 	}
 	//Уничтожаем TextDraw-ы
 	TextDrawDestroy(Corso);
-	for(new i; i < 3; i++){
+	for(new i; i < 8; i++)
 		TextDrawDestroy(Text:ChoseSkin[i]);
-	}
 	//Уничтожает лифт
 	Elevator_Destroy();
 	// Отключение MySQL
@@ -587,7 +592,9 @@ public OnRconLoginAttempt(ip[], password[], success)
 		{
 		    GetPlayerIp(i, ip_dest, sizeof(ip_dest));
 		    if(!strcmp(ip, ip_dest, false)) continue;
-			Message_ToAdmins(0xB9C9BFFF, "[Защита]: Взлом RCON - %s[%d] | %s", Name(i),i,ip_dest);
+			new string[74];
+			format(string,sizeof(string),"[Защита]: Взлом RCON - %s[%d] | %s", Name(i),i,ip_dest);
+			Message_ToAdmins(0xB9C9BFFF, string);
 		    Kick(i);
 		}
 	}

@@ -382,7 +382,7 @@ stock Weapon_Sync(playerid)
 	return 1;
 }
 
-stock Health_Sync(playerid)
+/*stock Health_Sync(playerid)
 {
 	if(P[playerid][_p_spawned] == false) return 1;
 	switch(GetPlayerState(playerid)) {
@@ -403,7 +403,7 @@ stock Health_Sync(playerid)
 	    }
 	}
 	return 1;
-}
+}*/
 
 stock Armour_Sync(playerid)
 {

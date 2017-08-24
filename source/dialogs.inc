@@ -106,8 +106,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		        if(Vehicle_IsNotForPlayer(vehicleid, playerid)) return 1;
 		        if(Vehicle_WithoutDoor(GetVehicleModel(vehicleid)) == 1) return 1;
 				switch(doors) {
-		        	case -1,0: SetVehicleParamsEx(vehicleid, engine,lights,alarm,1,bonnet,boot,objective);
-		        	case 1: SetVehicleParamsEx(vehicleid, engine,lights,alarm,0,bonnet,boot,objective);
+		        	case -1,0: {
+						SetVehicleParamsEx(vehicleid, engine,lights,alarm,1,bonnet,boot,objective);
+						GameTextForPlayer(playerid, "doors~n~~r~locked", 2000, 1);
+					}
+		        	case 1: {
+						SetVehicleParamsEx(vehicleid, engine,lights,alarm,0,bonnet,boot,objective);
+						GameTextForPlayer(playerid, "doors ~n~~r~opened", 2000, 1);
+					}
 		        }
 		    }
 		    // капот
@@ -321,12 +327,30 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         case 1:ShowPlayerDialog(playerid, d_player_settings, DIALOG_STYLE_LIST,"Настройки учётной записи","Сменить пароль\nСменить русификатор","Выход","");
         case 2:ShowPlayerDialog(playerid, d_null, DIALOG_STYLE_MSGBOX, "Справка о доступных командах", "{FFFFFF}/lock - закрыть/открыть двери автомобиля\n/fill - заправить ТС\n/mn - меню\n/lic - посмотреть список лицензий", "Выход", "");
         case 3:{
-            new string[2048];
-            for(new msg;msg<sizeof(Server_Rules);msg++)
-            {
-                strcat(string,Server_Rules[msg]);
-            }
-            ShowPlayerDialog(playerid, d_null,DIALOG_STYLE_MSGBOX,"Правила сервера",string,"Закрыть","");
+            ShowPlayerDialog(playerid, d_null,DIALOG_STYLE_MSGBOX,"Правила сервера",
+				"{FFFFFF}Правила игры на сервере.\n\
+				{54D5FF}1.{FFFFFF} Revenge Kill (Сокращено RK) запрещён | Warn/Тюрьма на 60 минут\n\
+				{54D5FF}2.{FFFFFF} Mеtagаming (Сокращение MG) запрещён | Бан чата 15-60 минут\n\
+				{54D5FF}3.{FFFFFF} Powergaming (Сокращение PG) запрещён | Kick/Warn/Тюрьма на 30-60 минут.\n\
+				{54D5FF}4.{FFFFFF} Deatmatch (сокращение DM)запрещён. | Kick/Warn/Тюрьма на 60 минут. Последующие нарушения Бан\n\
+				{54D5FF}5.{FFFFFF} DriveBy (сокращение DB) запрещён | Тюрьма 30-60 минут,Warn (DB разрешён только пассажирам)\n\
+				{54D5FF}6.{FFFFFF} Spawn Kill (Сокращение SK) запрещён |Тюрьма 60 минут,Warn/Бан\n\
+				{54D5FF}7.{FFFFFF} Team Kill (Сокращение TK) запрещён | Warn/Бан\n\
+				{54D5FF}8.{FFFFFF} Repeat Kill (Сокращение RK) запрещён | Тюрьма 60-120 минут,Warn\n\
+				{54D5FF}9.{FFFFFF} FastReload или Scroll (Сокращение FR), а так же Fastmoving (Сокращение FM) запрещён | Warn (Т.к. это багоюз)\n\
+				{54D5FF}10.{FFFFFF} Использование Читов/Хаков/Cleo запрещено. | бан на сервере от 10-30 дней до пожизненного.\n\
+				{54D5FF}11.{FFFFFF} Нон рп запрещён! | Тюрьма на 60 минут\n\
+				{54D5FF}12.{FFFFFF} Использовать аптечки,наркотики во время драки или перестрелки запрещено. | Warn\n\
+				{54D5FF}13.{FFFFFF} Флуд в IC и OOC, /s чаты | Бан чата 10-50 минут\n\
+				{54D5FF}14.{FFFFFF} Флуд в Репорт, а так же вопросы типа: Можете дать лицензию, деньги, дом, админку | Бан чата 40-100 минут,Kick,Warn\n\
+				{54D5FF}15.{FFFFFF} Выход из игры во время RP-процесса | Тюрьма 60-180 минут,Warn\n\
+				{54D5FF}16.{FFFFFF} Оскорбление/троллинг/клевета | Бан чата,Kick,Warn,Бан аккаунта\n\
+				{54D5FF}17.{FFFFFF} Оскорбление родителей | Бан 15-30 дней\n\
+				{54D5FF}18.{FFFFFF} Реклама посторонних ресурсов (серверов, сайтов, читов) | Пожизненный бан\n\n\
+				Правила для аккаунтов:\n\
+				{5a5fed}1.{FFFFFF} Ваш аккаунт - это ваша собственность и ваша отвественность. За утрату аккаунта (взлом,угон)\n\
+				{5a5fed}2.{FFFFFF} Администрация отвественности не несёт и аккаунты игроков не восстанавливает!\n\
+				{5a5fed}3.{FFFFFF} Продажа игровых денег,бизнесов,домов и т.д. за реальные деньги карается удалением аккаунта!\n","Закрыть","");
         }
         case 4:ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связь","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
     }
@@ -349,13 +373,13 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связть","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
         }
         if(strlen(inputtext) < 4){
-            SendClientMessage(playerid,COLOR_GREY,"Слишком короткий запрос");
+            SendClientMessage(playerid,0xAFAFAFAA,"Слишком короткий запрос");
             return ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связть","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
         }
         va_SendClientMessage(playerid, -1, "{61D765}Сообщение отправлено администраций сервера: {ffffff}%s",inputtext);
         new string[144];
         format(string, 144, "Жалоба от %s [ID:%d]:{ffffff} %s",Name(playerid), playerid, inputtext);
-        Message_ToAdmins(COLOR_RED, string);
+        Message_ToAdmins(0xAA3333AA, string);
     }
     // Смена пароля
     case d_account_change_password: if(response){
@@ -439,7 +463,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     case d_player_gps: if(response) switch(listitem){
         case 0:{
             new min_id;
-            new Float:min_distance = 99999.0;
+            new Float:min_distance = 6000.0;
             for (new x; x < sizeof(PS); x++) {
                 new Float: distance = GetPlayerDistanceFromPoint(playerid, PS[x][ps_pos_x],PS[x][ps_pos_y],PS[x][ps_pos_z]);
                 if (distance < min_distance) {
@@ -447,7 +471,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     min_id = x;
                 }
             }
-            p_gps = CreateDynamicCP(PS[min_id][ps_pos_x], PS[min_id][ps_pos_y], PS[min_id][ps_pos_z],5.0,-1,-1,playerid,99999.0);
+            p_gps = CreateDynamicCP(PS[min_id][ps_pos_x], PS[min_id][ps_pos_y], PS[min_id][ps_pos_z],5.0,-1,-1,playerid,6000.0);
             PlayerPlaySound(playerid,1130,0.0,0.0,0.0);
             SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Ближайший АЗС была отмечен на радаре.");
         }
@@ -473,19 +497,18 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
              10. Новости 'San Andreas'\n\
              11. Центр Аттестаций\n\
              12. Федеральное Бюро Расследований","Выбрать","Назад");
-        case 4: ShowPlayerDialog(playerid, d_gps_criminal_organizaions, DIALOG_STYLE_LIST,"Мафий/Банды",
-            "1. Grove Street\n\
-             2. Ballas\n\
-             3. Aztecas\n\
-             4. Vagos\n\
-             5. Rifa \n\
-             {CCCC66}6. Семья 'Триада'\n\
-             {CCCC66}7. Семья 'Воры в законе'\n\
-             {CCCC66}8. Семья 'Ла Коза Ностра'","Выбрать","Назад");
-        case 5: ShowPlayerDialog(playerid, d_gps_banks, DIALOG_STYLE_LIST,"Банки",
+        case 4: ShowPlayerDialog(playerid, d_gps_banks, DIALOG_STYLE_LIST,"Банки",
             "1. Банк города Los Santos\n\
              2. Банк города San Fierro\n\
              3. Банк города Las Venturas","Выбрать","Назад");
+		case 5:{
+			new string[341],name[35];
+			for(new x;x<sizeof(AN);x++){
+				format(name,sizeof(name),"%i. %s\n",x+1,AN[x][an_name]);
+				strcat(string,name);
+			}
+			ShowPlayerDialog(playerid,d_gps_ammu_nations, DIALOG_STYLE_LIST, "Амму-Нации",string,"Выбрать","Назад");
+		}
         case 6: ShowPlayerDialog(playerid, d_gps_pleasure, DIALOG_STYLE_LIST,"Развлечения",
             "1. Казино «Четыре дракона»\n\
              2. Казино «Дворец Калигулы»\n\
@@ -493,36 +516,40 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     }
     // Спутниковая Система Навигации: Общественные места
     case d_gps_public_places: if(response) switch(listitem){
-        case 0: p_gps = CreateDynamicCP(-2031.4530, -97.4284, 35.1641, 5.0,-1,-1,playerid,99999.0);
-        case 1: p_gps = CreateDynamicCP(1811.6638, -1889.9030, 12.9699, 5.0,-1,-1,playerid,99999.0);
-        case 2: p_gps = CreateDynamicCP(558.0014, -1257.0792, 16.9318, 5.0,-1,-1,playerid,99999.0);
-        case 3: p_gps = CreateDynamicCP(-1988.1427, 288.5436, 34.0706, 5.0,-1,-1,playerid,99999.0);
-        case 4: p_gps = CreateDynamicCP(1658.5923, 2177.1665, 10.3988, 5.0,-1,-1,playerid,99999.0);
-        case 5: p_gps = CreateDynamicCP(-2717.8606, 195.2175, 4.3418, 5.0,-1,-1,playerid,99999.0);
+        case 0: p_gps = CreateDynamicCP(-2031.4530, -97.4284, 35.1641, 5.0,-1,-1,playerid,6000.0);
+        case 1: p_gps = CreateDynamicCP(1811.6638, -1889.9030, 12.9699, 5.0,-1,-1,playerid,6000.0);
+        case 2: p_gps = CreateDynamicCP(558.0014, -1257.0792, 16.9318, 5.0,-1,-1,playerid,6000.0);
+        case 3: p_gps = CreateDynamicCP(-1988.1427, 288.5436, 34.0706, 5.0,-1,-1,playerid,6000.0);
+        case 4: p_gps = CreateDynamicCP(1658.5923, 2177.1665, 10.3988, 5.0,-1,-1,playerid,6000.0);
+        case 5: p_gps = CreateDynamicCP(-2717.8606, 195.2175, 4.3418, 5.0,-1,-1,playerid,6000.0);
     }
     // Спутниковая Система Навигации: Работы
     case d_gps_jobs: if(response) switch(listitem){
-        case 0: p_gps = CreateDynamicCP(-1034.8696,-617.4734,32.5861, 5.0,-1,-1,playerid,99999.0);
+        case 0: p_gps = CreateDynamicCP(-1034.8696,-617.4734,32.5861, 5.0,-1,-1,playerid,6000.0);
     }
     // Спутниковая Система Навигации: Государственные организации
     case d_gps_state_organizations: if(response) switch(listitem){
-        case 0: p_gps = CreateDynamicCP(1137.3706,-2037.2341,68.5749, 5.0,-1,-1,playerid,99999.0);
-        case 1: p_gps = CreateDynamicCP(1292.8685,-1650.4521,12.9523, 5.0,-1,-1,playerid,99999.0);
-        case 2: p_gps = CreateDynamicCP(1537.1475,-1675.8947,12.9438, 5.0,-1,-1,playerid,99999.0);
-        case 3: p_gps = CreateDynamicCP(-1605.4011,724.7184,11.3619, 5.0,-1,-1,playerid,99999.0);
-        case 4: p_gps = CreateDynamicCP(2289.8364,2417.6626,10.2683, 5.0,-1,-1,playerid,99999.0);
-        case 6: p_gps = CreateDynamicCP(-1531.5959,492.3214,6.9068, 5.0,-1,-1,playerid,99999.0);
-        case 11: p_gps = CreateDynamicCP(-2432.2952,490.2813,29.6579, 5.0,-1,-1,playerid,99999.0);
+        case 0: p_gps = CreateDynamicCP(1137.3706,-2037.2341,68.5749, 5.0,-1,-1,playerid,6000.0);
+        case 1: p_gps = CreateDynamicCP(1292.8685,-1650.4521,12.9523, 5.0,-1,-1,playerid,6000.0);
+        case 2: p_gps = CreateDynamicCP(1537.1475,-1675.8947,12.9438, 5.0,-1,-1,playerid,6000.0);
+        case 3: p_gps = CreateDynamicCP(-1605.4011,724.7184,11.3619, 5.0,-1,-1,playerid,6000.0);
+        case 4: p_gps = CreateDynamicCP(2289.8364,2417.6626,10.2683, 5.0,-1,-1,playerid,6000.0);
+        case 6: p_gps = CreateDynamicCP(-1531.5959,492.3214,6.9068, 5.0,-1,-1,playerid,6000.0);
+        case 11: p_gps = CreateDynamicCP(-2432.2952,490.2813,29.6579, 5.0,-1,-1,playerid,6000.0);
     }
-    // Спутниковая Система Навигации: Развлечения
+	case d_gps_ammu_nations: if(response){
+		new x = listitem;
+		p_gps = CreateDynamicCP(AN[x][an_pos_x],AN[x][an_pos_y],AN[x][an_pos_z],4.0,-1,-1,playerid,6000.0);
+	}
+    // Спутниковая Система Навигации: Казино
     case d_gps_pleasure: if(response) switch(listitem){
-        case 0: p_gps = CreateDynamicCP(2038.0607,1007.9816,10.2363,5.0,-1,-1,playerid,99999.0);
+        case 0: p_gps = CreateDynamicCP(2038.0607,1007.9816,10.2363,5.0,-1,-1,playerid,6000.0);
     }
     // Спутниковая Система Навигации: Банки
     case d_gps_banks: if(response) switch(listitem){
-        case 0: p_gps = CreateDynamicCP(1540.4420,-1276.2134,17.1346, 5.0,-1,-1,playerid,99999.0);
-        case 1: p_gps = CreateDynamicCP(-2650.0825,376.0515,6.1563, 5.0,-1,-1,playerid,99999.0);
-        case 2: p_gps = CreateDynamicCP(2359.4534,2377.9929,10.5474, 5.0,-1,-1,playerid,99999.0);
+        case 0: p_gps = CreateDynamicCP(1540.4420,-1276.2134,17.1346, 5.0,-1,-1,playerid,6000.0);
+        case 1: p_gps = CreateDynamicCP(-2650.0825,376.0515,6.1563, 5.0,-1,-1,playerid,6000.0);
+        case 2: p_gps = CreateDynamicCP(2359.4534,2377.9929,10.5474, 5.0,-1,-1,playerid,6000.0);
     }
     // АШ
     case d_law_test:{

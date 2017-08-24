@@ -242,7 +242,9 @@ enum
 	d_ps_business_edit,
 	d_ps_business_set_take,
 	d_ps_business_get_fuel,
-	d_ps_business_get_fuel2
+	d_ps_business_get_fuel2,
+	// ammu-nation
+	d_gps_ammu_nations
 }
 enum E_EXAM_ANSWER {
 	e_exam_question[88],
@@ -334,7 +336,8 @@ new Grove[2],
 new Chinese[2],
 	Russian[2],
 	Italian[2];
-new AutoSchool_Exam[1];
+new AutoSchool_Exam[2],
+	AutoSchool[4];
 // CheckPoint
 new Buy_Weapon,
 	Gang_Storage[5],
@@ -396,34 +399,9 @@ new LoopStatus[6] = 0,
 	target_count_ls = 0;
 // All
 new Streams[][][] = {
-{"Выключить радио\n", ""},
-{"Включить музыку с URL\n", ""},
-{"SESHstation", "https://stream.sesh.team/stream.m3u"}
-};
-new Server_Rules[][] = {
-"{FFFFFF}Правила игры на сервере.\n",
-"{54D5FF}1.{FFFFFF} Revenge Kill (Сокращено RK) запрещён | Warn/Тюрьма на 60 минут\n",
-"{54D5FF}2.{FFFFFF} Mеtagаming (Сокращение MG) запрещён | Бан чата 15-60 минут\n",
-"{54D5FF}3.{FFFFFF} Powergaming (Сокращение PG) запрещён | Kick/Warn/Тюрьма на 30-60 минут.\n",
-"{54D5FF}4.{FFFFFF} Deatmatch (сокращение DM)запрещён. | Kick/Warn/Тюрьма на 60 минут. Последующие нарушения Бан\n",
-"{54D5FF}5.{FFFFFF} DriveBy (сокращение DB) запрещён | Тюрьма 30-60 минут,Warn (DB разрешён только пассажирам)\n",
-"{54D5FF}6.{FFFFFF} Spawn Kill (Сокращение SK) запрещён |Тюрьма 60 минут,Warn/Бан\n",
-"{54D5FF}7.{FFFFFF} Team Kill (Сокращение TK) запрещён | Warn/Бан\n",
-"{54D5FF}8.{FFFFFF} Repeat Kill (Сокращение RK) запрещён | Тюрьма 60-120 минут,Warn\n",
-"{54D5FF}9.{FFFFFF} FastReload или Scroll (Сокращение FR), а так же Fastmoving (Сокращение FM) запрещён | Warn (Т.к. это багоюз)\n",
-"{54D5FF}10.{FFFFFF} Использование Читов/Хаков/Cleo запрещено. | бан на сервере от 10-30 дней до пожизненного.\n",
-"{54D5FF}11.{FFFFFF} Нон рп запрещён! | Тюрьма на 60 минут\n",
-"{54D5FF}12.{FFFFFF} Использовать аптечки,наркотики во время драки или перестрелки запрещено. | Warn\n",
-"{54D5FF}13.{FFFFFF} Флуд в IC и OOC, /s чаты | Бан чата 10-50 минут\n",
-"{54D5FF}14.{FFFFFF} Флуд в Репорт, а так же вопросы типа: Можете дать лицензию, деньги, дом, админку | Бан чата 40-100 минут,Kick,Warn\n",
-"{54D5FF}15.{FFFFFF} Выход из игры во время RP-процесса | Тюрьма 60-180 минут,Warn\n",
-"{54D5FF}16.{FFFFFF} Оскорбление/троллинг/клевета | Бан чата,Kick,Warn,Бан аккаунта\n",
-"{54D5FF}17.{FFFFFF} Оскорбление родителей | Бан 15-30 дней\n",
-"{54D5FF}18.{FFFFFF} Реклама посторонних ресурсов (серверов, сайтов, читов) | Пожизненный бан\n\n",
-"Правила для аккаунтов:\n",
-"{5a5fed}1.{FFFFFF} Ваш аккаунт - это ваша собственность и ваша отвественность. За утрату аккаунта (взлом,угон)\n",
-"{5a5fed}2.{FFFFFF} Администрация отвественности не несёт и аккаунты игроков не восстанавливает!\n",
-"{5a5fed}3.{FFFFFF} Продажа игровых денег,бизнесов,домов и т.д. за реальные деньги карается удалением аккаунта!\n"
+	{"Выключить радио\n", ""},
+	{"Включить музыку с URL\n", ""},
+	{"SESHstation", "https://stream.sesh.team/stream.m3u"}
 };
 new Float:cam_start_pos[][] = {
 	{1482.074462, -898.318481, 92.719245, 1482.074462, -898.318481, 92.719245},
@@ -456,7 +434,7 @@ public SetPlayerCameraPos_(playerid)
 	InterpolateCameraPos(playerid, cam_start_pos[rand][0], cam_start_pos[rand][1], cam_start_pos[rand][2], cam_start_pos[rand][3], cam_start_pos[rand][4], cam_start_pos[rand][5], 1000);
 	InterpolateCameraLookAt(playerid, cam_start_look[rand][0], cam_start_look[rand][1], cam_start_look[rand][2], cam_start_look[rand][3], cam_start_look[rand][4], cam_start_look[rand][5], 1000);
 }
-new Traffic_Laws_ExamQuestions[15][77] = {
+new Traffic_Laws_ExamQuestions[17][77] = {
 	"Что означает мигание зеленого сигнала светофора?",//0
 	"При какой неисправности Вам разрешается эксплуатация транспортного средства?",//1
 	"В каких из перечисленных случаев запрещена буксировка на гибкой сцепке?",//2
@@ -471,9 +449,11 @@ new Traffic_Laws_ExamQuestions[15][77] = {
 	"Разрешено ли перевозить людей в буксируемом легковом автомобиле?",//11
 	"Движение транспортных средств задним ходом разрешается:",//12
 	"Запрещено ли выполнить обгон на подъеме?",//13
-	"Что следует делать при возникновении ДТП в первую очередь?"//14
+	"Что следует делать при возникновении ДТП в первую очередь?",//14
+	"Где могут двигаться пешеходы в жилой зоне?",//15
+	"Более устойчив против опрокидывания на повороте легковой автомобиль:"//16
 };
-new Traffic_Laws_ExamAnswers[15][4][E_EXAM_ANSWER] =
+new Traffic_Laws_ExamAnswers[17][4][E_EXAM_ANSWER] =
 {
     {
         {"1. Запрещает дальнейшее движение.",false},
@@ -559,11 +539,23 @@ new Traffic_Laws_ExamAnswers[15][4][E_EXAM_ANSWER] =
 		{"3. Разрешено.",false},
 		{"",false}
 	},
-	{
+	{ // 15 
 		{"1. Включить аварийную сигнализацию.",false},
 		{"2. Вызвать скорую помощь и полицию.",false},
 		{"3. Если есть пострадавшие, оказать первую помощь.",false},
 		{"4. Все ответы верны.",true}
+	},
+	{
+		{"1. Только по тротуарам.",false},
+		{"2. По тротуарам и в один ряд по краю проезжей части.",false},
+		{"3. По тротуарам и по всей ширине проезжей части.",true},
+		{"",false}
+	},
+	{
+		{"1. Без пассажиров и груза.",true},
+		{"2. Без пассажиров, но с грузом на верхнем багажнике.",false},
+		{"3. С пассажирами, но без груза.",false},
+		{"4. С пассажирами и грузом.",false}
 	}
 };
 // Лифт

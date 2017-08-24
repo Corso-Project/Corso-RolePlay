@@ -1,30 +1,28 @@
 #include <a_samp>
 
-#include <a_mysql>
-#include <fixes>
-#include <callbacks>
-#include <sscanf2>
+#include <lib\fixes>
+
+#include <lib\a_mysql>
+#include <lib\sscanf2>
 #include <streamer>
-#include <whirlpool>
-#include <color>
-#include <kick>
-#include <crashdetect>
+#include <lib\whirlpool>
+#include <lib\kick>
+#include <lib\crashdetect>
 
-#include <YSI_Coding\y_timers>
-#include <YSI_Coding\y_va>
-#include <YSI_Data\y_iterate>
-#include <YSI_Server\y_flooding>
-#include <YSI_Storage\y_ini>
+#include <lib\mxINI>
+#include <lib\foreach>
 
-#include <YSF>
+#include <lib\YSI_Coding\y_timers>
+#include <lib\YSI_Coding\y_va>
+#include <lib\YSF>
 
-#include <Pawn.CMD>
-#include <geolocation>
-#include <gl_common>
-#include <rustext>
-#include <formatex>
-#include <gangzone>
-#include <weaponskill>
+#include <lib\Pawn.CMD>
+#include <lib\geolocation>
+#include <lib\gl_common>
+#include <lib\rustext>
+#include <lib\formatex>
+#include <lib\gangzone>
+#include <lib\weaponskill>
 
 #include "..\source\vars.inc"
 

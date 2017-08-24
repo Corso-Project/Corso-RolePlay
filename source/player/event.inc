@@ -327,8 +327,10 @@ public OnPlayerSpawn(playerid)
 	    	}
 			case ORG_AUTOSCHOOL:
 			{
-				SetPlayerPos(playerid,-2035.0981,-113.9995,35.2370);
-				SetPlayerFacingAngle(playerid, 253.8189);
+				SetPlayerPos(playerid,-2035.0481,-114.3642,1035.1719);
+				SetPlayerFacingAngle(playerid, 219.3287);
+				SetPlayerInterior(playerid, 3);
+				SetPlayerVirtualWorld(playerid, 1);
 			}
 			case ORG_GROVE:{
 				SetPlayerPos(playerid, 2450.4082,-1688.8137,1013.5078);
@@ -650,8 +652,7 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 				SendClientMessage(playerid,  0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы приняли предложение на починку вашего Т.С.");
 				Cash_Give(playerid, -price_offer);
 				Cash_Give(engineer, price_offer);
-			}
-			else{
+			} else{
 				new vehicleid = GetPlayerVehicleID(playerid);
 
 		    	new source[202],str_engine[36],str_lights[32],str_doors[30],str_bonnet[30],str_boot[33];
@@ -1042,7 +1043,7 @@ public OnPlayerUpdate(playerid)
 	}
 
 	Weapon_Sync(playerid);
-	Health_Sync(playerid);
+//	Health_Sync(playerid);
 	Armour_Sync(playerid);
 
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {
@@ -1131,6 +1132,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float: amount, weaponid, bodypart)
 public OnPlayerEnterDynamicCP(playerid,checkpointid)
 {
 	if(checkpointid == Buy_Weapon){
+		if(!IsValidDynamicCP(Buy_Weapon)) return true;
 		if(P[playerid][p_lic_weapon] == 0) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Вы не можете купить оружие без лицензий.");
 		new x = GetPVarInt(playerid,"Ammu_Nation");
 		new string[298];
@@ -1496,6 +1498,69 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerPos(playerid,-2483.6584,514.0369,51.0638);
 		SetPlayerFacingAngle(playerid, 270.0022);
 	}
+	else if(pickupid == AutoSchool[0]){
+		SetPlayerInterior(playerid, 3);
+		SetPlayerPos(playerid, -2027.1796,-104.8761,1035.1719);
+		SetPlayerFacingAngle(playerid, 180.2123);
+		SetPlayerVirtualWorld(playerid, 1);
+	}
+	else if(pickupid == AutoSchool[1]){
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, -2026.5153,-100.1560,35.1641);
+		SetPlayerFacingAngle(playerid, 0.7751);
+		SetPlayerVirtualWorld(playerid, 0);
+	}
+	else if(pickupid == AutoSchool[2]){
+		SetPlayerInterior(playerid, 3);
+		SetPlayerPos(playerid, -2029.6047,-118.0004,1035.1719);
+		SetPlayerFacingAngle(playerid, 0.2220);
+		SetPlayerVirtualWorld(playerid, 1);
+	}
+	else if(pickupid == AutoSchool[3]){
+		SetPlayerInterior(playerid, 0);
+		SetPlayerPos(playerid, -2029.7190,-122.5634,35.1931);
+		SetPlayerFacingAngle(playerid, 174.4220);
+		SetPlayerVirtualWorld(playerid, 0);
+	}
+	else if(pickupid == AutoSchool_Exam[0]){
+		if(P[playerid][p_lic_car] == 1) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас уже есть водительские права.");
+		new lawstring[256];
+		format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
+		ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
+		P[playerid][_p_dialog] = true;
+	}
+	else if(pickupid == AutoSchool_Exam[1]){
+		ShowPlayerDialog(playerid, d_null,DIALOG_STYLE_MSGBOX,"Информация",
+			"{5A5FED}•{FFFFFF} Для информирования водителей о предстоящей смене зеленого сигнала светофора на желтый,\n\
+			\tпредусмотрена возможность мигания зеленого сигнала.\n\
+			\tЭтот сигнал разрешает движение транспортных средств. Его длительность должна составлять 3 секунды.\n\
+			{5A5FED}•{FFFFFF} Неработающий стеклоподъемник это не может быть причиной запрещения эксплуатации транспортного средства.\n\
+			{5A5FED}•{FFFFFF} Буксировка на гибкой сцепке запрещена только в гололедицу из-за высокой вероятности заноса при торможении или трогании.\n\
+			{5A5FED}•{FFFFFF} Подача сигнала указателями поворота должна производиться заблаговременно до начала выполнения маневра и прекращаться немедленно после его завершения.\n\
+			\tПри этом сигнал не должен вводить в заблуждение других участников движения.\n\
+			{5A5FED}•{FFFFFF} Разметка в виде надписи {B22222}\"СТОП\"{FFFFFF} на проезжей части предупреждает о приближении к линии поперечной разметки (стоп-линия),\n\
+			\tуказывающей место,где Вы должны остановиться, выполняя требование знака {B22222}\"Движение без остановки запрещено\"{FFFFFF}. Без знакa данная разметка не применяется.\n\
+			{5A5FED}•{FFFFFF} В населенных пунктах звуковой сигнал разрешается применять только для предотвращения дорожно-транспортного происшествия.\n\
+			\tПри этом важно подать его своевременно, а не в последний момент, и он не должен быть излишне продолжительным.\n\
+			{5A5FED}•{FFFFFF} Произвести остановку на автомагистрали можно только на специальных площадках для стоянки, обозначенных соответствующими знаками.\n\
+			{5A5FED}•{FFFFFF} Водители мопедов должны двигаться по полосе для велосипедистов, выделенной знаками или разметкой,\n\
+			\tа в случае ее отсутствия - в один ряд по правому краю проезжей части или обочине, не создавая помех пешеходам.\n\
+			{5A5FED}•{FFFFFF} Обгон запрещён на равнозначных перекрёстках. Допускается производить обгон на неравнозначных перекрёстках при движении по главной дороге.\n\
+			{5A5FED}•{FFFFFF} Дорога включает в себя не только проезжие части, но также тротуары и обочины.\n\
+			{5A5FED}•{FFFFFF} В полотном потоке ТС движение со скоростью, большей или меньшей скорости потока,\n\
+			\tопасно и может способствовать возникновению аварийной ситуации. Скорость потока, как правило, не совпадает с предельно допустимой для Вас скоростью,\n\
+			\tи поэтому при движении в потоке именно интенсивность движения имеет решающее значение при выборе скорости.\n\
+			{5A5FED}•{FFFFFF} Перевозить людей в буксируемом легковом автомобиле разрешено только при буксировке на гибкой или жесткой сцепке.\n\
+			{5A5FED}•{FFFFFF} Движение ТС задним ходом запрещено на перекрестках, пешеходных переходах, в местах остановок маршрутных ТС.\n\
+			\tНа дорогах с односторонним движением двигаться задним ходом разрешается.\n\
+			{5A5FED}•{FFFFFF} Конец подъёма - это место перелома продольного профиля дороги. При подъезде к этому месту видимость отсутствует.\n\
+			\tПоэтому, Правилами обгон в конце подъёма, на опасных поворотах и на других участках с ограниченной видимостью запрещён.\n\
+			\tНе забываем главное условие обгона - {B22222}\"Путь, необходимый для обгона, никогда не должен превышать половины видимого отрезка пути\"{FFFFFF}.\n\
+			{5A5FED}•{FFFFFF} При вознекновении ДТП в первую очередь нужно оставаться на месте и вызвать сотрудников ПО.\n\
+			{5A5FED}•{FFFFFF} В жилых зонах и приравненных к ним дворовых территориях пешеходам движение разрешено как по тротуарам, так и по всей ширине проезжей части дорог\n\
+			{5A5FED}•{FFFFFF} Чем ниже и симметричнее расположен центр тяжести автомобиля, тем более он устойчив.\n\
+			\tПорожний автомобиль без пассажиров и груза всегда более устойчив против опрокидывания, чем при их наличии.","Закрыть","");
+	}
 	else if(pickupid == Grove[0]){
 		SetPlayerPos(playerid, 2466.4688,-1698.4783,1013.5078);
 		SetPlayerFacingAngle(playerid, 86.2566);
@@ -1579,13 +1644,6 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 		SetPlayerVirtualWorld(playerid, 0);
 		SetPlayerInterior(playerid,0);
 		SetCameraBehindPlayer(playerid);
-	}
-	else if(pickupid == AutoSchool_Exam[0]){
-		if(P[playerid][p_lic_car] == 1) return SendClientMessage(playerid,0xB22222FF,"[Справка]: {FFFFFF}У вас уже есть водительские права.");
-		new lawstring[256];
-		format(lawstring,sizeof(lawstring),"%s\n%s\n%s\n%s\n%s\n%s",Traffic_Laws_ExamQuestions[0],Traffic_Laws_ExamAnswers[0][0],Traffic_Laws_ExamAnswers[0][1],Traffic_Laws_ExamAnswers[0][2],Traffic_Laws_ExamAnswers[0][3]);
-		ShowPlayerDialog(playerid,d_law_test,DIALOG_STYLE_LIST,"Теориетическая сдача ПДД",lawstring,"Выбрать","Открыть");
-		P[playerid][_p_dialog] = true;
 	}
 	else if(pickupid == Russian[0])
 	{
@@ -1681,6 +1739,9 @@ public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 				P[playerid][p_cash] = g_Payment_Register;
 				P[playerid][p_level] = 1;
 				P[playerid][p_exp] = 1;
+				P[playerid][p_mute] = -1;
+				P[playerid][p_business_ps] = -1;
+				P[playerid][p_health] = 100;
 				SetPlayerScore(playerid,P[playerid][p_level]);
 				GetPlayerIp(playerid, P[playerid][p_reg_ip], 46);
 				orm_insert(P[playerid][_p_ormid], "OnMySQL_InsertAccount", "d", playerid);
@@ -1828,10 +1889,18 @@ public OnPlayerShootDynamicObject(playerid, weaponid, objectid, Float:x, Float:y
 	if(target_count_lv == 21){
 		Update_Target(1);
 		target_count_lv = 0;
+		foreach(new p : Player){
+			if(IsPlayerInRangeOfPoint(p, 30.0, 288.00000, -130.85989, 1007.165412) && GetPlayerInterior(p) == 7)
+				Streamer_Update(p,-1);
+		}
 	}  
 	if(target_count_ls == 21){
 		Update_Target(2);
 		target_count_ls = 0;
+		foreach(new p : Player){
+			if(IsPlayerInRangeOfPoint(p, 30.0, 292.35,-24.62,1001.52) && GetPlayerInterior(p) == 1)
+				Streamer_Update(p,-1);
+		}
 	}
     return 1;
 }

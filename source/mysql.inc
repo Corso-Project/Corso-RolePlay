@@ -12,12 +12,9 @@ public OnMySQL_SelectAccount(playerid)
 forward OnMySQL_InsertAccount(playerid);
 public OnMySQL_InsertAccount(playerid)
 {
-	P[playerid][p_mute] = -1;
-	P[playerid][p_business_ps] = -1;
 	orm_load(P[playerid][_p_ormid]);
 	TogglePlayerSpectating(playerid, 0);
 	SetSpawnInfo(playerid, 0, P[playerid][p_skin], 1642.4329,-2239.0205,13.4967,180.0, 0,0,0,0,0,0);
-	P[playerid][p_health] = 100;
 	SendClientMessage(playerid, 0xB9C9BFFF, "Создание учётной записи успешно выполнено.");
     SendClientMessage(playerid, 0xB9C9BFFF, "Добро пожаловать, в игру на "SERVER_NAME);
     SendClientMessage(playerid, 0xB9C9BFFF, "Главное меню, клавиша - '{00FF00}~k~~CONVERSATION_NO~{FFFFFF}'");
