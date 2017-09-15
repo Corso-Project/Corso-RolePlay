@@ -1,6 +1,8 @@
 stock Name_IsValid(const string[])
 {
 	new earth;
+	if(!strcmp(string,"Johhny",true)) return true;
+	
 	for(new i; i < strlen(string); i++) {
 		switch(string[i]) {
 		    case 'a'..'z': continue;
@@ -323,56 +325,6 @@ stock Get_TeamZoneColor(teamid)
 	}
 	return -1;
 }
-new weaponName[][] = {
-	{"Fist"}, // 0
-	{"Brass Knuckles"}, // 1
-	{"Golf Club"}, // 2
-	{"Night Stick"}, // 3
-	{"Knife"}, // 4
-	{"Baseball Bat"}, // 5
-	{"Shovel"}, // 6
-	{"Pool Cue"}, // 7
-	{"Katana"}, // 8
-	{"Chainsaw"}, // 9
-	{"Purple Dildo"}, // 10
-	{"Big White Vibrator"}, // 11
-	{"Medium White Vibrator"}, // 12
-	{"Small White Vibrator"}, // 13
-	{"Flowers"}, // 14
-	{"Cane"}, // 15
-	{"Grenade"}, // 16
-	{"Teargas"}, // 17
-	{"Molotov"}, // 18
-	{" "}, // 19
-	{" "}, // 20
-	{" "}, // 21
-	{"Colt 45"}, // 22
-	{"Silenced"}, // 23
-	{"Deagle"}, // 24
-	{"Shotgun"}, // 25
-	{"Sawnoff"}, // 26
-	{"Combat"}, // 27
-	{"Uzi"}, // 28
-	{"MP5"}, // 29
-	{"AK47"}, // 30
-	{"M4"}, // 31
-	{"Tec9"}, // 32
-	{"Rifle"}, // 33
-	{"Sniper"}, // 34
-	{"RPG"}, // 35
-	{"HS RPG"}, // 36
-	{"Flame"}, // 37
-	{"Minigun"}, // 38
-	{"Satchel Charge"}, // 39
-	{"Detonator"}, // 40
-	{"Spray Can"}, // 41
-	{"Fire Extinguisher"}, // 42
-	{"Camera"}, // 43
-	{"Nightvision"}, // 44
-	{"Infrared Vision"}, // 45
-	{"Parachute"}, // 46
-	{"Fake Pistol"} // 47
-};
 stock Get_GangOnline(gangid){
 	foreach(new i:Player)
 	{
@@ -526,6 +478,9 @@ stock Create_Target(){
 	
 	MoveDynamicObject(target_frame[5],298.885986, -7.349909, 1004.186157,Target_3, 0.0, 0.0, 0.0);
 	LoopStatus[5] = 1;
+	
+	// Ocean Flats Ammu-Nation
+	target_frame[7] = CreateDynamicObject(3025,318.309265, -58.041698, 1004.219421, 0.0, -0.0, -90.0,3,2);
 }
 stock Update_Target(ammunation){
 	switch(ammunation){

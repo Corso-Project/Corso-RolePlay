@@ -35,6 +35,15 @@ timer OnRentVehicleEnd[30*60*1000](vehicleid, category)
 			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
 			SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 		}
+		case JOB_BUS: {
+		    for(new i; i < sizeof(V_BUS); i++) {
+			    if(vehicleid != V_BUS[i]) continue;
+			    V_BUS_OWNER[i] = 0;
+			}
+			new engine,lights,alarm,doors,bonnet,boot,objective;
+			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+			SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
+		}
 		case JOB_ENGINEER: {
 		    for(new i; i < sizeof(V_ENGINEER); i++) {
 			    if(vehicleid != V_ENGINEER[i]) continue;
@@ -197,7 +206,7 @@ task PayDay[60*1000]()
 				}
 			}
 			orm_update(P[i][_p_ormid]);
-			va_SendClientMessage(i,0xB9C9BFFF,"Акаунт {B1BBBB}%s{B9C9BF} успешно сохранен.",P[i][p_name]);
+			va_SendClientMessage(i,0xB9C9BFFF,"Аккаунт {B1BBBB}%s{B9C9BF} успешно сохранен.",P[i][p_name]);
 		}
 	}
 	return true;
@@ -215,15 +224,6 @@ task OnSecTimer[1000]()
 		}
 	}
 	return true;
-}
-ptask SpectateUpdatePlayer[1000](playerid){
-	new Float:Healt, Float:Armour, string[260];
-
-    GetPlayerHealth(gSpectateID[playerid], Healt);
-    GetPlayerArmour(gSpectateID[playerid], Armour);
-    new Float:Total = Armour + Healt;
-    format(string,sizeof(string), "%s ~n~~g~~h~H~w~ealth: ~g~~h~%d ~r~~h~/ ~y~P~w~ING: ~y~%d~n~ ~r~W~w~eapons:~n~ ~r~%s",Name(gSpectateID[playerid]), floatround(Total), GetPlayerPing(gSpectateID[playerid]), ReturnPlayerWeaponsString(gSpectateID[playerid]));
-	PlayerTextDrawSetString(playerid, P[playerid][SpecText], string);
 }
 timer OnPlayerClearAnimation[500](playerid){
 	ClearAnimations(playerid);

@@ -41,6 +41,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	            if(P[i][_p_in_game] == false) continue;
 	            if(P[i][p_access] == 0) continue;
 				va_SendClientMessage(i, 0xADFF2FFF, "Подключился %s - %s [%d]", Get_AccessName(playerid),Name(playerid),playerid);
+				Protection_SetPlayerParamInt(playerid, PROTECTION_ALL, PROTECTION_PLAYER_DISABLED, 1);
 	        }
 	    }
         if(P[playerid][p_mute] >= 60){
@@ -270,6 +271,35 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	        }
 	    }
 	}
+	// Аренда автобуса
+	case d_vehicle_rent_bus: switch(response) {
+	    case 0: RemovePlayerFromVehicle(playerid);
+	    case 1: {
+	        new minute = strval(inputtext);
+	        if(minute < 25 || minute > 240) {
+	    	    SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Количество минут должно быть от 25 до 240");
+	            return RemovePlayerFromVehicle(playerid);
+	    	}
+	        new amount = minute * Prices_RentCar_Econom;
+	        if(P[playerid][p_cash] < amount) {
+	            SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Недостаточно денежных средств для аренды транспорта");
+	            return RemovePlayerFromVehicle(playerid);
+	        }
+	        va_SendClientMessageF(playerid, -1,"Транспортное средство арендовано на %d минут за $%m.", minute,amount);
+	        Cash_Give(playerid, -amount);
+	        Budget_GOVERNMENT += amount;
+	        for(new i; i < sizeof(V_BUS); i++) {
+	            if(V_BUS[i] != GetPlayerVehicleID(playerid)) continue;
+	            V_BUS_OWNER[i] = P[playerid][p_uid];
+	        	defer OnRentVehicleEnd[minute*60*1000](V_BUS[i], JOB_BUS);
+	        }
+			ShowPlayerDialog(playerid, d_job_bus_route, DIALOG_STYLE_LIST,"Выберите маршрут",
+				"Мэрия ЛС - АвтоШкола\n\
+			     Мэрия ЛС - Банк ЛС{B22222}[Не доступен]{FFFFFF}\n\
+				 Мэрия ЛС - Лесопилка{B22222}[Не доступен]{FFFFFF}\n\
+				 Мэрия ЛС - [Какое-то место]{B22222}[Не доступен]{FFFFFF}","Выбрать","Закрыть");
+	    }
+	}
 	// Аренда служебного транспорта
 	case d_vehicle_rent_officecar: switch(response) {
 	    case 0: RemovePlayerFromVehicle(playerid);
@@ -355,9 +385,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         case 4:ShowPlayerDialog(playerid, d_player_report, DIALOG_STYLE_INPUT,"Обратная связь","{FFFFFF}Введите своё сообщение для администрации сервера\nОно должно быть кратким и ясным\n\n{66CC66}Если вы хотите подать жалобу на игрока,\nобязательно укажите его ID и причину жалобы","Отправить","Закрыть");
     }
     case d_player_settings: if(response) switch(listitem){
-        case 0:{
+        case 0:
             ShowPlayerDialog(playerid, d_account_change_password, DIALOG_STYLE_INPUT,"Смена пароля учётной записи","{FFFFFF}Введит в поле ниже ваш новый пароль:","Сменить","Назад");
-        }
 		case 1:{
 			for (new i; i < TEXT_RUSSIFIERS_COUNT; i++) { 
 				SetPlayerRussifierType(playerid, RussifierType:i); 
@@ -551,7 +580,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         case 1: p_gps = CreateDynamicCP(-2650.0825,376.0515,6.1563, 5.0,-1,-1,playerid,6000.0);
         case 2: p_gps = CreateDynamicCP(2359.4534,2377.9929,10.5474, 5.0,-1,-1,playerid,6000.0);
     }
-    // АШ
+    // Авто-Школа
     case d_law_test:{
         if(!response){
             SendClientMessage(playerid, 0xFFCC66FF, "[Уведомление]: {FFFFFF}Вы прекратили теоретическую сдачу ПДД.");
@@ -1068,6 +1097,26 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         }
         if(IsPlayerInRangeOfPoint(playerid, 20.5, -1034.8696,-617.4734,32.5861)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Точка назначения будет показана как только вы отдолитесь от места загрузки топлива.");
     }
+	case d_job_bus_route:{
+		if(!response) return ShowPlayerDialog(playerid, d_job_bus_route, DIALOG_STYLE_LIST,"Выберите маршрут",
+				"Мэрия ЛС - АвтоШкола\n\
+			     Мэрия ЛС - Банк ЛС {B22222}[Не доступен]{FFFFFF}\n\
+				 Мэрия ЛС - Лесопилка {B22222}[Не доступен]{FFFFFF}\n\
+				 Мэрия ЛС - [Какое-то место] {B22222}[Не доступен]{FFFFFF}","Выбрать","Закрыть");
+		switch(listitem){
+			case 0: {
+				SetPVarInt(playerid,"Bus_Route_CP",0); // CP ID 0
+				SetPVarInt(playerid,"Bus_Route_To_Go",listitem);
+				new x = GetPVarInt(playerid, "Bus_Route_CP");
+				
+				Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[listitem][x][0],Bus_Route[listitem][x][1],Bus_Route[listitem][x][2],Bus_Route[listitem][x+1][0],Bus_Route[listitem][x+1][1],Bus_Route[listitem][x+1][2],4,0,0,playerid);
+				Streamer_Update(playerid,3);
+			}
+			case 1: SendClientMessage(playerid, -1, "0");
+			case 2: SendClientMessage(playerid, -1, "0");
+			case 3: SendClientMessage(playerid, -1, "0");
+		}
+	}
     }
     return 1;
 }

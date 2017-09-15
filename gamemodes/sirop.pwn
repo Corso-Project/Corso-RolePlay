@@ -18,11 +18,13 @@
 
 #include <lib\Pawn.CMD>
 #include <lib\geolocation>
-#include <lib\gl_common>
 #include <lib\rustext>
 #include <lib\formatex>
 #include <lib\gangzone>
 #include <lib\weaponskill>
+
+#include <lib\getspawninfo>
+#include <lib\protection>
 
 #include "..\source\vars.inc"
 

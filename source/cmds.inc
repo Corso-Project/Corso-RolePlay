@@ -413,6 +413,7 @@ CMD:lic(playerid, params[])
 		Show_PlayerLic(playerid,playerid);
 		P[playerid][_p_dialog] = true;
 		SetPlayerChatBubble(playerid, "Просматривает свои лицензий", 0xDDA0DDFF, 35.0, 5000);
+		IC_Me(playerid,"просматривает свои лицензий");
 	}
     return 1;
 }
@@ -484,52 +485,44 @@ CMD:buyfilling(playerid, params[]){
 CMD:spec(playerid, params[]){
 	if(P[playerid][_p_in_game] == false) return 1;
 	if(P[playerid][p_access] < 1) return true;
-	if(sscanf(params,"u",params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /spec [ID игрока].");
-	if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Игрока с таким ID нету в игре.");
-	if(params[0] == playerid) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Нельзя следить за собой.");
+	new user;
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Используйте /spec [ID игрока].");
+	if(!IsPlayerConnected(user)) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Игрока с таким ID нету в игре.");
+	if(user == playerid) return SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Нельзя следить за собой.");
 
 	SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Что бы выйти из режима слежки нажмите - {4682B4}SPACE{FFFFFF}.");
 
-	new Float:pos[3];
-	GetPlayerPos(playerid,pos[0],pos[1],pos[2]);
-	SetPVarFloat(playerid,"float_pos_x",pos[0]);
-	SetPVarFloat(playerid,"float_pos_y",pos[1]);
-	SetPVarFloat(playerid,"float_pos_z",pos[2]);
+	new Float:x,Float:y,Float:z,Float:a;
+	GetPlayerPos(playerid, x,y,z);
+	GetPlayerFacingAngle(playerid,a);
+	SetPVarFloat(playerid,"float_pos_x",x);
+	SetPVarFloat(playerid,"float_pos_y",y);
+	SetPVarFloat(playerid,"float_pos_z",z);
+	SetPVarFloat(playerid,"float_angle",a);
 	SetPVarInt(playerid,"int_interior",GetPlayerInterior(playerid));
 	SetPVarInt(playerid,"int_virtualworld",GetPlayerVirtualWorld(playerid));
-	if(GetPlayerState(params[0]) == PLAYER_STATE_ONFOOT){
-		TogglePlayerSpectating(playerid, 1);
-		PlayerSpectatePlayer(playerid, params[0]);
-		SetPlayerInterior(playerid,GetPlayerInterior(params[0]));
-		SetPlayerVirtualWorld(playerid,GetPlayerVirtualWorld(params[0]));
-		gSpectateID[playerid] = params[0];
-		gSpectateType[playerid] = 1;
-		StartSpectate(playerid, params[0]);
-	}
-	else if(GetPlayerState(params[0]) == PLAYER_STATE_PASSENGER || PLAYER_STATE_DRIVER){
-		new vehicleid = GetPlayerVehicleID(params[0]);
-		TogglePlayerSpectating(playerid, 1);
-		PlayerSpectateVehicle(playerid,vehicleid);
-		SetPlayerInterior(playerid,GetPlayerInterior(params[0]));
-		SetPlayerVirtualWorld(playerid,GetPlayerVirtualWorld(params[0]));
-		gSpectateID[playerid] = params[0];
-		gSpectateType[playerid] = 1;
-		StartSpectate(playerid, params[0]);
-	}
+	SetPVarInt(playerid,"spec",1);
+	
+	SetPlayerInterior(playerid,GetPlayerInterior(user));
+	SetPlayerVirtualWorld(playerid,GetPlayerVirtualWorld(user));
+	TogglePlayerSpectating(playerid, 1);
+	PlayerSpectatePlayer(playerid, user);
+	gSpectateID[playerid] = user;
+	gSpectateType[playerid] = ADMIN_SPEC_TYPE_PLAYER;
 	return true;
 }
 alias:spec("spectate","recon","rec","re");
 CMD:specoff(playerid, params[]){
 	if(P[playerid][_p_in_game] == false) return 1;
 	if(P[playerid][p_access] < 1) return true;
-	if(gSpectateType[playerid] == 1)
-	{
-		PlayerTextDrawHide(playerid, P[playerid][SpecText]);
-		TogglePlayerSpectating(playerid, 0);
-		gSpectateID[playerid] = INVALID_PLAYER_ID;
-		gSpectateType[playerid] = 0;
-		stop SpectateUpdatePlayer(playerid);
-	}
+	
+	TogglePlayerSpectating(playerid, 0);
+	gSpectateID[playerid] = INVALID_PLAYER_ID;
+	gSpectateType[playerid] = ADMIN_SPEC_TYPE_NONE;
+	
+	SetPlayerPos(playerid,GetPVarFloat(playerid,"float_pos_x"),GetPVarFloat(playerid,"float_pos_y"),GetPVarFloat(playerid,"float_pos_z"));
+	SetPlayerInterior(playerid, GetPVarInt(playerid, "int_interior"));
+	SetPlayerVirtualWorld(playerid, GetPVarInt(playerid, "int_virtualworld"));
 	return true;
 }
 CMD:ahelp(playerid, params[]){
@@ -879,8 +872,8 @@ CMD:time(playerid, params[]){
 	format(time,sizeof(time),"~h~~b~%d:%0d:%0d~n~~h~~g~%02d-%s-%d",hour,minute,second,day,mtext,year);
 	GameTextForPlayer(playerid,time,5000,1);
 	switch(P[playerid][p_sex]) {
-		case SEX_FEMALE: SetPlayerChatBubble(playerid, "Взглянула на часы", 0xDDA0DDFF, 35.0, 5000);
-		case SEX_MALE: SetPlayerChatBubble(playerid, "Взглянул на часы", 0xDDA0DDFF, 35.0, 5000);
+		case SEX_FEMALE: IC_Me(playerid, "взглянула на часы");
+		case SEX_MALE: IC_Me(playerid, "взглянул на часы");
 	}
 	if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT) ApplyAnimation(playerid, "COP_AMBIENT", "Coplook_watch",4.1,0,0,0,0,0);
 	return true;
@@ -1130,7 +1123,7 @@ CMD:skill(playerid,params[]){
 	}else{
 		Show_PlayerSkill(playerid,playerid);
 		P[playerid][_p_dialog] = true;
-		SetPlayerChatBubble(playerid, "Просматривает свою выписку из тира", 0xDDA0DDFF, 35.0, 5000);
+		IC_Me(playerid,  "просматривает свою выписку из тира");
 	}
 	return true;
 }

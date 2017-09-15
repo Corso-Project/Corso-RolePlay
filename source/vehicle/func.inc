@@ -82,17 +82,22 @@ stock Vehicle_IsNotForPlayer(vehicleid, playerid)
 	}
 	for(new i; i < sizeof(V_TAXI); i++) {
 		if(vehicleid != V_TAXI[i]) continue;
-		if(P[playerid][p_job_team] != JOB_TAXI) return 1;
+		if(V_TAXI_OWNER[i] != P[playerid][p_uid]) return 1;
+		return 0;
+	}
+	for(new i; i < sizeof(V_BUS); i++) {
+		if(vehicleid != V_BUS[i]) continue;
+		if(V_BUS_OWNER[i] != P[playerid][p_uid]) return 1;
 		return 0;
 	}
 	for(new i; i < sizeof(V_ENGINEER); i++) {
 		if(vehicleid != V_ENGINEER[i]) continue;
-		if(P[playerid][p_job_team] != JOB_ENGINEER) return 1;
+		if(V_ENGINEER_OWNER[i] != P[playerid][p_uid]) return 1;
 		return 0;
 	}
 	for(new i; i < sizeof(V_FREIGHTER); i++) {
 		if(vehicleid != V_FREIGHTER[i]) continue;
-		if(P[playerid][p_job_team] != JOB_FREIGHTER) return 1;
+		if(V_FREIGHTER_OWNER[i] != P[playerid][p_uid]) return 1;
 		return 0;
 	}
 	for(new i; i < sizeof(V_RENT); i++) {

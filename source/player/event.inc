@@ -420,6 +420,19 @@ public OnPlayerSpawn(playerid)
 				for(new x; x < 2; x++) TextDrawShowForPlayer(playerid, Capture[x]);
 			}
 		}
+		if(GetPVarInt(playerid,"spec") == 1){
+			SetPlayerPos(playerid,GetPVarFloat(playerid,"float_pos_x"),GetPVarFloat(playerid,"float_pos_y"),GetPVarFloat(playerid,"float_pos_z"));
+			SetPlayerInterior(playerid, GetPVarInt(playerid, "int_interior"));
+			SetPlayerVirtualWorld(playerid, GetPVarInt(playerid, "int_virtualworld"));
+			SetPlayerFacingAngle(playerid, GetPVarFloat(playerid,"float_angle"));
+			DeletePVar(playerid,"spec");
+			DeletePVar(playerid,"float_pos_x");
+			DeletePVar(playerid,"float_pos_y");
+			DeletePVar(playerid,"float_pos_z");
+			DeletePVar(playerid,"int_interior");
+			DeletePVar(playerid,"int_virtualworld");
+			DeletePVar(playerid,"float_angle");
+		}
 	}
 	return 1;
 }
@@ -529,6 +542,24 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 				Введите время аренды. От 1 минуты ($%m) до 240 минут",
 				Prices_RentCar_Econom);
             ShowPlayerDialog(playerid, d_vehicle_rent_taxi, DIALOG_STYLE_INPUT, "Аренда такси",source,"Аренда","Выйти");
+			P[playerid][_p_dialog] = true;
+            break;
+	    }
+		for(new i; i < sizeof(V_BUS); i++) {
+	        if(P[playerid][p_job_team] != JOB_BUS) break;
+	        if(vehicleid != V_BUS[i]) continue;
+	        if(V_BUS_OWNER[i] != 0) break;
+			//if(P[playerid][])
+	        if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
+                SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
+                break;
+            }
+            new source[128];
+            format(source, sizeof(source),
+				"{FFFFFF}Данный автобус сдаётся в аренду.\n\n\
+				Введите время аренды. От 25 минут ($%m) до 240 минут",
+				Prices_RentCar_Econom);
+            ShowPlayerDialog(playerid, d_vehicle_rent_bus, DIALOG_STYLE_INPUT, "Аренда автобуса",source,"Аренда","Выйти");
 			P[playerid][_p_dialog] = true;
             break;
 	    }
@@ -954,16 +985,8 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	}
 	if(newkeys & KEY_SPRINT)
 	{
-		if(gSpectateType[playerid] == 1)
-		{
-			PlayerTextDrawHide(playerid, P[playerid][SpecText]);
-			TogglePlayerSpectating(playerid, 0);
-			gSpectateID[playerid] = INVALID_PLAYER_ID;
-			gSpectateType[playerid] = 0;
-			SetPlayerPos(playerid, GetPVarFloat(playerid,"float_pos_x"),GetPVarFloat(playerid,"float_pos_y"),GetPVarFloat(playerid,"float_pos_z"));
-		    SetPlayerInterior(playerid, GetPVarInt(playerid,"int_interior"));
-		    SetPlayerVirtualWorld(playerid, GetPVarInt(playerid,"int_virtualworld"));
-		}
+		if(gSpectateType[playerid] >= 1)
+			callcmd::specoff(playerid,"");
 	}
 	if(newkeys & KEY_WALK)
 	{
@@ -1013,15 +1036,6 @@ public OnPlayerUpdate(playerid)
     if(!IsPlayerConnected(playerid)) return 0;
     if(P[playerid][_p_in_game] == false) return 0;
 
-    if(P[playerid][_p_cheater] >= 10) {
-        Kick(playerid);
-        return 0;
-    }
-
-	/*new string[32];
-	format(string, sizeof(string), "%.0f Cent", floatmul(floatfract(P[playerid][p_cash]), 100.0));
-	PlayerTextDrawSetString(playerid,P[playerid][_p_cent], string);
-	PlayerTextDrawShow(playerid, P[playerid][_p_cent]);*/
 	if(P[playerid][p_wanted_level] == 0){		
 		new string[16];
 		format(string, sizeof(string), "%d Cent", P[playerid][p_cash] % 100);
@@ -1034,18 +1048,6 @@ public OnPlayerUpdate(playerid)
 		PlayerTextDrawSetString(playerid, Wanted_New_Cash, string);
 		PlayerTextDrawShow(playerid, Wanted_New_Cash);
 	}
-
-    if(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
-	{
-		Message_ToAdmins(0xB9C9BFFF, "[Защита]: Реактивный ранец - %s[%d]", Name(playerid),playerid);
-	    Kick(playerid);
-	    return 0;
-	}
-
-	Weapon_Sync(playerid);
-//	Health_Sync(playerid);
-	Armour_Sync(playerid);
-
 	if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER) {
 		Speedo_Sync(playerid);
 	}
@@ -1096,6 +1098,15 @@ public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY
 		{
 		    P[playerid][p_ammo_4] = 0;
 			P[playerid][p_weapon_4] = 0;
+		}
+	}
+	else if(weaponid == P[playerid][p_weapon_5])
+	{
+		P[playerid][p_ammo_5]--;
+		if(P[playerid][p_ammo_5] <= 0)
+		{
+		    P[playerid][p_ammo_5] = 0;
+			P[playerid][p_ammo_5] = 0;
 		}
 	}
     return 1;
@@ -1162,16 +1173,22 @@ public OnPlayerEnterDynamicCP(playerid,checkpointid)
 		   (checkpointid == Mafia_Storage[2] && P[playerid][p_job_team] != 17)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}У вас нет доступа к этому складу.");
 		   
 		new x = P[playerid][p_job_team]-10;
-		new text[159+1],
+		new text[159+31+1],
 			name[8+22+1];
 		format(name,sizeof(name),"{FFCC66}%s",Get_GangName(P[playerid][p_job_team]));
 		format(text,sizeof(text),
-		"Взять деньги {FF8888}($%m)\n\
-		Взять патроны {FF8888}(%d)\n\
-		Взять материалы {FF8888}(%d)\n\
-		Положить деньги\n\
-		Положить патроны\n\
-		Положить материалы",GS[x][g_cash],GS[x][g_ammo],GS[x][g_materials]);
+			"Взять деньги {FF8888}($%m)\n\
+			Взять патроны {FF8888}(%d)\n\
+			Взять материалы {FF8888}(%d)\n\
+			Положить деньги\n\
+			Положить патроны\n\
+			Положить материалы",
+				GS[x][g_cash],GS[x][g_ammo],GS[x][g_materials]);
+		if(P[playerid][p_job_team] >= 10 && P[playerid][p_job_team] <= 14){
+			new zones[31];
+			format(zones,sizeof(zones),"\n \nТерриторий захваченно: %i",Captured_Zones[x+1]);
+			strcat(text, zones);
+		}
 		ShowPlayerDialog(playerid, d_gang_storage, DIALOG_STYLE_LIST, name, text, "Выбрать", "Закрыть");
 		P[playerid][_p_dialog] = true;
 	}
@@ -1534,7 +1551,7 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
 			"{5A5FED}•{FFFFFF} Для информирования водителей о предстоящей смене зеленого сигнала светофора на желтый,\n\
 			\tпредусмотрена возможность мигания зеленого сигнала.\n\
 			\tЭтот сигнал разрешает движение транспортных средств. Его длительность должна составлять 3 секунды.\n\
-			{5A5FED}•{FFFFFF} Неработающий стеклоподъемник это не может быть причиной запрещения эксплуатации транспортного средства.\n\
+			{5A5FED}•{FFFFFF} Неработающий стеклоподъемник не может быть причиной запрещения эксплуатации транспортного средства.\n\
 			{5A5FED}•{FFFFFF} Буксировка на гибкой сцепке запрещена только в гололедицу из-за высокой вероятности заноса при торможении или трогании.\n\
 			{5A5FED}•{FFFFFF} Подача сигнала указателями поворота должна производиться заблаговременно до начала выполнения маневра и прекращаться немедленно после его завершения.\n\
 			\tПри этом сигнал не должен вводить в заблуждение других участников движения.\n\
@@ -1680,6 +1697,21 @@ public OnPlayerPickUpDynamicPickup(playerid, pickupid)
     return true;
 }
 public OnPlayerEnterDynamicRaceCP(playerid, checkpointid){
+	new vehicleid = GetPlayerVehicleID(playerid);
+	if(checkpointid == Bus_Route_CheckPoint && GetVehicleModel(vehicleid) == 431){
+		new x = GetPVarInt(playerid, "Bus_Route_CP"),
+			y = GetPVarInt(playerid, "Bus_Route_To_Go");
+		
+		if(x == 93)
+			SetPVarInt(playerid, "Bus_Route_CP", 2);
+		else
+			SetPVarInt(playerid,"Bus_Route_CP", x+1);
+		
+		TogglePlayerDynamicRaceCP(playerid, Bus_Route_CheckPoint,0);
+		Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[y][x][0],Bus_Route[y][x][1],Bus_Route[y][x][2],Bus_Route[y][x+1][0],Bus_Route[y][x+1][1],Bus_Route[y][x+1][2],4,0,0,playerid);
+		TogglePlayerDynamicRaceCP(playerid, Bus_Route_CheckPoint,1);
+		Streamer_Update(playerid, 3);
+	}
 	return true;
 }
 public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
@@ -1758,12 +1790,12 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
 {
 	new x = 0;
 	while(x!=MAX_PLAYERS) {
-	    if( IsPlayerConnected(x) &&	GetPlayerState(x) == PLAYER_STATE_SPECTATING && gSpectateID[x] == playerid && gSpectateType[x] == 1 ){
+	    if( IsPlayerConnected(x) &&	GetPlayerState(x) == PLAYER_STATE_SPECTATING && gSpectateID[x] == playerid && gSpectateType[x] == ADMIN_SPEC_TYPE_PLAYER)
+   		{
    		    SetPlayerInterior(x,newinteriorid);
 		}
 		x++;
 	}
-	return true;
 }
 public OnPlayerClickTextDraw(playerid, Text:clickedid) 
 { 
@@ -1953,12 +1985,6 @@ stock Show_PlayerLic(playerid,targetid){
 		lic_car,lic_aircraft,lic_boat,lic_moto,lic_weapon,lic_freight,lic_helicopter);
 	ShowPlayerDialog(targetid, d_null, DIALOG_STYLE_MSGBOX, "Лицензии", output, "Ок","");
 	P[playerid][_p_dialog] = true;
-}
-stock StartSpectate(playerid, specid)
-{
-	PlayerTextDrawShow(playerid, P[playerid][SpecText]);
-    SpectateUpdatePlayer(playerid);
-	printf("%i",specid);
 }
 stock Show_PlayerSkill(playerid, targetid){
 	new skillname[32],amount;

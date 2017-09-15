@@ -244,6 +244,18 @@ public OnGameModeInit()
 	V_TAXI[18] = Vehicle_Add(420, 2782.0000, 1295.0000, 10.5000, 180.0000, 1,1);
 	V_TAXI[19] = Vehicle_Add(438, 2775.6001, 1295.0000, 10.5000, 180.0000, 1,1);
 	V_TAXI[20] = Vehicle_Add(420, 2769.3000, 1295.0000, 10.5000, 180.0000, 1,1);
+	// Автобусы 
+	V_BUS[0] = Vehicle_Add(431, 1063.8400, -1775.55, 13.4400, 270.1800,1,1);
+	V_BUS[1] = Vehicle_Add(431, 1063.8400, -1769.68, 13.4400, 270.1800,1,1);
+	V_BUS[2] = Vehicle_Add(431, 1063.8400, -1763.80, 13.4400, 270.1800,1,1);
+	V_BUS[3] = Vehicle_Add(431, 1063.8400, -1757.93, 13.4400, 270.1800,1,1);
+	V_BUS[4] = Vehicle_Add(431, 1063.8400, -1752.04, 13.4400, 270.1800,1,1);
+	V_BUS[5] = Vehicle_Add(431, 1063.8400, -1746.12, 13.4400, 270.1800,1,1);
+	V_BUS[6] = Vehicle_Add(431, 1063.8400, -1740.18, 13.4400, 270.1800,1,1);
+	V_BUS[7] = Vehicle_Add(431, 1097.4200, -1775.52, 13.4400, 90.0,1,1);
+	V_BUS[8] = Vehicle_Add(431, 1097.4200, -1769.70, 13.4400, 90.0,1,1);
+	V_BUS[9] = Vehicle_Add(431, 1097.4200, -1763.70, 13.4400, 90.0,1,1);
+	V_BUS[10] = Vehicle_Add(431,1097.4200,-1757.87,13.4400,90.0,1,1);
 	// Инженерные
 	V_ENGINEER[0] = Vehicle_Add(525, 1552.7000, -2361.0000, 13.5000, 0.0000);
 	V_ENGINEER[1] = Vehicle_Add(552, 1546.2400, -2361.0000, 13.5000, 0.0000);
@@ -551,6 +563,8 @@ public OnGameModeInit()
 		TextDrawUseBox(Text:TextRusTD[RussifierType:i], 1);
 		TextDrawBoxColor(Text:TextRusTD[RussifierType:i], 0x00000080);
     }
+	// Protection
+	Protection_SetParamInt(PROTECTION_ALL, PROTECTION_ENABLED, 1);
 	return 1;
 }
 

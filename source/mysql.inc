@@ -90,6 +90,13 @@ public OnMySQL_SelectGangZones()
 
 		GZ[x][_gz_local] = GangZoneCreate(GZ[x][gz_min_pos_x], GZ[x][gz_min_pos_y], GZ[x][gz_max_pos_x], GZ[x][gz_max_pos_y]);
 		TotalGangZones++;
+		switch(GZ[x][gz_team]){
+			case 1:	Captured_Zones[1]++;
+			case 2: Captured_Zones[2]++;
+			case 3: Captured_Zones[3]++;
+			case 4: Captured_Zones[4]++;
+			case 5: Captured_Zones[5]++;
+		}
 	}
 	printf("Загруженно Ганг Зон:%i      [Длительность загрузки: %d ms]",TotalGangZones,cache_get_query_exec_time(MILLISECONDS));
 }

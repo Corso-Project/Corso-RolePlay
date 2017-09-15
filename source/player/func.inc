@@ -37,6 +37,7 @@ stock Get_TeamName(playerid)
 		case ORG_RUSSIAN: dests = "Семья 'Воры в законе'";
 		case ORG_ITALIAN: dests = "Семья 'Ла Коза Ностра'";
 		case JOB_TAXI: dests = "Таксист";
+		case JOB_BUS: dests = "Автобусник";
 		case JOB_ENGINEER: dests = "Инженер";
 		case JOB_FREIGHTER: dests = "Грузоперевозчик";
 	}
@@ -46,7 +47,7 @@ stock Get_RangName(playerid)
 {
 	new dests[41+1];
 	switch(P[playerid][p_job_team]){
-		case ORG_UNKNOWN, JOB_TAXI, JOB_ENGINEER, JOB_FREIGHTER : dests = "-";
+		case ORG_UNKNOWN, JOB_TAXI, JOB_ENGINEER, JOB_FREIGHTER,JOB_BUS : dests = "-";
 		case ORG_GOVERNMENT:{
 			switch(P[playerid][p_rang]){
 				case 1: dests = "Водитель";
@@ -299,7 +300,7 @@ stock IC_Me(playerid, action[])
 	}
 	return 1;
 }
-
+/*
 stock Weapon_Sync(playerid)
 {
     if(P[playerid][_p_spawned] == false) return 1;
@@ -379,100 +380,6 @@ stock Weapon_Sync(playerid)
 			} // default
 	    } // switch
 	} // for
-	return 1;
-}
-
-/*stock Health_Sync(playerid)
-{
-	if(P[playerid][_p_spawned] == false) return 1;
-	switch(GetPlayerState(playerid)) {
-	    case 0,7..9: return 1;
-	}
-    new Float: fhealth;
-	GetPlayerHealth(playerid, fhealth);
-	new health = floatround(fhealth);
-	if(health > P[playerid][p_health]) {
-	    if(IsPlayerNearVending(playerid, 1 | 2)) {
-			P[playerid][p_health] += 5;
-			if(P[playerid][p_health] > 100) P[playerid][p_health] = 100;
-			SetPlayerHealth(playerid, P[playerid][p_health]);
-	    } else {
-			Message_ToAdmins(0xB9C9BFFF, "[Защита]: Несоответствие здоровья - %s[%d] | C: %d / S: %d",Name(playerid),playerid,health,P[playerid][p_health]);
-	        SetPlayerHealth(playerid, P[playerid][p_health]);
-	        P[playerid][_p_cheater]++;
-	    }
-	}
-	return 1;
-}*/
-
-stock Armour_Sync(playerid)
-{
-    if(P[playerid][_p_spawned] == false) return 1;
-	switch(GetPlayerState(playerid))
-	{
-	    case 0,7..9: return 1;
-	}
-    new Float: farmour;
-	GetPlayerArmour(playerid, farmour);
-	new armour = floatround(farmour);
-	if(armour > P[playerid][p_armour])
-	{
-		Message_ToAdmins(0xB9C9BFFF, "[Защита]: Несоответствие бронежилета - %s[%d] | C: %d / S: %d",Name(playerid),playerid,armour,P[playerid][p_armour]);
-	    SetPlayerArmour(playerid, P[playerid][p_armour]);
-	    P[playerid][_p_cheater]++;
-	}
-	return 1;
-}/*
-forward OnCheatDetected(playerid, ip_address[], type, code);
-public OnCheatDetected(playerid, ip_address[], type, code)
-{
-	if(type) BlockIpAddress(ip_address, 0); //Среагировал на IP (например за попытку брута ркона) - блочим его
-	else //Среагировал на ID игрока
-	{
-		switch(code) //Какой чит?
-		{
-			case 5: return 1; //Телепорт незанятых авто (античит в любом случае вернёт её на прежнее место, наказание лучше не делать)
-			case 7:{
-				Message_ToAdmins(0xB22222FF, "[Защита]: {FFFFFF}Подозрение на FlyHack (onfoot) - %s[%d]",Name(playerid),playerid);
-				return 1;
-			}
-			case 8:{
-				Message_ToAdmins(0xB22222FF, "[Защита]: {FFFFFF}Подозрение на FlyHack (in vehicle) - %s[%d]",Name(playerid),playerid);
-				return 1;
-			}
-			case 11: //Починка транспорта, лучше вернуть ему старое хп (если не применит его - сработает уже анти-ноп)
-			{
-				new vehid = GetPlayerVehicleID(playerid), Float:vhealth;
-				AntiCheatGetVehicleHealth(vehid, vhealth);
-				SetVehicleHealth(vehid, vhealth);
-				return 1;
-			}
-			case 14: //Деньги
-			{
-				//Возвращаем старую сумму
-				new a = AntiCheatGetMoney(playerid);
-				ResetPlayerMoney(playerid);
-				GivePlayerMoney(playerid, a);
-				return 1; //Иное наказание также нам не нужно
-			}
-			case 32: return ClearAnimations(playerid, 1); //CarJack, выкидываем игрока из авто
-			case 40: SendClientMessage(playerid, -1, MAX_CONNECTS_MSG); //Песочница (вход 2-х и более человек с одного IP), прощаемся
-			case 41: SendClientMessage(playerid, -1, UNKNOWN_CLIENT_MSG); //Версия клиента игрока не определена, прощаемся с ним
-			case 43..47: //Крашеры
-			{
-				Kick(playerid); //КРАЙНЕ рекомендуется кикать без задержки, иначе ОНО успеет крашнуть игроков
-				return 1;
-			}
-			default: //Здесь все остальные читы
-			{
-				va_SendClientMessage(playerid, -1, "Вы были кикнуты по причине %s (#%d)", CheatNames[code], code);
-				Kick(playerid);
-				return 1;
-			}
-		}
-		new pPing = GetPlayerPing(playerid) + 150;
-		SetTimerEx("ac_KickTimer", (pPing > 500 ? 500 : pPing), false, "i", playerid); //Кик за 40 и 41 код, ac_KickTimer есть в античите и успешно сработает
-	}
 	return 1;
 }*/
 stock Speedo_Sync(playerid)
@@ -558,8 +465,8 @@ stock ReturnPlayerWeaponsString(playerid)
 		{
 		    if(Ammo > 60000) Ammo = 1;
 
-		    if(strlen(string) > 4) format(string,256,"%s, %s(~y~%d~r~)", string, weaponName[WeaponID], Ammo);
-			else format(string,256,"%s(~y~%d~r~)", weaponName[WeaponID], Ammo);
+		    if(strlen(string) > 4) format(string,256,"%s, %s(~y~%w~r~)", string, WeaponID, Ammo);
+			else format(string,256,"%w(~y~%d~r~)", WeaponID, Ammo);
 		}
 	}
 	if(strlen(string) < 3) string = "N~w~/~r~A";
@@ -641,4 +548,33 @@ stock Update_Skill(playerid,weaponid){
 	}
 	orm_update(P[playerid][_p_ormid]);
 	return true;
+}
+public OnPlayerGetProtectionWarning(playerid, Protection:protection, bool:warn_reached, message[])
+{
+	new
+		protection_name[32];
+
+	Protection_GetParamString(protection, PROTECTION_NAME, protection_name);
+
+	P[playerid][_p_cheater]++;
+	if(Protection_GetPlayerParamInt(playerid, protection, PROTECTION_PLAYER_WARNING_COUNT) > 1){
+		if(P[playerid][_p_cheater] >= 3){
+			va_SendClientMessage(playerid, -1,"Вы были кикнуты по подозрению в читерстве! {B9C9BF}[%s]",protection_name);
+			Kick(playerid);
+		}
+		return true;
+	}	
+	
+	Message_ToAdmins(0xB9C9BFFF, "[Защита]: %s[%d] | Cheat: %s | Debug: %s", Name(playerid),playerid, protection_name, message);
+	return 1;
+}
+stock PlaySoundForPlayersInRange(soundid, Float:range, Float:x, Float:y, Float:z)
+{
+	foreach(new i:Player)
+	{
+	    if(IsPlayerConnected(i) && IsPlayerInRangeOfPoint(i,range,x,y,z))
+	    {
+		    PlayerPlaySound(i, soundid, x, y, z);
+	    }
+	}
 }
