@@ -292,12 +292,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	            if(V_BUS[i] != GetPlayerVehicleID(playerid)) continue;
 	            V_BUS_OWNER[i] = P[playerid][p_uid];
 	        	defer OnRentVehicleEnd[minute*60*1000](V_BUS[i], JOB_BUS);
+				SetPVarInt(playerid,"Bus_Driver_ID",V_BUS[i]);
 	        }
 			ShowPlayerDialog(playerid, d_job_bus_route, DIALOG_STYLE_LIST,"Выберите маршрут",
 				"Мэрия ЛС - АвтоШкола\n\
-			     Мэрия ЛС - Банк ЛС{B22222}[Не доступен]{FFFFFF}\n\
-				 Мэрия ЛС - Лесопилка{B22222}[Не доступен]{FFFFFF}\n\
-				 Мэрия ЛС - [Какое-то место]{B22222}[Не доступен]{FFFFFF}","Выбрать","Закрыть");
+			     Мэрия ЛС - Банк ЛС {B22222}[Не доступен]{FFFFFF}\n\
+				 Мэрия ЛС - Лесопилка {B22222}[Не доступен]{FFFFFF}","Выбрать","Закрыть");
 	    }
 	}
 	// Аренда служебного транспорта
@@ -1101,10 +1101,23 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		if(!response) return ShowPlayerDialog(playerid, d_job_bus_route, DIALOG_STYLE_LIST,"Выберите маршрут",
 				"Мэрия ЛС - АвтоШкола\n\
 			     Мэрия ЛС - Банк ЛС {B22222}[Не доступен]{FFFFFF}\n\
-				 Мэрия ЛС - Лесопилка {B22222}[Не доступен]{FFFFFF}\n\
-				 Мэрия ЛС - [Какое-то место] {B22222}[Не доступен]{FFFFFF}","Выбрать","Закрыть");
+				 Мэрия ЛС - Лесопилка {B22222}[Не доступен]{FFFFFF}","Выбрать","Закрыть");
 		switch(listitem){
 			case 0: {
+				SetPVarInt(playerid,"Bus_Route_CP",0); // CP ID 0
+				SetPVarInt(playerid,"Bus_Route_To_Go",listitem);
+				
+				new x = GetPVarInt(playerid, "Bus_Route_CP");
+				
+				Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[listitem][x][0],Bus_Route[listitem][x][1],Bus_Route[listitem][x][2],Bus_Route[listitem][x+1][0],Bus_Route[listitem][x+1][1],Bus_Route[listitem][x+1][2],4,0,0,playerid);
+				
+				for(new y; y<sizeof(V_BUS);y++){
+					if(V_BUS[y] != GetPlayerVehicleID(playerid)) continue;
+					text_bus_route[y] = CreateDynamic3DTextLabel("Маршрут: Мэрия ЛС - АвтоШкола",-1,0.0,0.0,2.0,20.0,INVALID_PLAYER_ID,V_BUS[y]);
+				}
+				Streamer_Update(playerid,3);
+			}
+			case 1: {
 				SetPVarInt(playerid,"Bus_Route_CP",0); // CP ID 0
 				SetPVarInt(playerid,"Bus_Route_To_Go",listitem);
 				new x = GetPVarInt(playerid, "Bus_Route_CP");
@@ -1112,9 +1125,8 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[listitem][x][0],Bus_Route[listitem][x][1],Bus_Route[listitem][x][2],Bus_Route[listitem][x+1][0],Bus_Route[listitem][x+1][1],Bus_Route[listitem][x+1][2],4,0,0,playerid);
 				Streamer_Update(playerid,3);
 			}
-			case 1: SendClientMessage(playerid, -1, "0");
-			case 2: SendClientMessage(playerid, -1, "0");
-			case 3: SendClientMessage(playerid, -1, "0");
+			case 2: SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот маршрут пока что недоступен.");
+			case 3: SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот маршрут пока что недоступен.");
 		}
 	}
     }

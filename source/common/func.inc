@@ -64,14 +64,34 @@ stock containsAnyIP(const string[])
 	return 0;
 }
 
-stock strtolower(source[])
+/*stock strtolower(source[])
 {
 	for(new i; i < strlen(source); i++) switch(source[i]) {
 		case 168: source[i] = 184;
 		case 192..223: source[i] = (source[i] + 32);
 		default: source[i] = tolower(source[i]);
 	}
-}
+}*/
+stock strtolower(string[]) 
+{ 
+    switch(string[0]) 
+    { 
+        case 'เ'..'ÿ', 'a'..'z':     
+            string[0] -= ('เ' - 'ภ'); 
+        case 'ธ':         
+            string[0] -= ('ธ' - 'จ'); 
+    }    
+    for(new pos = strlen(string); pos != 0; --pos)
+    { 
+        switch(string[pos]) 
+        { 
+            case 'ภ'..'฿', 'A'..'Z':     
+                string[pos] += ('เ' - 'ภ'); 
+            case 'จ': 
+                string[pos] += ('ธ' - 'จ'); 
+        } 
+    } 
+}  
 // ห่๔๒
 stock Elevator_Initialize()
 {

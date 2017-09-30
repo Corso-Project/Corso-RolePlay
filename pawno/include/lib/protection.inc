@@ -39,6 +39,10 @@
 	#define PROTECTION_CUSTOM_VENDING 1
 #endif
 
+#if !defined PROTECTION_MAX_AVAILABLE_IDS
+	#define PROTECTION_MAX_AVAILABLE_IDS 100
+#endif
+
 #define PROTECTION_MAX_STRING 32
 #define PROTECTION_MAX_IP     14
 
@@ -76,6 +80,7 @@ enum Protection {
 	PROTECTION_PICKUPPICK,
 	PROTECTION_VEHICLECOLOR,
 	PROTECTION_CAMERA,
+	PROTECTION_CAMERAMODE,
 }
 
 enum ProtectionParams {
@@ -89,11 +94,13 @@ enum ProtectionParams {
 	Float:PROTECTION_MAX_DISTANCE,
 	Float:PROTECTION_MAX_VEHICLE_DISTANCE,
 	PROTECTION_MAX_PING,
+	PROTECTION_AVAILABLE_IDS[PROTECTION_MAX_AVAILABLE_IDS],
 }
 
 enum ProtectionPlayerParams {
 	PROTECTION_PLAYER_DISABLED,
 	PROTECTION_PLAYER_WARNING_COUNT,
+	PROTECTION_PLAYER_BLOCK_UPDATE,
 }
 
 enum ProtectionPlayerInfo {
@@ -124,6 +131,7 @@ enum ProtectionPlayerInfo {
 #include "protection/pickuppick"
 #include "protection/vehiclecolor"
 #include "protection/camera"
+#include "protection/cameramode"
 
 #if PROTECTION_CUSTOM_VENDING
 	#include "protection/vending"
@@ -139,7 +147,7 @@ static
 	gPlayerInfo[MAX_PLAYERS][ProtectionPlayerInfo];
 
 static const
-	NULL_gPlayerParam[Protection][ProtectionPlayerParams],
+	NULL_gPlayerParam[ProtectionPlayerParams],
 	NULL_gPlayerInfo[ProtectionPlayerInfo];
 
 /*
@@ -237,14 +245,14 @@ public OnGameModeInit()
 	Protection_SetParamFloat(PROTECTION_CAMERA, PROTECTION_MAX_DISTANCE, 200.0);
 	Protection_SetParamInt(PROTECTION_CAMERA, PROTECTION_SPAWN_DELAY, 2000);
 
+	// cameramode
+	Protection_SetParamInt(PROTECTION_CAMERAMODE, PROTECTION_ENABLED, 1);
+	Protection_SetParamString(PROTECTION_CAMERAMODE, PROTECTION_NAME, "Camera Mode");
+	Protection_SetParamString(PROTECTION_CAMERAMODE, PROTECTION_FUNCTION, "Protection_CameraMode");
+	Protection_SetParamArray(PROTECTION_CAMERAMODE, PROTECTION_AVAILABLE_IDS, {3, 4, 7, 8, 15, 16, 18, 22, 46, 51, 53, 55, 56, 57, 58, 59, 62, 63, 64, -1});
+
 	// timer
 	SetTimer("Protection_Timer", PROTECTION_TIMER_TIME, 1);
-
-	// compiler crash fix
-#if __Pawn != 0x030A
-	new crash_fix[1];
-	format(crash_fix, 1, "");
-#endif
 
 	#if defined Protection_OnGameModeInit
 		return Protection_OnGameModeInit();
@@ -270,7 +278,9 @@ public OnGameModeInit()
 public OnPlayerConnect(playerid)
 {
 	// reset arrays data
-	gPlayerParam[playerid] = NULL_gPlayerParam;
+	for (new i = 0; i < sizeof(gParam); i++) {
+		gPlayerParam[playerid][Protection:i] = NULL_gPlayerParam;
+	}
 	gPlayerInfo[playerid] = NULL_gPlayerInfo;
 
 	// store connect data
@@ -339,6 +349,142 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 #define OnPlayerStateChange Protection_OnPlayerStateChange
 #if defined Protection_OnPlayerStateChange
 	forward Protection_OnPlayerStateChange(playerid, newstate, oldstate);
+#endif
+
+/*
+	OnPlayerUpdate
+*/
+
+public OnPlayerUpdate(playerid)
+{
+	static
+		i,
+		bool:blocked;
+
+	for (i = 1; i < sizeof(gParam); i++) {
+		blocked = bool:Protection_GetPlayerParamInt(playerid, Protection:i, PROTECTION_PLAYER_BLOCK_UPDATE);
+		if (blocked) {
+			return 0;
+		}
+	}
+
+	#if defined Protection_OnPlayerUpdate
+		return Protection_OnPlayerUpdate(playerid);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnPlayerUpdate
+	#undef OnPlayerUpdate
+#else
+	#define _ALS_OnPlayerUpdate
+#endif
+
+#define OnPlayerUpdate Protection_OnPlayerUpdate
+#if defined Protection_OnPlayerUpdate
+	forward Protection_OnPlayerUpdate(playerid);
+#endif
+
+/*
+	OnPlayerWeaponShot
+*/
+
+public OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ)
+{
+	static
+		i,
+		bool:blocked;
+
+	for (i = 1; i < sizeof(gParam); i++) {
+		blocked = bool:Protection_GetPlayerParamInt(playerid, Protection:i, PROTECTION_PLAYER_BLOCK_UPDATE);
+		if (blocked) {
+			return 0;
+		}
+	}
+
+	#if defined Protection_OnPlayerWeaponShot
+		return Protection_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, fX, fY, fZ);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnPlayerWeaponShot
+	#undef OnPlayerWeaponShot
+#else
+	#define _ALS_OnPlayerWeaponShot
+#endif
+
+#define OnPlayerWeaponShot Protection_OnPlayerWeaponShot
+#if defined Protection_OnPlayerWeaponShot
+	forward Protection_OnPlayerWeaponShot(playerid, weaponid, hittype, hitid, Float:fX, Float:fY, Float:fZ);
+#endif
+
+/*
+	OnUnoccupiedVehicleUpdate
+*/
+
+public OnUnoccupiedVehicleUpdate(vehicleid, playerid, passenger_seat, Float:new_x, Float:new_y, Float:new_z, Float:vel_x, Float:vel_y, Float:vel_z)
+{
+	static
+		i,
+		bool:blocked;
+
+	for (i = 1; i < sizeof(gParam); i++) {
+		blocked = bool:Protection_GetPlayerParamInt(playerid, Protection:i, PROTECTION_PLAYER_BLOCK_UPDATE);
+		if (blocked) {
+			return 0;
+		}
+	}
+
+	#if defined Prot_OnUnoccupiedVehicleUpdate
+		return Prot_OnUnoccupiedVehicleUpdate(vehicleid, playerid, passenger_seat, new_x, new_y, new_z, vel_x, vel_y, vel_z);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnUnoccupiedVehicleUpdate
+	#undef OnUnoccupiedVehicleUpdate
+#else
+	#define _ALS_OnUnoccupiedVehicleUpdate
+#endif
+
+#define OnUnoccupiedVehicleUpdate Prot_OnUnoccupiedVehicleUpdate
+#if defined Prot_OnUnoccupiedVehicleUpdate
+	forward Prot_OnUnoccupiedVehicleUpdate(vehicleid, playerid, passenger_seat, Float:new_x, Float:new_y, Float:new_z, Float:vel_x, Float:vel_y, Float:vel_z);
+#endif
+
+/*
+	OnTrailerUpdate
+*/
+
+public OnTrailerUpdate(playerid, vehicleid)
+{
+	static
+		i,
+		bool:blocked;
+
+	for (i = 1; i < sizeof(gParam); i++) {
+		blocked = bool:Protection_GetPlayerParamInt(playerid, Protection:i, PROTECTION_PLAYER_BLOCK_UPDATE);
+		if (blocked) {
+			return 0;
+		}
+	}
+
+	#if defined Protection_OnTrailerUpdate
+		return Protection_OnTrailerUpdate(playerid, vehicleid);
+	#else
+		return 1;
+	#endif
+}
+#if defined _ALS_OnTrailerUpdate
+	#undef OnTrailerUpdate
+#else
+	#define _ALS_OnTrailerUpdate
+#endif
+
+#define OnTrailerUpdate Protection_OnTrailerUpdate
+#if defined Protection_OnTrailerUpdate
+	forward Protection_OnTrailerUpdate(playerid, vehicleid);
 #endif
 
 /*
@@ -419,7 +565,14 @@ public Protection_Timer()
 	Protection report
 */
 
-stock Protection_GivePlayerWarning(playerid, Protection:protection, fstring[] = "", {Float, _}:...)
+forward _Protection_SysreqFix();
+public _Protection_SysreqFix()
+{
+	new temp[2];
+	format(temp, sizeof(temp), "");
+}
+
+stock Protection_GivePlayerWarning(playerid, Protection:protection, fstring[], {Float, _}:...)
 {
 	static
 		warn_max,
@@ -433,41 +586,36 @@ stock Protection_GivePlayerWarning(playerid, Protection:protection, fstring[] = 
 	Protection_SetPlayerParamInt(playerid, protection, PROTECTION_PLAYER_WARNING_COUNT, warn_count);
 
 	// format
-	#define BYTES_PER_CELL 4
-	static const STATIC_ARGS = 3;
+	static const
+		BYTES_PER_CELL = 4,
+		STATIC_ARGS = 3;
 
-	new n = (numargs() - STATIC_ARGS) * BYTES_PER_CELL;
+	static
+		args,
+		arg_start,
+		arg_end,
+		message[144];
 
-	if (n) {
-		new message[144], arg_start, arg_end;
-		#emit CONST.alt			fstring
-		#emit LCTRL				5
-		#emit ADD
-		#emit STOR.S.pri		arg_start
+	#emit LOAD.S.pri 8
+	#emit STOR.pri args
 
-		#emit LOAD.S.alt		n
-		#emit ADD
-		#emit STOR.S.pri		arg_end
-		do {
-			#emit LOAD.I
+	if (args > STATIC_ARGS * BYTES_PER_CELL) {
+		#emit ADDR.pri fstring
+		#emit STOR.pri arg_start
+
+		for (arg_end = arg_start + (args - STATIC_ARGS * BYTES_PER_CELL); arg_end > arg_start; arg_end -= BYTES_PER_CELL)
+		{
+			#emit LREF.pri arg_end
 			#emit PUSH.pri
-			arg_end -= BYTES_PER_CELL;
-			#emit LOAD.S.pri	arg_end
-		} while (arg_end > arg_start);
+		}
+		#emit PUSH.S fstring
+		#emit PUSH.C 144
+		#emit PUSH.C message
+		#emit PUSH.C args
+		#emit SYSREQ.C format
 
-		#emit PUSH.S			fstring
-		#emit PUSH.C			144
-		#emit PUSH.ADR			message
-
-		n += BYTES_PER_CELL * 3;
-		#emit PUSH.S			n
-		#emit SYSREQ.C			format
-
-		n += BYTES_PER_CELL;
-		#emit LCTRL				4
-		#emit LOAD.S.alt		n
-		#emit ADD
-		#emit SCTRL				4
+		#emit LCTRL 5
+		#emit SCTRL 4
 
 		CallRemoteFunction("OnPlayerGetProtectionWarning", "iiis", playerid, _:protection, warn_count >= warn_max, message);
 	} else {
@@ -519,6 +667,26 @@ stock Protection_SetParamFloat(Protection:protection, ProtectionParams:param, Fl
 stock Float:Protection_GetParamFloat(Protection:protection, ProtectionParams:param)
 {
 	return Float:gParam[protection][param];
+}
+
+/*
+	Array params
+*/
+
+stock Protection_SetParamArray(Protection:protection, ProtectionParams:param, values[], const size = sizeof(values))
+{
+	if (protection == PROTECTION_ALL) {
+		for (new i = 0; i < sizeof(gParam); i++) {
+			memcpy(gParam[Protection:i][param], values, 0, size * 4, PROTECTION_MAX_AVAILABLE_IDS);
+		}
+	} else {
+		memcpy(gParam[protection][param], values, 0, size * 4, PROTECTION_MAX_AVAILABLE_IDS);
+	}
+}
+
+stock Protection_GetParamArray(Protection:protection, ProtectionParams:param, values[], size = sizeof(values))
+{
+	memcpy(values, gParam[protection][param], 0, PROTECTION_MAX_AVAILABLE_IDS, size * 4);
 }
 
 /*

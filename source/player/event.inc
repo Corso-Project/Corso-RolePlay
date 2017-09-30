@@ -549,7 +549,10 @@ public OnPlayerStateChange(playerid, newstate, oldstate)
 	        if(P[playerid][p_job_team] != JOB_BUS) break;
 	        if(vehicleid != V_BUS[i]) continue;
 	        if(V_BUS_OWNER[i] != 0) break;
-			//if(P[playerid][])
+			if(GetPVarInt(playerid,"Bus_Driver_ID") != 0){
+				SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы уже взяли в аренду другой автобус.");
+				return RemovePlayerFromVehicle(playerid);
+			}
 	        if(Vehicle_IsPlayerWithLicense(GetVehicleModel(vehicleid), playerid) == 0) {
                 SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}У вас нет опыта и лицензии управления данным транспортным средством!");
                 break;
@@ -1700,16 +1703,21 @@ public OnPlayerEnterDynamicRaceCP(playerid, checkpointid){
 	new vehicleid = GetPlayerVehicleID(playerid);
 	if(checkpointid == Bus_Route_CheckPoint && GetVehicleModel(vehicleid) == 431){
 		new x = GetPVarInt(playerid, "Bus_Route_CP"),
-			y = GetPVarInt(playerid, "Bus_Route_To_Go");
-		
+			y = GetPVarInt(playerid, "Bus_Route_To_Go"),
+			cash = GetPVarInt(playerid, "Bus_Route_Cash");
+
+		SetPVarInt(playerid, "Bus_Route_Cash",cash+728);
+			
 		if(x == 93)
 			SetPVarInt(playerid, "Bus_Route_CP", 2);
 		else
-			SetPVarInt(playerid,"Bus_Route_CP", x+1);
-		
+			SetPVarInt(playerid,"Bus_Route_CP", x+1);			
+		x = GetPVarInt(playerid, "Bus_Route_CP");
+	
 		TogglePlayerDynamicRaceCP(playerid, Bus_Route_CheckPoint,0);
 		Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[y][x][0],Bus_Route[y][x][1],Bus_Route[y][x][2],Bus_Route[y][x+1][0],Bus_Route[y][x+1][1],Bus_Route[y][x+1][2],4,0,0,playerid);
 		TogglePlayerDynamicRaceCP(playerid, Bus_Route_CheckPoint,1);
+		
 		Streamer_Update(playerid, 3);
 	}
 	return true;

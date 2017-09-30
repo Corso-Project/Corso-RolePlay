@@ -1,9 +1,35 @@
 timer OnWeatherChanger[60*60*1000]()
 {
 	SetWorldTime(g_hour);
-	//SetWeather(random(20));
-	SetWeather(10);
+	SetWeather(random(20));
 	defer OnWeatherChanger[random(60)*60*1000]();
+}
+
+timer OnJobDutyEnd[10000](vehicleid, playerid){
+	if(P[playerid][p_job_team] == JOB_BUS){
+		for(new x; x < sizeof(V_BUS); x++) {
+			if(vehicleid != V_BUS[x]) continue;
+			if(V_BUS_OWNER[x] == 0 && GetPVarInt(playerid,"Bus_Driver_ID") == 0) return true;
+			if((GetPlayerState(playerid) == 2 && IsPlayerInVehicle(playerid,vehicleid)) && P[playerid][p_uid] == V_BUS_OWNER[x] && vehicleid == GetPVarInt(playerid,"Bus_Driver_ID")) return true;
+			new cash = GetPVarInt(playerid, "Bus_Route_Cash");
+		
+			SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы закончили работу.");
+			va_SendClientMessageF(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Вы получили $%m.",cash);
+			Cash_Give(playerid,cash);
+			
+			TogglePlayerDynamicRaceCP(playerid, Bus_Route_CheckPoint,0);
+			
+			SetPVarInt(playerid, "Bus_Driver_ID",0);
+			DeletePVar(playerid,"Bus_Route_CP");
+			DeletePVar(playerid, "Bus_Route_To_Go");
+			DeletePVar(playerid, "Bus_Route_Cash");
+			
+			V_BUS_OWNER[x] = 0;
+			DestroyDynamic3DTextLabel(text_bus_route[x]);
+			SetVehicleToRespawn(vehicleid);
+		}
+	}
+	return true;
 }
 
 timer OnRentVehicleEnd[30*60*1000](vehicleid, category)

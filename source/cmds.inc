@@ -1127,3 +1127,14 @@ CMD:skill(playerid,params[]){
 	}
 	return true;
 }
+CMD:vsethp(playerid, params[])
+{
+	if(P[playerid][_p_in_game] == false) return 1;
+	if(P[playerid][p_access] < 1) return true;
+	if (IsPlayerInAnyVehicle(playerid) == 0)
+		return 1;
+	new Float: hp;
+	if(sscanf(params,"f",hp)) return true;
+	SetVehicleHealth(GetPlayerVehicleID(playerid),hp);
+	return 1;
+}

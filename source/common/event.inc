@@ -303,7 +303,7 @@ public OnGameModeInit()
 	V_PETROL_TRAILER[12] = Vehicle_Add(584, -980.0000, -684.3000, 33.0000, 90.0000);
 
 	new string[42+4+1];
-	for(new x=0; x<13;x++){
+	for(new x=0; x<sizeof(V_PETROL_TRAILER);x++){
 		format(string,sizeof(string),"{FFFFFF}Топлива в цистерне: %.0f/1000 литров",trailer_fuel_v[x]);
 		text_trailer[x] = CreateDynamic3DTextLabel(string,-1,0.0,0.0,2.0,20.0,INVALID_PLAYER_ID,V_PETROL_TRAILER[x]);
 	}
