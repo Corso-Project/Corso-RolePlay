@@ -1106,6 +1106,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			case 0: {
 				SetPVarInt(playerid,"Bus_Route_CP",0); // CP ID 0
 				SetPVarInt(playerid,"Bus_Route_To_Go",listitem);
+				va_SendClientMessage(playerid, -1, "%i",GetPVarInt(playerid,"Bus_Route_To_Go"));
 				
 				new x = GetPVarInt(playerid, "Bus_Route_CP");
 				
@@ -1122,11 +1123,11 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				SetPVarInt(playerid,"Bus_Route_To_Go",listitem);
 				new x = GetPVarInt(playerid, "Bus_Route_CP");
 				
-				Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[listitem][x][0],Bus_Route[listitem][x][1],Bus_Route[listitem][x][2],Bus_Route[listitem][x+1][0],Bus_Route[listitem][x+1][1],Bus_Route[listitem][x+1][2],4,0,0,playerid);
+				Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[listitem][x][0],Bus_Route[listitem][x][1],Bus_Route[listitem][x][2],Bus_Route[listitem][x+1][0],Bus_Route[listitem][x+1][1],Bus_Route[listitem][x+1][2],4,0,0,playerid,666);
 				Streamer_Update(playerid,3);
 			}
-			case 2: SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот маршрут пока что недоступен.");
-			case 3: SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот маршрут пока что недоступен.");
+			case 2: SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот маршрут пока недоступен.");
+			case 3: SendClientMessage(playerid, 0xB22222FF, "[Справка]: {FFFFFF}Этот маршрут пока недоступен.");
 		}
 	}
     }

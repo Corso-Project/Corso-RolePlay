@@ -743,7 +743,7 @@ CMD:spawn(playerid, params[]){
 	if(P[playerid][_p_in_game] == false) return 1;
 	if(P[playerid][p_access] < 1) return true;
 	new user;
-	if(sscanf(params,"U(playerid)",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /spawn [ID игрока]");
+	if(sscanf(params,"u",user)) return SendClientMessage(playerid, 0xB22222FF,"[Справка]: {FFFFFF}Используйте /spawn [ID игрока]");
 	SpawnPlayer(user);
 	return true;
 }
@@ -1126,15 +1126,4 @@ CMD:skill(playerid,params[]){
 		IC_Me(playerid,  "просматривает свою выписку из тира");
 	}
 	return true;
-}
-CMD:vsethp(playerid, params[])
-{
-	if(P[playerid][_p_in_game] == false) return 1;
-	if(P[playerid][p_access] < 1) return true;
-	if (IsPlayerInAnyVehicle(playerid) == 0)
-		return 1;
-	new Float: hp;
-	if(sscanf(params,"f",hp)) return true;
-	SetVehicleHealth(GetPlayerVehicleID(playerid),hp);
-	return 1;
 }

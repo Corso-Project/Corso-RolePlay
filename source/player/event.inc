@@ -1707,15 +1707,18 @@ public OnPlayerEnterDynamicRaceCP(playerid, checkpointid){
 			cash = GetPVarInt(playerid, "Bus_Route_Cash");
 
 		SetPVarInt(playerid, "Bus_Route_Cash",cash+728);
-			
-		if(x == 93)
-			SetPVarInt(playerid, "Bus_Route_CP", 2);
-		else
-			SetPVarInt(playerid,"Bus_Route_CP", x+1);			
-		x = GetPVarInt(playerid, "Bus_Route_CP");
-	
+		if(y == 0){	
+			if(x == 107)
+				SetPVarInt(playerid, "Bus_Route_CP", 4);
+			else
+				SetPVarInt(playerid,"Bus_Route_CP", x+1);			
+			x = GetPVarInt(playerid, "Bus_Route_CP");
+		}
+		/*
+		else if(y == 1){}
+		else if(y == 2){}*/
 		TogglePlayerDynamicRaceCP(playerid, Bus_Route_CheckPoint,0);
-		Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[y][x][0],Bus_Route[y][x][1],Bus_Route[y][x][2],Bus_Route[y][x+1][0],Bus_Route[y][x+1][1],Bus_Route[y][x+1][2],4,0,0,playerid);
+		Bus_Route_CheckPoint = CreateDynamicRaceCP(0,Bus_Route[y][x][0],Bus_Route[y][x][1],Bus_Route[y][x][2],Bus_Route[y][x+1][0],Bus_Route[y][x+1][1],Bus_Route[y][x+1][2],4,0,0,playerid,666);
 		TogglePlayerDynamicRaceCP(playerid, Bus_Route_CheckPoint,1);
 		
 		Streamer_Update(playerid, 3);
