@@ -492,11 +492,6 @@ public OnGameModeInit()
 	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,10,6);
 	CreateDynamicActor(179,287.5085,-104.5135,1001.5156,183.2922,1,100.0,11,6);
 	// Динамические зоны
-	auto_school_press_alt[0] = CreateDynamicSphere(-2056.885009, -93.754776, 34.157676,1.5);
-	auto_school_press_alt[1] = CreateDynamicSphere(-2045.722778, -102.226257, 35.607597,1.0);
-	auto_school_press_alt[2] = CreateDynamicSphere(-2047.912719, -102.216247, 35.607597,1.0);
-	auto_school_press_alt[3] = CreateDynamicSphere(-2045.722778, -103.206237, 35.607597,1.0);
-	auto_school_press_alt[4] = CreateDynamicSphere(-2047.912719, -103.196243, 35.607597,1.0);
 	police_press_alt[0] = CreateDynamicSphere(2237.830078, 2449.383300, 11.049513,1.0);
 	police_press_alt[1] = CreateDynamicSphere(-1572.707153, 656.855529, 7.637507,1.0);
 	police_press_alt[2] = CreateDynamicSphere(-1701.057495, 689.615234, 25.270635,1.0);

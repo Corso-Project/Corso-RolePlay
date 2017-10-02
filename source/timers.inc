@@ -38,57 +38,71 @@ timer OnRentVehicleEnd[30*60*1000](vehicleid, category)
 	    case ORG_UNKNOWN: {
 			for(new i; i < sizeof(V_RENT); i++) {
 			  	if(vehicleid != V_RENT[i]) continue;
+				if(V_RENT_OWNER[i] == 0) return true;
 			    V_RENT_OWNER[i] = 0;
+				new engine,lights,alarm,doors,bonnet,boot,objective;
+				GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+				SetVehicleParamsEx(vehicleid, 0,lights,alarm,0,bonnet,boot,objective);
 			}
 			for(new i; i < sizeof(V_RENT_STANDART); i++) {
 				if(vehicleid != V_RENT_STANDART[i]) continue;
+				if(V_RENT_OWNER_STANDART[i] == 0) return true;
 				V_RENT_OWNER_STANDART[i] = 0;
+				new engine,lights,alarm,doors,bonnet,boot,objective;
+				GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+				SetVehicleParamsEx(vehicleid, 0,lights,alarm,0,bonnet,boot,objective);
 			}
 			for(new i; i < sizeof(V_RENT_PREMIUM); i++) {
 				if(vehicleid != V_RENT_PREMIUM[i]) continue;
+				if(V_RENT_OWNER_PREMIUM[i] == 0) return true;
 				V_RENT_OWNER_PREMIUM[i] = 0;
+				new engine,lights,alarm,doors,bonnet,boot,objective;
+				GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+				SetVehicleParamsEx(vehicleid, 0,lights,alarm,0,bonnet,boot,objective);
 			}
-			new engine,lights,alarm,doors,bonnet,boot,objective;
-			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-			SetVehicleParamsEx(vehicleid, 0,lights,alarm,0,bonnet,boot,objective);
 		}
 		case JOB_TAXI: {
 		    for(new i; i < sizeof(V_TAXI); i++) {
 			    if(vehicleid != V_TAXI[i]) continue;
+				if(V_TAXI_OWNER[i] == 0) return true;
 			    V_TAXI_OWNER[i] = 0;
+				new engine,lights,alarm,doors,bonnet,boot,objective;
+				GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+				SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 			}
-			new engine,lights,alarm,doors,bonnet,boot,objective;
-			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-			SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 		}
 		case JOB_BUS: {
 		    for(new i; i < sizeof(V_BUS); i++) {
 			    if(vehicleid != V_BUS[i]) continue;
+				if(V_BUS_OWNER[i] == 0) return true;
 			    V_BUS_OWNER[i] = 0;
+				new engine,lights,alarm,doors,bonnet,boot,objective;
+				GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+				SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 			}
-			new engine,lights,alarm,doors,bonnet,boot,objective;
-			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-			SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 		}
 		case JOB_ENGINEER: {
 		    for(new i; i < sizeof(V_ENGINEER); i++) {
 			    if(vehicleid != V_ENGINEER[i]) continue;
+				if(V_ENGINEER_OWNER[i] == 0) return true;
 			    V_ENGINEER_OWNER[i] = 0;
+				new engine,lights,alarm,doors,bonnet,boot,objective;
+				GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+				SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 			}
-			new engine,lights,alarm,doors,bonnet,boot,objective;
-			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-			SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 		}
 		case JOB_FREIGHTER: {
 		    for(new i; i < sizeof(V_FREIGHTER); i++) {
 			    if(vehicleid != V_FREIGHTER[i]) continue;
+				if(V_FREIGHTER_OWNER[i] == 0) return true;
 			    V_FREIGHTER_OWNER[i] = 0;
+				new engine,lights,alarm,doors,bonnet,boot,objective;
+				GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
+				SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 			}
-			new engine,lights,alarm,doors,bonnet,boot,objective;
-			GetVehicleParamsEx(vehicleid, engine,lights,alarm,doors,bonnet,boot,objective);
-			SetVehicleParamsEx(vehicleid, 0,lights,alarm,doors,bonnet,boot,objective);
 		}
 	}
+	return true;
 }
 
 timer OnGateClosed[7500](objectid)

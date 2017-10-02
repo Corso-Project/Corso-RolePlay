@@ -379,8 +379,7 @@ new PlayerText: ChoseSkin[8],
 	PlayerText: Press_ALT[5],
 	PlayerText: Wanted_New_Cash;
 //Динамические зоны
-new auto_school_press_alt[5],
-	police_press_alt[4];
+new police_press_alt[4];
 // Gang Zone
 new army;
 // Скины

@@ -1822,12 +1822,6 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid)
 	return false;
 }
 public OnPlayerEnterDynamicArea(playerid, areaid){
-	if(areaid == auto_school_press_alt[0] || areaid == auto_school_press_alt[1] || areaid == auto_school_press_alt[2] || areaid == auto_school_press_alt[3] || areaid == auto_school_press_alt[4]){
-		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL){
-			for(new i; i < 5; i++)
-		   		PlayerTextDrawShow(playerid, Press_ALT[i]);
-		}
-	}
 	if(areaid == police_press_alt[0] || areaid == police_press_alt[1] || areaid == police_press_alt[2] || areaid == police_press_alt[3]){
 		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LSPD || P[playerid][p_job_team] == ORG_SFPD || P[playerid][p_job_team] == ORG_LVPD){
 			for(new i; i < 5; i++)
@@ -1837,12 +1831,6 @@ public OnPlayerEnterDynamicArea(playerid, areaid){
 	return true;
 }
 public OnPlayerLeaveDynamicArea(playerid, areaid){
-	if(areaid == auto_school_press_alt[0] || areaid == auto_school_press_alt[1] || areaid == auto_school_press_alt[2] || areaid == auto_school_press_alt[3] || areaid == auto_school_press_alt[4]){
-		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_AUTOSCHOOL){
-		for(new i; i < 5; i++)
-			PlayerTextDrawHide(playerid, Press_ALT[i]);
-		}
-	}
 	if(areaid == police_press_alt[0] || areaid == police_press_alt[1] || areaid == police_press_alt[2] || areaid == police_press_alt[3]){
 		if(P[playerid][p_job_team] == ORG_FBI || P[playerid][p_job_team] == ORG_LSPD || P[playerid][p_job_team] == ORG_SFPD || P[playerid][p_job_team] == ORG_LVPD){
 			for(new i; i < 5; i++)
