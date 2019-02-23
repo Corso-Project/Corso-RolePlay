@@ -2,8 +2,8 @@
 * text=auto
 
 # Custom for Visual Studio
-*.cs     diff=csharp
+*.cs linguist-language=csharp
 
 # Pawn
-*.pwn diff=pawn
-*.inc diff=pawn
+*.pwn linguist-language=SourcePawn
+*.inc linguist-language=SourcePawn
